@@ -16,14 +16,14 @@ export const addEmployee = async (req, res) => {
             confirmPassword // New field for confirming password
         } = req.body;
 
-        // Hash the password and confirmPassword
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const hashedConfirmPassword = await bcrypt.hash(confirmPassword, 10);
-
         // Check if password and confirmPassword match
         if (password !== confirmPassword) {
             return res.status(400).json({ message: 'Passwords do not match' });
         }
+
+        // Hash the password and confirmPassword
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedConfirmPassword = await bcrypt.hash(confirmPassword, 10);
 
         // Check if the email already exists
         const existingEmployee = await Employee.findOne({ email });

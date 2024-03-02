@@ -8,31 +8,30 @@ const personalSchema = new mongoose.Schema({
   },
   bloodGroup: {
     type: String,
-    required: true,
   },
   emergencyContact1: {
     type: String,
-    required: true,
   },
   emergencyContact2: {
     type: String,
-    required: true,
   },
   relation1: {
     type: String,
-    required: true,
   },
   relation2: {
     type: String,
-    required: true,
   },
   dateOfBirth: {
     type: String,
-    required: true,
   },
+  deleteFlag: {
+    type: Boolean,
+    required: true,
+    default: false
+}
 });
 
-export const personalDeatilsSchema = mongoose.Model(
-  "employee_PersonalDetails",
+export const personalDeatilsSchema = mongoose.model(
+  "employee_personal_details_epd",
   personalSchema
 );

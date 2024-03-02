@@ -1,46 +1,43 @@
 import mongoose from "mongoose";
 
-const salaryDetails = new mongoose.Schema({
-  employeeId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "employee",
-    required: true,
-  },
-
-  bankAccountName: {
-    type: String,
-    required: true,
-  },
-  ifscCode: {
-    type: String,
-    required: true,
-  },
-  accountNo: {
-    type: String,
-    required: true,
-  },
-  uanNo: {
-    type: String,
-    required: true,
-  },
-  epfoNo: {
-    type: String,
-    required: true,
-  },
-  panNo: {
-    type: String,
-    required: true,
-  },
-  annualSalary: {
-    type: String,
-    required: true,
-  },
-  monthlySalary: {
-    type: String,
-    required: true,
-  },
+const salaryDetailsSchema = new mongoose.Schema({
+    employeeId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "employee",
+        required: true,
+    },
+    bankAccountName: {
+        type: String,
+    },
+    ifscCode: {
+        type: String,
+    },
+    accountNo: {
+        type: String,
+    },
+    uanNo: {
+        type: String,
+    },
+    epfoNo: {
+        type: String,
+    },
+    panNo: {
+        type: String,
+    },
+    annualSalary: {
+        type: String,
+    },
+    monthlySalary: {
+        type: String,
+    },
+    deleteFlag: {
+      type: Boolean,
+      required: true,
+      default: false
+  }
 });
+
 export const salaryDetailSchema = mongoose.model(
-  "employee_Salary_Details",
-  salaryDetails
+    "employee_salary_details",
+    salaryDetailsSchema
 );

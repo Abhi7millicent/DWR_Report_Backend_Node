@@ -14,11 +14,11 @@ const employeeSchema = new mongoose.Schema({
     },
     email: {
         type: String,
-        required: false
+        required: true
     },
     date: {
         type: String,
-        required: false
+        required: true
     },
     balancedLeave: {
         type: String
@@ -32,13 +32,14 @@ const employeeSchema = new mongoose.Schema({
     role: {
         type: String
     },
-    loginId: {
-        type: String,
-        required: false
-    },
+   
     password: {
         type: String,
-        required: false
+        required: true
+    },
+    confirmPassword: {
+        type: String,
+        required: true
     },
     deleteFlag: {
         type: Boolean,

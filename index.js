@@ -10,7 +10,7 @@ const USERNAME = process.env.DB_USERNAME;
 const PASSWORD = process.env.DB_PASSWORD;
 
 const app = express();
-app.use(cors());
+app.use(cors({origin: true, credentials: true}));
 app.use(express.json());
 app.use("/api/DWR/employee", employee);
 app.use("/api/DWR/authenticate", authenticate);

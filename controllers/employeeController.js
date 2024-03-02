@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import Employee from "../models/employee.js";
 import addresSchema  from "../models/employeeAddress.js";
 import { personalDeatilsSchema } from "../models/employeePersonalDeatils.js";
-import {salaryDetailSchema}  from "../models/employeeSalary.js";
+import { salaryDetailSchema }  from "../models/employeeSalary.js";
 
 export const addEmployee = async (req, res) => {
     try {
@@ -85,5 +85,16 @@ export const addEmployee = async (req, res) => {
         res.status(201).json({ message: 'Employee added successfully' });
     } catch (error) {
         res.status(400).json({ message: error.message });
+    }
+};
+
+export const getEmployeeList = async (req, res) => {
+    try {
+        // Fetch the list of employees from the database
+        const employeeList = await Employee.find({ deleteFlag: false, role: { $ne: "admin" } });
+
+        res.status(200).json({ employees: employeeList });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
 };

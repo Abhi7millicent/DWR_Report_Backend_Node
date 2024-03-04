@@ -98,3 +98,40 @@ export const getEmployeeList = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+
+export const getEmployeeById = async (req, res) => {
+    try {
+        const employeeId = req.params.id;
+
+        // Find the employee by ID
+        const employee = await Employee.findById(employeeId);
+
+        if (!employee) {
+            return res.status(404).json({ message: 'Employee not found' });
+        }
+
+        res.status(200).json({ data : employee });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+export const updateEmployee = async (req, res) => {
+    try {
+        const employeeId = req.params.id; // Extract employee ID from request parameters
+        const updateData = req.body; // Extract updated data from request body
+
+        // Find the employee by ID and update their information
+        const updatedEmployee = await Employee.findByIdAndUpdate(employeeId, updateData, { new: true });
+
+        if (!updatedEmployee) {
+            return res.status(404).json({ message: 'Employee not found' });
+        }
+
+        res.status(200).json({ message: 'Employee updated successfully', data : updatedEmployee });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+

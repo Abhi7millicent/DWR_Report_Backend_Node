@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import Connection from "./dataBase/db.js";
 import employee   from './routes/employeeRoutes.js';
 import authenticate  from './routes/authenticateRoute.js';
+import EmployeePersonalDetails from './routes/employeePersonalDetailsRoute.js';
 dotenv.config();
 const PORT = process.env.PORT;
 const USERNAME = process.env.DB_USERNAME;
@@ -14,6 +15,7 @@ app.use(cors({origin: true, credentials: true}));
 app.use(express.json());
 app.use("/api/DWR/employee", employee);
 app.use("/api/DWR/authenticate", authenticate);
+app.use("/api/DWR/personal-details", EmployeePersonalDetails);
 
 Connection(USERNAME, PASSWORD);
 

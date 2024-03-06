@@ -9,6 +9,7 @@ import employeeAdress from "./routes/employeeAddressRoute.js";
 import EmployeePersonalDetails from "./routes/employeePersonalDetailsRoute.js";
 import EmployeeEducationalDetails from "./routes/employeeEducationalRoute.js"
 import letter from "./routes/letterRoute.js"
+import employeeDocument from "./routes/employeeDocumentRoute.js";
 dotenv.config();
 const PORT = process.env.PORT;
 const USERNAME = process.env.DB_USERNAME;
@@ -24,6 +25,7 @@ app.use("/api/DWR/employee-salary", employeeSalary);
 app.use("/api/DWR/employee-address", employeeAdress);
 app.use("/api/DWR/educational-details", EmployeeEducationalDetails);
 app.use("/api/DWR/letter",letter);
+app.use("/api/DWR/employee-document", employeeDocument);
 
 Connection(USERNAME, PASSWORD);
 

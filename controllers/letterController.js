@@ -1,12 +1,12 @@
 import fs from "fs";
 import { promisify } from "util";
 import { lettersSchema } from "../models/letter.js";
-import { createReadStream } from "fs";
 import Docxtemplater from "docxtemplater";
 import PizZip from "pizzip";
+import libreofficeConvert from "libreoffice-convert";
 
 // Function to replace placeholders in a Word document
-async function replacePlaceholders(path, replacements) {
+async function replacePlaceholders(path, replacements, res) {
     try {
         const content = await promisify(fs.readFile)(path);
         const zip = new PizZip(content);
@@ -15,13 +15,22 @@ async function replacePlaceholders(path, replacements) {
         doc.setData(replacements);
         doc.render();
 
-        // Get the modified content as a buffer
         const modifiedContent = doc.getZip().generate({ type: 'nodebuffer' });
 
-        return modifiedContent;
+        res.setHeader('Content-Type', 'application/docx');
+        res.setHeader('Content-Disposition', 'attachment; filename="modified_letter.docx"');
+        res.send(modifiedContent);
     } catch (error) {
         console.error("Error replacing placeholders:", error);
         throw error;
+    } finally {
+        // Attempt to remove temporary files/directories created by libreoffice-convert
+        try {
+            await promisify(fs.rmdir)(libreofficeConvert.getTmpDirPath(), { recursive: true });
+        } catch (cleanupError) {
+            // Ignore cleanup errors
+            console.error("Error cleaning up temporary directory:", cleanupError);
+        }
     }
 }
 
@@ -55,8 +64,7 @@ export const updateLetter = async (req, res) => {
 
         if (letter) {
             const path = letter.path;
-            const modifiedDocBuffer = await replacePlaceholders(path, replacements);
-            
+            await replacePlaceholders(path, replacements, res);
         } else {
             res.status(404).json({ message: "Letter not found" });
         }

@@ -7,6 +7,7 @@ import authenticate from "./routes/authenticateRoute.js";
 import employeeSalary from "./routes/employeeSalaryRoute.js";
 import employeeAdress from "./routes/employeeAddressRoute.js";
 import EmployeePersonalDetails from "./routes/employeePersonalDetailsRoute.js";
+import employeeDocument from "./routes/employeeDocumentRoute.js";
 dotenv.config();
 const PORT = process.env.PORT;
 const USERNAME = process.env.DB_USERNAME;
@@ -20,6 +21,7 @@ app.use("/api/DWR/authenticate", authenticate);
 app.use("/api/DWR/personal-details", EmployeePersonalDetails);
 app.use("/api/DWR/employee-salary", employeeSalary);
 app.use("/api/DWR/employee-address", employeeAdress);
+app.use("/api/DWR/employee-document", employeeDocument);
 
 Connection(USERNAME, PASSWORD);
 

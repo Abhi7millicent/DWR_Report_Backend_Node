@@ -32,7 +32,7 @@ export const getEmployeePersonalDataByEmployeeId = async (req, res) => {
             return res.status(404).json({ message: "Personal data not found for the given employeeId" });
         }
         
-        return res.status(200).json({ personalData });
+        return res.status(200).json({data: personalData });
     } catch (error) {
         console.error("Error retrieving personal data:", error);
         return res.status(500).json({ message: "Internal server error" });

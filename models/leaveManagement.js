@@ -33,6 +33,7 @@ const leaveManagementSchema = new mongoose.Schema({
   status: {
     type: String,
     required: true,
+    default: "Pendding",
   },
   deleteFlag: {
     type: Boolean,

@@ -50,40 +50,19 @@ export const postApproveLeave = async (req, res) => {
   try {
     const leaveRequest = await LeaveManagementSchema.findById(id);
     if (!leaveRequest) {
-      return res.status(404).json({ message: "Leave request not found" });
+      res.status(404).json({ message: "Leave request not found" });
     }
-
-    // Assuming each leave request has an associated employee ID
-    const employeeId = leaveRequest.employeeId;
-    const employee = await employee.findById(employeeId);
-
-    // Check if the employee exists
-    if (!employee) {
-      return res.status(404).json({ message: "Employee not found" });
-    }
-
-    // Check if the employee has enough leave balance
-    if (employee.leaveBalance < leaveRequest.numberOfLeave) {
-      return res.status(400).json({ message: "Insufficient leave balance" });
-    }
-
-    // Deduct leave balance and update status
-    employee.leaveBalance -= leaveRequest.numberOfLeave;
     leaveRequest.status = "Approve";
-
-    // Save changes
-    await employee.save();
     await leaveRequest.save();
 
     return res.status(200).json({
-      message: "Leave request approved successfully",
+      message: "Leave request approve successfully",
       data: leaveRequest,
     });
   } catch (error) {
     return res.status(500).json({ message: "Internal server error" });
   }
 };
-
 export const postRejectLeave = async (req, res) => {
   const id = req.params.id;
 
@@ -101,5 +80,22 @@ export const postRejectLeave = async (req, res) => {
     });
   } catch (error) {
     return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const getRequestedLeave = async (req, res) => {
+  try {
+    const requestedLeave = await LeaveManagementSchema.find({})
+      .populate({
+        path: "employeeId",
+        model: employee,
+        select: "firstName lastName",
+      })
+      .exec();
+
+    res.status(200).json({ data: requestedLeave });
+  } catch (error) {
+    console.error("Error fetching requested leave:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };

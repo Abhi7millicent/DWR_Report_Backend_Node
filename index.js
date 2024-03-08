@@ -11,7 +11,8 @@ import EmployeeEducationalDetails from "./routes/employeeEducationalRoute.js";
 import letter from "./routes/letterRoute.js";
 import employeeDocument from "./routes/employeeDocumentRoute.js";
 import leaveManagement from "./routes/leaveManagementRoute.js";
-import dwr from "./routes/DWRRoute.js"
+import dwr from "./routes/DWRRoute.js";
+import email from "./routes/emailRoute.js";
 dotenv.config();
 const PORT = process.env.PORT;
 const USERNAME = process.env.DB_USERNAME;
@@ -30,6 +31,7 @@ app.use("/api/DWR/letter", letter);
 app.use("/api/DWR/employee-document", employeeDocument);
 app.use("/api/DWR/leave-management", leaveManagement);
 app.use("/api/DWR/dwr", dwr);
+app.use("/api/DWR/email", email);
 
 Connection(USERNAME, PASSWORD);
 

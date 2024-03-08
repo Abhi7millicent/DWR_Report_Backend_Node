@@ -14,7 +14,7 @@ export const postLeaveManagement = async (req, res) => {
       employeeId,
     } = req.body;
     // const employeeId = req.params.id;
-    console.log(employeeId, "emplyeeId");
+
     const leaveManagement = new LeaveManagementSchema({
       leaveType,
       description,

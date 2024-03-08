@@ -29,7 +29,7 @@ app.use("/api/DWR/educational-details", EmployeeEducationalDetails);
 app.use("/api/DWR/letter", letter);
 app.use("/api/DWR/employee-document", employeeDocument);
 app.use("/api/DWR/leave-management", leaveManagement);
-app.use("/api/DWR/dwr", dwr);
+app.use("/api/DWR", dwr);
 
 Connection(USERNAME, PASSWORD);
 

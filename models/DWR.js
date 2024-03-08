@@ -26,7 +26,7 @@ const DWR = new mongoose.Schema({
         type: String,
         required: true,
     },
-    taskDiscription: {
+    taskDescription: {
         type: String,
         required: true,
     },

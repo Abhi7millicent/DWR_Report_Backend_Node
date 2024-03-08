@@ -204,3 +204,28 @@ export const getBalancedLeave = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+export const updateBalancedLeave = async (employeeId, leave) => {
+  try {
+    await Employee.findByIdAndUpdate(
+      employeeId,
+      { balancedLeave: leave },
+      { new: true }
+    );
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+export const getBalancedLeaveById = async (employeeId) => {
+  try{
+    const employee = await Employee.findOne({ employeeId });
+    if (!employee) {
+      return res.status(404).json({ message: "Employee not found" });
+    }
+    return employee.balancedLeave;
+
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};

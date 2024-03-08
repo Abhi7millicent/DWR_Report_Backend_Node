@@ -1,5 +1,6 @@
 import employee from "../models/employee.js";
 import { LeaveManagementSchema } from "../models/leaveManagement.js";
+import { updateBalancedLeave, getBalancedLeaveById } from "./employeeController.js";
 
 export const postLeaveManagement = async (req, res) => {
   try {
@@ -25,6 +26,9 @@ export const postLeaveManagement = async (req, res) => {
     });
 
     const leaveManagementSave = await leaveManagement.save();
+      const perviousBalancedLeave = await getBalancedLeaveById(leaveManagementSave.employeeId);
+      const leave = (parseInt(perviousBalancedLeave) - parseInt(leaveManagementSave.noOfDays)).toString();
+      await updateBalancedLeave(leaveManagementSave.employeeId, leave); 
     res.status(200).json({ data: leaveManagementSave });
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -50,19 +54,26 @@ export const postApproveLeave = async (req, res) => {
   try {
     const leaveRequest = await LeaveManagementSchema.findById(id);
     if (!leaveRequest) {
-      res.status(404).json({ message: "Leave request not found" });
+      return res.status(404).json({ message: "Leave request not found" }); // Return to exit the function after sending the response
     }
-    leaveRequest.status = "Approve";
+
+    if (leaveRequest.status === "Rejected") { 
+      const leave = (parseInt(leaveRequest.balancedLeave) - parseInt(leaveRequest.noOfDays)).toString();
+      await updateBalancedLeave(leaveRequest.employeeId, leave); // Added await
+    }
+
+    leaveRequest.status = "Approved";
     await leaveRequest.save();
 
     return res.status(200).json({
-      message: "Leave request approve successfully",
+      message: "Leave request approved successfully", // Corrected: "approved" to "approved"
       data: leaveRequest,
     });
   } catch (error) {
     return res.status(500).json({ message: "Internal server error" });
   }
 };
+
 export const postRejectLeave = async (req, res) => {
   const id = req.params.id;
 
@@ -70,6 +81,11 @@ export const postRejectLeave = async (req, res) => {
     const leaveRequest = await LeaveManagementSchema.findById(id);
     if (!leaveRequest) {
       res.status(404).json({ message: "Leave request not found" });
+    }
+
+    if (leaveRequest.status !== "Rejected") { 
+      const leave = (parseInt(leaveRequest.balancedLeave) + parseInt(leaveRequest.noOfDays)).toString();
+      await updateBalancedLeave(leaveRequest.employeeId, leave); // Added await
     }
     leaveRequest.status = "Rejected";
     await leaveRequest.save();

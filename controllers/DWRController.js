@@ -1,40 +1,77 @@
 import xlsx from "xlsx";
 import dwrSchema from "../models/DWR.js";
+import moment from "moment";
 
 export const uploadDWR = async (req, res) => {
   try {
-    console.log("file:", req.body.file);
     if (!req.file) {
-      return res.status(400).json({ message: "No file uploaded" });
+      return res.status(400).send("No file uploaded");
     }
 
-    const workbook = xlsx.read(req.file.buffer, { type: "buffer" });
+    // Parse uploaded Excel file
+    const workbook = xlsx.readFile(req.file.path);
     const sheetName = workbook.SheetNames[0];
-    const worksheet = workbook.Sheets[sheetName];
-    const data = xlsx.utils.sheet_to_json(worksheet);
+    const sheet = workbook.Sheets[sheetName];
+    const data = xlsx.utils.sheet_to_json(sheet);
+    console.log("data:", data);
 
-    for (const row of data) {
-      const newDWR = new dwrSchema({
-        employeeId: row.employeeId,
-        date: row.date,
-        fromTime: row.fromTime,
-        toTime: row.toTime,
-        taskId: row.taskId,
-        projectName: row.projectName,
-        taskDescription: row.taskDescription, // Corrected spelling
-        reportedBy: row.reportedBy,
-        ticketType: row.ticketType,
-        status: row.status,
-        estimatedDate: row.estimatedDate,
-        solution: row.solution,
-      });
+    // Transform Excel data to match the schema
+    const transformedData = data.map((row) => ({
+      employeeId: row.employeeId,
+      date: formatDate(row.date),
+      fromTime: formatTime(row.fromTime),
+      toTime: formatTime(row.toTime),
+      taskId: row.taskId,
+      projectName: row.projectName,
+      taskDescription: row.taskDescription,
+      reportedBy: row.reportedBy,
+      ticketType: row.ticketType,
+      status: row.status,
+      estimatedDate: formatDate(row.estimatedDate),
+      solution: row.solution,
+    }));
 
-      await newDWR.save();
+    function formatDate(cell) {
+      // console.log("cell:", cell);
+      if (!isNaN(cell)) {
+        // Check if the cell value is a number (which is typical for date cells in Excel)
+        const dateValue = cell;
+        const date = new Date((dateValue - (25567 + 1)) * 86400 * 1000); // Converting Excel date serial to JavaScript date
+        // console.log("date2:", date);
+        if (!isNaN(date.getTime())) {
+          // Check if the date is valid
+          const year = date.getFullYear();
+          const month = String(date.getMonth() + 1).padStart(2, "0");
+          const day = String(date.getDate() - 1).padStart(2, "0");
+          return `${year}-${month}-${day}`;
+        } else {
+          console.log("Cell does not contain a valid date value1.");
+          return null;
+        }
+      } else {
+        console.log("Cell does not contain a valid date value2.");
+        return null;
+      }
     }
 
-    res.status(200).json({ message: "Data uploaded successfully" });
+    function formatTime(cell) {
+      if (!isNaN(cell)) {
+        const timeValue = cell;
+        const Value = new Date((timeValue - 25567) * 86400 * 1000);
+        const formattedTime = moment.utc(Value).format("HH:mm");
+        return formattedTime;
+      } else {
+        console.log("Cell does not contain a numeric value.");
+        return null;
+      }
+    }
+
+    // Save transformed data to MongoDB
+    await dwrSchema.insertMany(transformedData);
+
+    res.status(200).send("Data uploaded successfully");
   } catch (error) {
-    console.error("Error uploading DWR:", error);
-    res.status(500).json({ message: "Internal server error" });
+    console.error(error);
+    res.status(500).send("Error uploading data");
   }
 };

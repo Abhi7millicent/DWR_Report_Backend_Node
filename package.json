@@ -23,6 +23,7 @@
     "jspdf": "^2.5.1",
     "jszip": "^3.10.1",
     "libreoffice-convert": "^1.5.1",
+    "luxon": "^3.4.4",
     "mammoth": "^1.7.0",
     "moment": "^2.30.1",
     "mongoose": "^8.2.0",

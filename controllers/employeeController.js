@@ -3,7 +3,7 @@ import Employee from "../models/employee.js";
 import addresSchema from "../models/employeeAddress.js";
 import { personalDeatilsSchema } from "../models/employeePersonalDeatils.js";
 import { salaryDetailSchema } from "../models/employeeSalary.js";
-
+import { DateTime } from "luxon";
 export const addEmployee = async (req, res) => {
   try {
     const {
@@ -133,12 +133,73 @@ export const updateEmployee = async (req, res) => {
       return res.status(404).json({ message: "Employee not found" });
     }
 
-    res
-      .status(200)
-      .json({
-        message: "Employee updated successfully",
-        data: updatedEmployee,
-      });
+    res.status(200).json({
+      message: "Employee updated successfully",
+      data: updatedEmployee,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const postAddBalancedLeave = async (req, res) => {
+  try {
+    const currentDate = DateTime.now(); // Get current date-time using Luxon
+
+    const currentMonth = currentDate.toFormat("MM-yyyy"); // Format current date-time to MM-yyyy
+
+    // Check if leave already added for the current month
+    const leaveAlreadyAdded = await Employee.findOne({
+      lastUpdatedMonthYear: currentMonth,
+    });
+
+    if (leaveAlreadyAdded) {
+      return res
+        .status(400)
+        .json({ message: "Leave already added for the current month." });
+    } else {
+      // Fetch all employees
+      const employees = await Employee.find({});
+
+      // Update balancedLeave for all employees and set lastUpdatedMonthYear
+      for (const employee of employees) {
+        let balancedLeave = employee.balancedLeave
+          ? parseInt(employee.balancedLeave)
+          : 0;
+
+        const newBalancedLeave = balancedLeave + 2;
+
+        // Update balancedLeave and lastUpdatedMonthYear
+        await Employee.findByIdAndUpdate(employee._id, {
+          balancedLeave: newBalancedLeave.toString(),
+          lastUpdatedMonthYear: currentMonth,
+        });
+      }
+
+      return res
+        .status(200)
+        .json({ message: "Leave updated successfully for all entities." });
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    return res
+      .status(500)
+      .json({ message: "An error occurred while processing leave updates." });
+  }
+};
+
+export const getBalancedLeave = async (req, res) => {
+  try {
+    const employeeId = req.body.id;
+    const employee = await Employee.findOne({ employeeId }); // Find employee by ID
+
+    if (!employee) {
+      return res.status(404).json({ message: "Employee not found" });
+    }
+
+    const balancedLeave = employee.balancedLeave; // Get balancedLeave from the employee object
+
+    res.status(200).json({ data: balancedLeave });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

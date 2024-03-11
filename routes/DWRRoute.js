@@ -1,6 +1,6 @@
 import express from "express";
 import multer from "multer";
-import { uploadDWR } from "../controllers/DWRController.js";
+import { uploadDWR, getDWR, getDWRBasedOnDate, getDWRBasedOnDateRange } from "../controllers/DWRController.js";
 
 const router = express.Router();
 
@@ -18,5 +18,8 @@ const upload = multer({ storage: storage });
 
 // Define route for uploading DWR data
 router.post("/upload", upload.single('file'), uploadDWR);
+router.get("/list/:employeeId", getDWR);
+router.get("/list/:employeeId/:date", getDWRBasedOnDate);
+router.get("/list/:employeeId/:startDate/:endDate", getDWRBasedOnDateRange);
 
 export default router;

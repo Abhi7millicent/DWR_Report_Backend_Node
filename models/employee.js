@@ -41,6 +41,10 @@ const employeeSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    attendanceId: {
+        type: String,
+        ref:"attendanceSchema"
+    },
     deleteFlag: {
         type: Boolean,
         required: true,

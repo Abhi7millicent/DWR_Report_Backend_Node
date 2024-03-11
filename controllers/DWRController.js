@@ -75,3 +75,47 @@ export const uploadDWR = async (req, res) => {
     res.status(500).send("Error uploading data");
   }
 };
+
+export const getDWR = async (req, res) => {
+  try {
+    const employeeId = req.params.employeeId;
+    const dwrList = await dwrSchema.find({employeeId, deleteFlag: false});
+    res.status(200).json({ data: dwrList });
+  } catch (err) {
+    console.error("Error fetching DWR entries:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
+export const getDWRBasedOnDateRange = async (req, res) => {
+  try {
+    // Extract start and end dates from route parameters
+    const startDate = req.params.startDate;
+    const endDate = req.params.endDate;
+    const employeeId = req.params.employeeId;
+
+    // Fetch DWR entries within the specified date range and delete flag is false from the database
+    const dwrList = await dwrSchema.find({
+      employeeId,
+      date: { $gte: startDate, $lte: endDate },
+      deleteflag: false
+    });
+
+    res.status(200).json({ data: dwrList });
+  } catch (err) {
+    console.error("Error fetching DWR entries:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
+export const getDWRBasedOnDate = async (req, res) => {
+  try {
+    const employeeId = req.params.employeeId;
+    const date = req.params.date;
+    const dwrList = await dwrSchema.find({ employeeId, date, deleteflag: false }); 
+    res.status(200).json({ data: dwrList });
+  } catch (err) {
+    console.error("Error fetching DWR entries:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}

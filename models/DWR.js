@@ -49,6 +49,11 @@ const DWR = new mongoose.Schema({
     solution: {
         type: String,
         required: true,
+    },
+    deleteFlag: {
+        type: Boolean,
+        required: true,
+        default: false
     }
 });
 

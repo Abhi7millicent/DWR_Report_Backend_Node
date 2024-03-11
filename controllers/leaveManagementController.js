@@ -26,12 +26,14 @@ export const postLeaveManagement = async (req, res) => {
     });
 
     const leaveManagementSave = await leaveManagement.save();
+    console.log("empid1:",leaveManagementSave.employeeId)
       const perviousBalancedLeave = await getBalancedLeaveById(leaveManagementSave.employeeId);
       const leave = (parseInt(perviousBalancedLeave) - parseInt(leaveManagementSave.noOfDays)).toString();
       await updateBalancedLeave(leaveManagementSave.employeeId, leave); 
     res.status(200).json({ data: leaveManagementSave });
   } catch (error) {
     res.status(400).json({ message: error.message });
+    
   }
 };
 

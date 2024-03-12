@@ -25,15 +25,25 @@ export const postLeaveManagement = async (req, res) => {
       employeeId,
     });
 
-    const leaveManagementSave = await leaveManagement.save();
-    console.log("empid1:",leaveManagementSave.employeeId)
-      const perviousBalancedLeave = await getBalancedLeaveById(leaveManagementSave.employeeId);
-      const leave = (parseInt(perviousBalancedLeave) - parseInt(leaveManagementSave.noOfDays)).toString();
-      await updateBalancedLeave(leaveManagementSave.employeeId, leave); 
+   
+    if (leaveManagement.leaveType !== "Unpaid Leave") {
+      // console.log("empid1:",leaveManagementSave.employeeId)
+      const previousBalancedLeave = await getBalancedLeaveById(leaveManagementSave.employeeId);
+      if (previousBalancedLeave >= leaveManagementSave.noOfDays) {
+          const leave = (parseInt(previousBalancedLeave) - parseInt(leaveManagementSave.noOfDays)).toString();
+          await updateBalancedLeave(leaveManagementSave.employeeId, leave);
+      } else {
+          res.status(400).json({ message: "Sorry you do not have sufficient amount of leave." });
+      }
+  };
+  
+  const leaveManagementSave = await leaveManagement.save();
+  
+
+   
     res.status(200).json({ data: leaveManagementSave });
   } catch (error) {
     res.status(400).json({ message: error.message });
-    
   }
 };
 
@@ -63,7 +73,7 @@ export const postApproveLeave = async (req, res) => {
       const leave = (parseInt(leaveRequest.balancedLeave) - parseInt(leaveRequest.noOfDays)).toString();
       await updateBalancedLeave(leaveRequest.employeeId, leave); // Added await
     }
-
+    // console.log("leaveRequest.status:", leaveRequest.status);
     leaveRequest.status = "Approved";
     await leaveRequest.save();
 
@@ -72,7 +82,7 @@ export const postApproveLeave = async (req, res) => {
       data: leaveRequest,
     });
   } catch (error) {
-    return res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ message: error });
   }
 };
 

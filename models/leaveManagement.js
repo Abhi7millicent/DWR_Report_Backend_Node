@@ -24,11 +24,9 @@ const leaveManagementSchema = new mongoose.Schema({
   },
   noOfDays: {
     type: String,
-    required: true,
   },
   balancedLeave: {
     type: String,
-    required: true,
   },
   status: {
     type: String,
@@ -39,7 +37,7 @@ const leaveManagementSchema = new mongoose.Schema({
     type: Boolean,
     require: true,
     default: false,
-  },
+  }
 });
 
 export const LeaveManagementSchema = mongoose.model(

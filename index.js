@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import Connection from "./dataBase/db.js";
+import sequelize from "./dataBase/sequelize.js";
 import employee from "./routes/employeeRoute.js";
 import authenticate from "./routes/authenticateRoute.js";
 import employeeSalary from "./routes/employeeSalaryRoute.js";
@@ -16,8 +16,6 @@ import email from "./routes/emailRoute.js";
 import attendance from "./routes/attendanceRoute.js";
 dotenv.config();
 const PORT = process.env.PORT;
-const USERNAME = process.env.DB_USERNAME;
-const PASSWORD = process.env.DB_PASSWORD;
 
 const app = express();
 app.use(cors({ origin: true, credentials: true }));
@@ -35,6 +33,12 @@ app.use("/api/DWR", dwr);
 app.use("/api/DWR/email", email);
 app.use("/api/DWR/attendance", attendance);
 
-Connection(USERNAME, PASSWORD);
-
-app.listen(PORT, () => console.log(`Server is running on : ${PORT} `));
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log('Database connected successfully');
+    app.listen(PORT, () => console.log(`Server is running on : ${PORT}`));
+  })
+  .catch(err => {
+    console.error('Unable to connect to the database:', err);
+  });

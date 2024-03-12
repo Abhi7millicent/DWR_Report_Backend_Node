@@ -1,57 +1,85 @@
-import mongoose from "mongoose";
+import { DataTypes, Model } from "sequelize";
+import sequelize from "../dataBase/sequelize.js";
 
-const employeeSchema = new mongoose.Schema({
+class Employee extends Model {}
+
+Employee.init(
+  {
+    id: { 
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        field:'id_em',
+      },
     firstName: {
-        type: String,
-        required: true
+      type: DataTypes.STRING,
+      allowNull: false,
+      field:'firstname_em',
     },
     middleName: {
-        type: String
+      type: DataTypes.STRING,
+    field:'middlename_em',
     },
     lastName: {
-        type: String,
-        required: true
+      type: DataTypes.STRING,
+      allowNull: false,
+      field:'lastname_em',
     },
     email: {
-        type: String,
-        required: true
+      type: DataTypes.STRING,
+      allowNull: false,
+      field:'email_em',
     },
     date: {
-        type: String,
-        required: true
+      type: DataTypes.STRING,
+      allowNull: false,
+      field:'date_em',
     },
     balancedLeave: {
-        type: String
+      type: DataTypes.STRING,
+      field:'balanceleave_em',
     },
     lastUpdatedMonthYear: {
-        type: String
+      type: DataTypes.STRING,
+      field:'lastupdatedmonthyear_em',
     },
     reporting: {
-        type: String
+      type: DataTypes.STRING,
+      field:'reporting_em',
     },
     role: {
-        type: String
+      type: DataTypes.STRING,
+      field:'role_em',
     },
-   
     password: {
-        type: String,
-        required: true
+      type: DataTypes.STRING,
+      allowNull: false,
+      field:'password_em',
     },
     confirmPassword: {
-        type: String,
-        required: true
+      type: DataTypes.STRING,
+      allowNull: false,
+      field:'confirmpassword_em',
     },
     attendanceId: {
-        type: String,
-        ref:"attendanceSchema"
+      type: DataTypes.STRING,
+      field:'attendanceid_em',
     },
     deleteFlag: {
-        type: Boolean,
-        required: true,
-        default: false
-    }
-});
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+      field: 'deleteFlag_em',
+    },
+  },
+  {
+    sequelize,
+    modelName: "Employee",
+    tableName: "employee_master_em",
+  }
+);
 
-const employee = mongoose.model('employee_master_em', employeeSchema);
+Employee.sync();
 
-export default employee;
+
+export default Employee;

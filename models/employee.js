@@ -1,85 +1,90 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../dataBase/sequelize.js";
 
-class Employee extends Model {}
+// class Employee extends Model {}
 
-Employee.init(
+const Employee = sequelize.define(
+  "Employee",
   {
-    id: { 
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-        field:'id_em',
-      },
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      field: "id_em",
+    },
     firstName: {
       type: DataTypes.STRING,
       allowNull: false,
-      field:'firstname_em',
+      field: "firstname_em",
     },
     middleName: {
       type: DataTypes.STRING,
-    field:'middlename_em',
+      field: "middlename_em",
     },
     lastName: {
       type: DataTypes.STRING,
       allowNull: false,
-      field:'lastname_em',
+      field: "lastname_em",
     },
     email: {
       type: DataTypes.STRING,
       allowNull: false,
-      field:'email_em',
+      unique: true, // Ensure email is unique
+      field: "email_em",
     },
     date: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING, // Assuming it's a date field
       allowNull: false,
-      field:'date_em',
+      field: "date_em",
     },
     balancedLeave: {
-      type: DataTypes.STRING,
-      field:'balanceleave_em',
+      type: DataTypes.STRING, // Assuming it's a numeric field
+      field: "balanceleave_em",
     },
     lastUpdatedMonthYear: {
       type: DataTypes.STRING,
-      field:'lastupdatedmonthyear_em',
+      field: "lastupdatedmonthyear_em",
     },
     reporting: {
       type: DataTypes.STRING,
-      field:'reporting_em',
+      field: "reporting_em",
     },
     role: {
       type: DataTypes.STRING,
-      field:'role_em',
+      field: "role_em",
     },
     password: {
       type: DataTypes.STRING,
       allowNull: false,
-      field:'password_em',
+      field: "password_em",
     },
     confirmPassword: {
-      type: DataTypes.STRING,
+      type: DataTypes.VIRTUAL, // This field is not stored in the database
       allowNull: false,
-      field:'confirmpassword_em',
     },
     attendanceId: {
       type: DataTypes.STRING,
-      field:'attendanceid_em',
+      field: "attendanceid_em",
     },
     deleteFlag: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: false,
-      field: 'deleteFlag_em',
+      field: "deleteFlag_em",
     },
   },
   {
-    sequelize,
-    modelName: "Employee",
     tableName: "employee_master_em",
   }
 );
 
-Employee.sync();
-
+(async () => {
+  try {
+    await sequelize.sync(); // Synchronize the model with the database
+    console.log("Employee model synchronized successfully.");
+  } catch (error) {
+    console.error("Error synchronizing Employee model:", error);
+  }
+})();
 
 export default Employee;

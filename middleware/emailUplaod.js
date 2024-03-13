@@ -1,6 +1,4 @@
 import multer from "multer";
-import nodemailer from "nodemailer";
-import { Transporter } from "../models/transporterEmail.js";
 
 // Set up multer for handling file uploads
 const storage = multer.diskStorage({

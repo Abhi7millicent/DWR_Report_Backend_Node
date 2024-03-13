@@ -1,4 +1,3 @@
-
 import EmployeeEducationDetails from "../models/employeeEducationalDetails.js";
 
 export const addEmployeeEducationalDetail = async (req, res) => {
@@ -36,11 +35,11 @@ export const getEmployeeEducationalDetail = async (req, res) => {
 
 export const putDeleteFlag = async (req, res) => {
   try {
-    const id = req.params.id;
+    const employeeId = req.params.id;
 
     // Find the educational detail by ID
     const educationalDetails = await EmployeeEducationDetails.findOne({
-      where: { id: id },
+      where: { id: employeeId },
     });
 
     // Check if the educational detail exists

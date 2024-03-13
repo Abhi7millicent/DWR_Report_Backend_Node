@@ -2,7 +2,15 @@ import EmployeeEducationDetails from "../models/employeeEducationalDetails.js";
 
 export const addEmployeeEducationalDetail = async (req, res) => {
   try {
-    const { id, degree, institute, startDate, endDate, percentage } = req.body;
+    const {
+      id,
+      degree,
+      institute,
+      startDate,
+      endDate,
+      percentage,
+      employeeId,
+    } = req.body;
     const educationalDetails = new EmployeeEducationDetails({
       id,
       degree,
@@ -10,6 +18,7 @@ export const addEmployeeEducationalDetail = async (req, res) => {
       startDate,
       endDate,
       percentage,
+      employeeId,
     });
     const savedEducationalDetails = await educationalDetails.save();
     res.status(201).json({ data: savedEducationalDetails });
@@ -23,7 +32,7 @@ export const getEmployeeEducationalDetail = async (req, res) => {
   try {
     const educationalDetails = await EmployeeEducationDetails.findAll({
       where: {
-        id: id,
+        employeeId: id,
         deleteFlag: false,
       },
     });

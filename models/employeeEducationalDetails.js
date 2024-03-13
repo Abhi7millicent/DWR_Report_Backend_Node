@@ -10,6 +10,11 @@ const EmployeeEducationDetails = sequelize.define(
       autoIncrement: true,
       field: "id_eed",
     },
+    employeeId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      field: "employee_id_eed",
+    },
     degree: {
       type: DataTypes.STRING,
       allowNull: false,

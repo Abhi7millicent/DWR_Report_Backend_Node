@@ -2,8 +2,9 @@ import bcrypt from "bcrypt";
 import Employee from "../models/employee.js";
 import addresSchema from "../models/employeeAddress.js";
 import personalDeatilsSchema from "../models/employeePersonalDeatils.js";
-import  salaryDetailsSchema  from "../models/employeeSalary.js";
+import salaryDetailsSchema from "../models/employeeSalary.js";
 import { DateTime } from "luxon";
+import { Sequelize } from "sequelize";
 export const addEmployee = async (req, res) => {
   try {
     const {
@@ -29,7 +30,7 @@ export const addEmployee = async (req, res) => {
     }
 
     // Check if the email already exists
-    const existingEmployee = await Employee.findOne({ where: { email }} );
+    const existingEmployee = await Employee.findOne({ where: { email } });
     if (existingEmployee) {
       return res.status(400).json({ message: "Email already exists" });
     }
@@ -90,8 +91,10 @@ export const getEmployeeList = async (req, res) => {
   try {
     // Fetch the list of employees from the database
     const employeeList = await Employee.findAll({
-      deleteFlag: false,
-      role: { $ne: "admin" },
+      where: {
+        deleteFlag: false,
+        role: { [Sequelize.Op.not]: "admin" }, // Using Sequelize operators
+      },
     });
 
     res.status(200).json({ employees: employeeList });

@@ -27,7 +27,7 @@ export const authenticate = async (req, res) => {
 
         // Response data
         const responseData = {
-            id: employee._id,
+            id: employee.id,
             name: `${employee.firstName} ${employee.lastName}`,
             role: employee.role,
             message: 'Authentication successful',

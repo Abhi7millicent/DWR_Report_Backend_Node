@@ -7,7 +7,7 @@ export const authenticate = async (req, res) => {
         const { email, password } = req.body;
 
         // Find the employee by email
-        const employee = await Employee.findOne({ email });
+        const employee = await Employee.findOne({ where: { email } });
         if (!employee) {
             return res.status(401).json({ message: 'Authentication failed. Email or password incorrect.' });
         }

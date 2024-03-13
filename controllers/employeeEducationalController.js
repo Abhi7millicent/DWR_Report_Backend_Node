@@ -1,4 +1,4 @@
-import { EducationalSchema } from "../models/employeeEducationalDetails.js"
+
 import EmployeeEducationDetails from "../models/employeeEducationalDetails.js";
 
 export const addEmployeeEducationalDetail = async (req, res) => {

@@ -1,11 +1,11 @@
-import { salaryDetailSchema } from "../models/employeeSalary.js";
+import  salaryDetailsSchema  from "../models/employeeSalary.js";
 
 export const putEmployeeSalary = async (req, res) => {
   try {
     const employeeId = req.params.id; // Corrected the destructure
     const updateData = req.body;
 
-    const updateSalary = await salaryDetailSchema.findOneAndUpdate(
+    const updateSalary = await salaryDetailsSchema.findOneAndUpdate(
       { employeeId: employeeId },
       updateData,
       { new: true }
@@ -21,7 +21,7 @@ export const putEmployeeSalary = async (req, res) => {
 export const getEmployeeSalaryByEmployeeId = async (req, res) => {
   try {
     const employeeId = req.params.id;
-    const employeeSalary = await salaryDetailSchema.findOne({
+    const employeeSalary = await salaryDetailsSchema.findOne({
       employeeId,
     });
     if (!employeeSalary) {

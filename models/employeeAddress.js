@@ -1,47 +1,76 @@
-import mongoose from "mongoose";
+import { DataTypes } from "sequelize";
+import sequelize from "../dataBase/sequelize.js";
 
-const employeeAddresSchema = new mongoose.Schema({
-  employeeId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "employee",
-    required: true,
+const EmployeeAddress = sequelize.define(
+  "EmployeeAddress",
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      field: "id_ea",
+    },
+    employeeId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      field: "employee_id_ea",
+    },
+    addressType: {
+      type: DataTypes.STRING,
+      field: "address_type_ea",
+    },
+    addressLine1: {
+      type: DataTypes.STRING,
+      field: "address_line1_ea",
+    },
+    addressLine2: {
+      type: DataTypes.STRING,
+      field: "address_line2_ea",
+    },
+    country: {
+      type: DataTypes.STRING,
+      field: "country_ea",
+    },
+    pinCode: {
+      type: DataTypes.STRING,
+      field: "pin_code_ea",
+    },
+    city: {
+      type: DataTypes.STRING,
+      field: "city_ea",
+    },
+    state: {
+      type: DataTypes.STRING,
+      field: "state_ea",
+    },
+    contactno1: {
+      type: DataTypes.STRING,
+      field: "contactno1_ea",
+    },
+    contactno2: {
+      type: DataTypes.STRING,
+      field: "contactno2_ea",
+    },
+    deleteFlag: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+      field: "delete_flag_ea",
+    },
   },
-  addressType: {
-    type: String,
-  },
-  addressLine1: {
-    type: String,
-  },
-  addressLine2: {
-    type: String,
-  },
-  country: {
-    type: String,
-  },
-  pinCode: {
-    type: String,
-  },
-  city: {
-    type: String,
-  },
-  state: {
-    type: String,
-  },
-  contactno1: {
-    type: String,
-  },
-  contactno2: {
-    type: String,
-  },
-  deleteFlag: {
-    type: Boolean,
-    require: true,
-    default: false,
-  },
-});
-
-const addresSchema = mongoose.model(
-  "employee_address_ea",
-  employeeAddresSchema
+  {
+    tableName: "employee_address_ea",
+  }
 );
-export default addresSchema;
+
+
+(async () => {
+  try {
+    await EmployeeAddress.sync();
+    console.log("EmployeeAddress model synchronized successfully.");
+  } catch (error) {
+    console.error("Error synchronizing EmployeeAddress model:", error);
+  }
+})();
+
+export default EmployeeAddress;

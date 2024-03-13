@@ -1,7 +1,5 @@
-import { DataTypes, Model } from "sequelize";
+import { DataTypes } from "sequelize";
 import sequelize from "../dataBase/sequelize.js";
-
-// class Employee extends Model {}
 
 const Employee = sequelize.define(
   "Employee",

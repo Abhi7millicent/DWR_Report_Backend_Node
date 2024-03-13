@@ -1,11 +1,11 @@
-import { personalDeatilsSchema } from "../models/employeePersonalDeatils.js";
+import personalDetailsSchema from "../models/employeePersonalDeatils.js";
 
 export const updateEmployeePersonalDetails = async (req, res) => {
     const employeeId = req.params.employeeId;
     const updatedPersonalDetails = req.body;
   
     try {
-      const result = await personalDeatilsSchema.findOneAndUpdate(
+      const result = await personalDetailsSchema.findOneAndUpdate(
         { employeeId: employeeId },
         updatedPersonalDetails,
         { new: true }
@@ -26,7 +26,7 @@ export const getEmployeePersonalDataByEmployeeId = async (req, res) => {
     const employeeId = req.params.employeeId;
 
     try {
-        const personalData = await personalDeatilsSchema.findOne({ employeeId: employeeId });
+        const personalData = await personalDetailsSchema.findOne({ employeeId: employeeId });
         
         if (!personalData) {
             return res.status(404).json({ message: "Personal data not found for the given employeeId" });

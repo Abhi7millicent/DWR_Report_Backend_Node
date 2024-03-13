@@ -1,43 +1,71 @@
-import mongoose from "mongoose";
+import { DataTypes } from "sequelize";
+import sequelize from "../dataBase/sequelize.js";
 
-const salaryDetailsSchema = new mongoose.Schema({
+const salaryDetailsSchema = sequelize.define(
+  "EmployeeSalaryDetails",
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      field: "id_esd",
+    },
     employeeId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "employee",
-        required: true,
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      field: "employee_id_esd",
     },
     bankAccountName: {
-        type: String,
+      type: DataTypes.STRING,
+      field: "bank_account_name_esd",
     },
     ifscCode: {
-        type: String,
+      type: DataTypes.STRING,
+      field: "ifsc_code_esd",
     },
     accountNo: {
-        type: String,
+      type: DataTypes.STRING,
+      field: "account_no_esd",
     },
     uanNo: {
-        type: String,
+      type: DataTypes.STRING,
+      field: "uan_no_esd",
     },
     epfoNo: {
-        type: String,
+      type: DataTypes.STRING,
+      field: "epfo_no_esd",
     },
     panNo: {
-        type: String,
+      type: DataTypes.STRING,
+      field: "pan_no_esd",
     },
     annualSalary: {
-        type: String,
+      type: DataTypes.STRING,
+      field: "annual_salary_esd",
     },
     monthlySalary: {
-        type: String,
+      type: DataTypes.STRING,
+      field: "monthly_salary_esd",
     },
     deleteFlag: {
-      type: Boolean,
-      required: true,
-      default: false
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+      field: "delete_flag_esd",
+    },
+  },
+  {
+    tableName: "employee_salary_details_esd",
   }
-});
-
-export const salaryDetailSchema = mongoose.model(
-    "employee_salary_details",
-    salaryDetailsSchema
 );
+
+(async () => {
+  try {
+    await salaryDetailsSchema.sync();
+    console.log("EmployeeSalaryDetails model synchronized successfully.");
+  } catch (error) {
+    console.error("Error synchronizing EmployeeSalaryDetails model:", error);
+  }
+})();
+
+export default salaryDetailsSchema;

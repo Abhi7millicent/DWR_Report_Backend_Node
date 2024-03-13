@@ -1,37 +1,63 @@
-import mongoose from "mongoose";
+import { DataTypes } from "sequelize";
+import sequelize from "../dataBase/sequelize.js";
 
-const personalSchema = new mongoose.Schema({
-  employeeId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "employee",
-    required: true,
+const personalDeatilsSchema = sequelize.define(
+  "EmployeePersonalDetails",
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      field: "id_epd",
+    },
+    employeeId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      field: "employee_id_epd",
+    },
+    bloodGroup: {
+      type: DataTypes.STRING,
+      field: "blood_group_epd",
+    },
+    emergencyContact1: {
+      type: DataTypes.STRING,
+      field: "emergency_contact1_epd",
+    },
+    emergencyContact2: {
+      type: DataTypes.STRING,
+      field: "emergency_contact2_epd",
+    },
+    relation1: {
+      type: DataTypes.STRING,
+      field: "relation1_epd",
+    },
+    relation2: {
+      type: DataTypes.STRING,
+      field: "relation2_epd",
+    },
+    dateOfBirth: {
+      type: DataTypes.STRING,
+      field: "date_of_birth_epd",
+    },
+    deleteFlag: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+      field: "delete_flag_epd",
+    },
   },
-  bloodGroup: {
-    type: String,
-  },
-  emergencyContact1: {
-    type: String,
-  },
-  emergencyContact2: {
-    type: String,
-  },
-  relation1: {
-    type: String,
-  },
-  relation2: {
-    type: String,
-  },
-  dateOfBirth: {
-    type: String,
-  },
-  deleteFlag: {
-    type: Boolean,
-    required: true,
-    default: false
-}
-});
-
-export const personalDeatilsSchema = mongoose.model(
-  "employee_personal_details_epd",
-  personalSchema
+  {
+    tableName: "employee_personal_details_epd",
+  }
 );
+
+(async () => {
+  try {
+    await personalDeatilsSchema.sync();
+    console.log("EmployeePersonalDetails model synchronized successfully.");
+  } catch (error) {
+    console.error("Error synchronizing EmployeePersonalDetails model:", error);
+  }
+})();
+
+export default personalDeatilsSchema;

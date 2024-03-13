@@ -1,8 +1,8 @@
 import bcrypt from "bcrypt";
 import Employee from "../models/employee.js";
 import addresSchema from "../models/employeeAddress.js";
-import { personalDeatilsSchema } from "../models/employeePersonalDeatils.js";
-import { salaryDetailSchema } from "../models/employeeSalary.js";
+import personalDeatilsSchema from "../models/employeePersonalDeatils.js";
+import  salaryDetailsSchema  from "../models/employeeSalary.js";
 import { DateTime } from "luxon";
 export const addEmployee = async (req, res) => {
   try {
@@ -29,7 +29,7 @@ export const addEmployee = async (req, res) => {
     }
 
     // Check if the email already exists
-    const existingEmployee = await Employee.findOne({ where: { email } });
+    const existingEmployee = await Employee.findOne({ email } );
     if (existingEmployee) {
       return res.status(400).json({ message: "Email already exists" });
     }
@@ -55,30 +55,30 @@ export const addEmployee = async (req, res) => {
 
     // Automatically add address entries for the new employee
 
-    // try {
-    //   await addresSchema.create({
-    //     employeeId: employee._id,
-    //     addressType: "Permanent",
-    //   });
-    // } catch (error) {
-    //   // Handle the error here
-    //   console.error("An error occurred while creating the address:", error);
-    // }
+    try {
+      await addresSchema.create({
+        employeeId: employee.id,
+        addressType: "Permanent",
+      });
+    } catch (error) {
+      // Handle the error here
+      console.error("An error occurred while creating the address:", error);
+    }
 
-    // await addresSchema.create({
-    //   employeeId: employee._id,
-    //   addressType: "Temporary",
-    // });
+    await addresSchema.create({
+      employeeId: employee.id,
+      addressType: "Temporary",
+    });
 
-    // // Create personal details entry for the new employee
-    // await personalDeatilsSchema.create({
-    //   employeeId: employee._id,
-    // });
+    // Create personal details entry for the new employee
+    await personalDeatilsSchema.create({
+      employeeId: employee.id,
+    });
 
-    // // Create salary details entry for the new employee
-    // await salaryDetailSchema.create({
-    //   employeeId: employee._id,
-    // });
+    // Create salary details entry for the new employee
+    await salaryDetailsSchema.create({
+      employeeId: employee.id,
+    });
 
     res.status(201).json({ message: "Employee added successfully" });
   } catch (error) {

@@ -1,18 +1,39 @@
-import mongoose from "mongoose";
+import { DataTypes } from "sequelize";
+import sequelize from "../dataBase/sequelize.js";
 
-const roleMaster = new mongoose.Schema({
+const roleMasterSchema = sequelize.define(
+  "role_master_rm",
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      field: "id_rm",
+    },
     name: {
-        type: String,
-        required: true,
+      type: DataTypes.STRING,
+      allowNull: false,
+      field: "name_rm",
     },
     deleteFlag: {
-        type: Boolean,
-        require: true,
-        default: false,
-    }
-})
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+      field: "delete_flag_rm",
+    },
+  },
+  {
+    tableName: "role_master_rm",
+  }
+);
 
-export const roleMasterSchema = mongoose.model(
-    "role_master_rm",
-    roleMaster
-  );
+(async () => {
+  try {
+    await roleMasterSchema.sync();
+    console.log("Role Master model synchronized successfully.");
+  } catch (error) {
+    console.error("Error synchronizing Role Master model:", error);
+  }
+})();
+
+export default roleMasterSchema;

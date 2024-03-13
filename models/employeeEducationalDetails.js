@@ -1,38 +1,60 @@
-import mongoose from "mongoose";
+import { DataTypes } from "sequelize";
+import sequelize from "../dataBase/sequelize.js";
 
-const employeeEducationalSchema = new mongoose.Schema({
-    employeeId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "employee",
-        required: true,
+const EmployeeEducationDetails = sequelize.define(
+  "EmployeeEducationDetails",
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      field: "id_eed",
     },
     degree: {
-        type: String,
-        required: true,
+      type: DataTypes.STRING,
+      allowNull: false,
+      field: "degree_eed",
     },
     institute: {
-        type: String,
-        required: true,
+      type: DataTypes.STRING,
+      allowNull: false,
+      field: "institute_eed",
     },
     startDate: {
-        type: String,
-        required: true,
+      type: DataTypes.STRING,
+      allowNull: false,
+      field: "startDate_eed",
     },
     endDate: {
-        type: String,
-        required: true,
+      type: DataTypes.STRING,
+      allowNull: false,
+      field: "endDate_eed",
     },
     percentage: {
-        type: String,
-        required: true,
+      type: DataTypes.STRING,
+      allowNull: false,
+      field: "percentage_eed",
     },
     deleteFlag: {
-        type: Boolean,
-        required: true,
-        default: false
-    }
-});
-
-export const EducationalSchema = mongoose.model(
-    "employee_educational_schema_ees", employeeEducationalSchema
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+      field: "deleteFlag_eed",
+    },
+  },
+  {
+    tableName: "employee_educational_details_eed",
+  }
 );
+(async () => {
+  try {
+    await sequelize.sync(); // Synchronize the model with the database
+    console.log("Employee  Education Details model synchronized successfully.");
+  } catch (error) {
+    console.error(
+      "Error synchronizing Employee Education Details model:",
+      error
+    );
+  }
+})();
+export default EmployeeEducationDetails;

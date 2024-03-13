@@ -89,7 +89,7 @@ export const addEmployee = async (req, res) => {
 export const getEmployeeList = async (req, res) => {
   try {
     // Fetch the list of employees from the database
-    const employeeList = await Employee.find({
+    const employeeList = await Employee.findAll({
       deleteFlag: false,
       role: { $ne: "admin" },
     });
@@ -105,7 +105,7 @@ export const getEmployeeById = async (req, res) => {
     const employeeId = req.params.id;
 
     // Find the employee by ID
-    const employee = await Employee.findById(employeeId);
+    const employee = await Employee.findByPk(employeeId);
 
     if (!employee) {
       return res.status(404).json({ message: "Employee not found" });
@@ -123,16 +123,14 @@ export const updateEmployee = async (req, res) => {
     const updateData = req.body; // Extract updated data from request body
 
     // Find the employee by ID and update their information
-    const updatedEmployee = await Employee.findByIdAndUpdate(
-      employeeId,
-      updateData,
-      { new: true }
-    );
+    const updatedEmployee = await Employee.findByPk(employeeId);
 
     if (!updatedEmployee) {
       return res.status(404).json({ message: "Employee not found" });
     }
-
+    // Update the employee's information
+    updatedEmployee.set(updateData);
+    await updatedEmployee.save();
     res.status(200).json({
       message: "Employee updated successfully",
       data: updatedEmployee,
@@ -150,7 +148,9 @@ export const postAddBalancedLeave = async (req, res) => {
 
     // Check if leave already added for the current month
     const leaveAlreadyAdded = await Employee.findOne({
-      lastUpdatedMonthYear: currentMonth,
+      where: {
+        lastUpdatedMonthYear: currentMonth,
+      },
     });
 
     if (leaveAlreadyAdded) {
@@ -159,7 +159,7 @@ export const postAddBalancedLeave = async (req, res) => {
         .json({ message: "Leave already added for the current month." });
     } else {
       // Fetch all employees
-      const employees = await Employee.find({});
+      const employees = await Employee.findAll();
 
       // Update balancedLeave for all employees and set lastUpdatedMonthYear
       for (const employee of employees) {
@@ -169,8 +169,14 @@ export const postAddBalancedLeave = async (req, res) => {
 
         const newBalancedLeave = balancedLeave + 2;
 
+        //   // Update balancedLeave and lastUpdatedMonthYear
+        //   await Employee.findByIdAndUpdate(employee._id, {
+        //     balancedLeave: newBalancedLeave.toString(),
+        //     lastUpdatedMonthYear: currentMonth,
+        //   });
+        // }
         // Update balancedLeave and lastUpdatedMonthYear
-        await Employee.findByIdAndUpdate(employee._id, {
+        await employee.update({
           balancedLeave: newBalancedLeave.toString(),
           lastUpdatedMonthYear: currentMonth,
         });
@@ -190,8 +196,8 @@ export const postAddBalancedLeave = async (req, res) => {
 
 export const getBalancedLeave = async (req, res) => {
   try {
-    const employeeId = req.body.id;
-    const employee = await Employee.findOne({ employeeId }); // Find employee by ID
+    const id = req.params.id;
+    const employee = await Employee.findByPk(id); // Find employee by ID
 
     if (!employee) {
       return res.status(404).json({ message: "Employee not found" });
@@ -220,11 +226,11 @@ export const updateBalancedLeave = async (employeeId, leave) => {
 export const getBalancedLeaveById = async (employeeId) => {
   try {
     console.log("employeeId:", employeeId);
-    const employee = await Employee.findById( employeeId );
+    const employee = await Employee.findById(employeeId);
     if (!employee) {
       throw new Error("Employee not found1");
     }
-    console.log("blancedleave:" ,employee.balancedLeave);
+    console.log("blancedleave:", employee.balancedLeave);
     return employee.balancedLeave;
   } catch (error) {
     throw new Error(error.message);
@@ -234,11 +240,11 @@ export const getBalancedLeaveById = async (employeeId) => {
 export const getAttendanceIdById = async (employeeId) => {
   try {
     console.log("employeeId:", employeeId);
-    const employee = await Employee.findById( employeeId );
+    const employee = await Employee.findById(employeeId);
     if (!employee) {
       throw new Error("Employee not found1");
     }
-    console.log("attendanceId:" ,employee.attendanceId);
+    console.log("attendanceId:", employee.attendanceId);
     return employee.attendanceId;
   } catch (error) {
     throw new Error(error.message);

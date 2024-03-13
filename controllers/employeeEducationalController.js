@@ -1,11 +1,11 @@
 import { EducationalSchema } from "../models/employeeEducationalDetails.js"
+import EmployeeEducationDetails from "../models/employeeEducationalDetails.js";
 
 export const addEmployeeEducationalDetail = async (req, res) => {
   try {
-    const { employeeId, degree, institute, startDate, endDate, percentage } =
-      req.body;
-    const educationalDetails = new EducationalSchema({
-      employeeId,
+    const { id, degree, institute, startDate, endDate, percentage } = req.body;
+    const educationalDetails = new EmployeeEducationDetails({
+      id,
       degree,
       institute,
       startDate,
@@ -20,11 +20,13 @@ export const addEmployeeEducationalDetail = async (req, res) => {
 };
 
 export const getEmployeeEducationalDetail = async (req, res) => {
-  const employeeId = req.params.id;
+  const id = req.params.id;
   try {
-    const educationalDetails = await EducationalSchema.find({
-      employeeId,
-      deleteFlag: false,
+    const educationalDetails = await EmployeeEducationDetails.findAll({
+      where: {
+        id: id,
+        deleteFlag: false,
+      },
     });
     res.status(200).json({ data: educationalDetails });
   } catch (error) {
@@ -35,8 +37,13 @@ export const getEmployeeEducationalDetail = async (req, res) => {
 export const putDeleteFlag = async (req, res) => {
   try {
     const id = req.params.id;
-    const educationalDetails = await EducationalSchema.findById(id);
 
+    // Find the educational detail by ID
+    const educationalDetails = await EmployeeEducationDetails.findOne({
+      where: { id: id },
+    });
+
+    // Check if the educational detail exists
     if (!educationalDetails) {
       return res.status(404).json({ message: "Educational details not found" });
     }

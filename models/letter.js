@@ -1,21 +1,44 @@
-import mongoose from "mongoose";
+import { DataTypes } from "sequelize";
+import sequelize from "../dataBase/sequelize.js";
 
-const letterSchema = new mongoose.Schema({
+const lettersSchema = sequelize.define(
+  "Letter",
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      field: "id_lm",
+    },
     letterType: {
-        type: String,
-        required: true,
+      type: DataTypes.STRING,
+      allowNull: false,
+      field: "letter_type_lm",
     },
     path: {
-        type: String,
-        required: true,
+      type: DataTypes.STRING,
+      allowNull: false,
+      field: "path_lm",
     },
     deleteFlag: {
-        type: Boolean,
-        required: true,
-        default: false
-    }
-});
-
-export const lettersSchema = mongoose.model(
-    "letter_l", letterSchema
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+      field: "delete_flag_lm",
+    },
+  },
+  {
+    tableName: "letters_master_lm",
+  }
 );
+
+(async () => {
+  try {
+    await lettersSchema.sync();
+    console.log("Letter model synchronized successfully.");
+  } catch (error) {
+    console.error("Error synchronizing Letter model:", error);
+  }
+})();
+
+export default lettersSchema;

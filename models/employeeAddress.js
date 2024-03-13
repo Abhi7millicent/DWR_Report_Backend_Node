@@ -74,3 +74,5 @@ const EmployeeAddress = sequelize.define(
 })();
 
 export default EmployeeAddress;
+
+

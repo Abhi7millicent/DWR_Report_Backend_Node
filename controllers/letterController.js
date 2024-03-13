@@ -1,6 +1,6 @@
 import fs from "fs";
 import { promisify } from "util";
-import { lettersSchema } from "../models/letter.js";
+import  lettersSchema  from "../models/letter.js";
 import Docxtemplater from "docxtemplater";
 import PizZip from "pizzip";
 import libreofficeConvert from "libreoffice-convert";
@@ -40,14 +40,12 @@ export const saveLetter = async (req, res) => {
         const { letterType } = req.body;
         const path = req.file.path;
 
-        const newLetter = new lettersSchema({
+        const newLetter = await lettersSchema.create({
             letterType,
             path,
         });
 
-        await newLetter.save();
-
-        res.status(201).send("Letter uploaded successfully.");
+        res.status(201).send("Letter uploaded successfully.:" , newLetter);
     } catch (error) {
         console.error("Error saving letter:", error);
         res.status(500).send("Server error");
@@ -60,7 +58,7 @@ export const updateLetter = async (req, res) => {
     const replacements = req.body;
 
     try {
-        const letter = await lettersSchema.findOne({ letterType, deleteFlag: false });
+        const letter = await lettersSchema.findOne({ where: { letterType, deleteFlag: false } });
 
         if (letter) {
             const path = letter.path;

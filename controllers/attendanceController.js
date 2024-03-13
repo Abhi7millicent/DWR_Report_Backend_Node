@@ -1,5 +1,5 @@
 import XLSX from 'xlsx';
-import attendanceSchema from '../models/attendance.js';
+import AttendanceSchema from '../models/attendance.js';
 import moment from "moment-timezone";
 import { getAttendanceIdById } from './employeeController.js';
 export const uploadAttendance = async (req, res) => {
@@ -48,7 +48,7 @@ const savePromises = Object.values(attendanceRecords).map(async record => {
         } else {
             statusflag = 'Absent';
         }
-        await attendanceSchema.create({ attendanceId, date, startTime, endTime, statusflag });
+        await AttendanceSchema.create({ attendanceId, date, startTime, endTime, statusflag });
     }
 });
 await Promise.all(savePromises);
@@ -88,28 +88,21 @@ function formatDateTime(cell) {
 
 export const getAttendanceOfMonth = async (req, res) => {
     try {
-        // Extract date and employeeId from the request parameters
         const { date, employeeId } = req.params;
-
         const attendanceId = await getAttendanceIdById(employeeId);
-
         if (!attendanceId) {
             throw new Error("attendanceId not found1");
-          }
-        // Extract month and year from the date parameter
-        const [year, month] = date.split('-');
+        }
 
-        // Validate input (ensure month and year are numbers)
+        const [year, month] = date.split('-');
         if (isNaN(parseInt(month)) || isNaN(parseInt(year))) {
             return res.status(400).json({ message: 'Invalid month or year' });
         }
 
-        // Assuming month is in "MM" format and year is in "YYYY" format
-        const startDate = new Date(year, month - 1, 1);
-        const endDate = new Date(year, month, 0, 23, 59, 59);
+        const startDate = new Date(year, month - 1, 1).toISOString().split('T')[0];
+        const endDate = new Date(year, month, 0, 23, 59, 59).toISOString().split('T')[0];
 
-        // Retrieve attendance records from the database for the specified month
-        const attendanceList = await attendanceSchema.find({
+        const attendanceList = await AttendanceSchema.find({
             attendanceId: attendanceId,
             date: {
                 $gte: startDate,
@@ -117,14 +110,11 @@ export const getAttendanceOfMonth = async (req, res) => {
             }
         });
 
-        // Construct a result object where keys are dates and values are status flags
         const result = {};
         attendanceList.forEach(attendance => {
-            // Assuming date is stored as a string in "YYYY-MM-DD" format
             result[attendance.date] = attendance.statusflag;
         });
 
-        // Return the result as JSON response
         res.status(200).json(result);
     } catch (error) {
         console.error('Error:', error);

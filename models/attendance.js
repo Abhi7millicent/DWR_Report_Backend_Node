@@ -1,37 +1,57 @@
-import mongoose from "mongoose";
+import { DataTypes } from "sequelize";
+import sequelize from "../dataBase/sequelize.js";
 
-const attendance = new mongoose.Schema({
-      attendanceId:{
-        type: String,
-        required: true,
-      },
+const AttendanceSchema = sequelize.define(
+  "attendance",
+  {
+    attendanceId: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      primaryKey: true,
+      field: "attendance_id",
+    },
     date: {
-        type: String,
-        required: true,
+      type: DataTypes.STRING,
+      allowNull: false,
+      field: "date",
     },
     startTime: {
-        type: String,
+      type: DataTypes.STRING,
+      field: "start_time",
     },
     endTime: {
-        type: String,
+      type: DataTypes.STRING,
+      field: "end_time",
     },
     statusflag: {
-        type: String,
+      type: DataTypes.STRING,
+      field: "status_flag",
     },
     dwrFlag: {
-        type: Boolean,
-        required: true,
-        default: false
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+      field: "dwr_flag",
     },
     deleteFlag: {
-        type: Boolean,
-        required: true,
-        default: false
-    }
-});
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+      field: "delete_flag",
+    },
+  },
+  {
+    tableName: "attendance_a",
+  }
+);
 
-const attendanceSchema = mongoose.model(
-    "attendance_a",
-    attendance
-  );
-export default attendanceSchema;
+(async () => {
+  try {
+    await AttendanceSchema.sync();
+    console.log("Attendance model synchronized successfully.");
+  } catch (error) {
+    console.error("Error synchronizing Attendance model:", error);
+  }
+})();
+
+export default AttendanceSchema;

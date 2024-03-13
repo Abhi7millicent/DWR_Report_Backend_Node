@@ -66,8 +66,9 @@ export const uploadDWR = async (req, res) => {
       }
     }
 
-    // Save transformed data to MongoDB
-    await dwrSchema.insertMany(transformedData);
+    // Save transformed data to MySQL
+    await dwrSchema.bulkCreate(transformedData);
+
 
     res.status(200).send("Data uploaded successfully");
   } catch (error) {
@@ -79,26 +80,20 @@ export const uploadDWR = async (req, res) => {
 export const getDWR = async (req, res) => {
   try {
     const employeeId = req.params.employeeId;
-    const dwrList = await dwrSchema.find({employeeId, deleteFlag: false});
+    const dwrList = await dwrSchema.findAll({ where: { employeeId, deleteFlag: false } });
     res.status(200).json({ data: dwrList });
   } catch (err) {
     console.error("Error fetching DWR entries:", err);
     res.status(500).json({ message: "Internal server error" });
   }
-}
+};
 
 export const getDWRBasedOnDateRange = async (req, res) => {
   try {
-    // Extract start and end dates from route parameters
-    const startDate = req.params.startDate;
-    const endDate = req.params.endDate;
-    const employeeId = req.params.employeeId;
+    const { startDate, endDate, employeeId } = req.params;
 
-    // Fetch DWR entries within the specified date range and delete flag is false from the database
-    const dwrList = await dwrSchema.find({
-      employeeId,
-      date: { $gte: startDate, $lte: endDate },
-      deleteflag: false
+    const dwrList = await dwrSchema.findAll({
+      where: { employeeId, date: { [sequelize.Op.between]: [startDate, endDate] }, deleteflag: false }
     });
 
     res.status(200).json({ data: dwrList });
@@ -106,16 +101,17 @@ export const getDWRBasedOnDateRange = async (req, res) => {
     console.error("Error fetching DWR entries:", err);
     res.status(500).json({ message: "Internal server error" });
   }
-}
+};
 
 export const getDWRBasedOnDate = async (req, res) => {
   try {
-    const employeeId = req.params.employeeId;
-    const date = req.params.date;
-    const dwrList = await dwrSchema.find({ employeeId, date, deleteflag: false }); 
+    const { employeeId, date } = req.params;
+
+    const dwrList = await dwrSchema.findAll({ where: { employeeId, date, deleteflag: false } });
+
     res.status(200).json({ data: dwrList });
   } catch (err) {
     console.error("Error fetching DWR entries:", err);
     res.status(500).json({ message: "Internal server error" });
   }
-}
+};

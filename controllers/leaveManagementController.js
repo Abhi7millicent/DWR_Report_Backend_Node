@@ -1,5 +1,5 @@
 import employee from "../models/employee.js";
-import { LeaveManagementSchema } from "../models/leaveManagement.js";
+import  LeaveManagementSchema  from "../models/leaveManagement.js";
 import { updateBalancedLeave, getBalancedLeaveById } from "./employeeController.js";
 
 export const postLeaveManagement = async (req, res) => {
@@ -50,9 +50,11 @@ export const postLeaveManagement = async (req, res) => {
 export const getLeaveManagement = async (req, res) => {
   const employeeId = req.params.id;
   try {
-    const leaveManagement = await LeaveManagementSchema.find({
-      employeeId,
-      deleteFlag: false,
+    const leaveManagement = await LeaveManagementSchema.findAll({
+      where: {
+        employeeId,
+        deleteFlag: false,
+      },
     });
     res.status(200).json({ data: leaveManagement });
   } catch (error) {
@@ -64,25 +66,25 @@ export const postApproveLeave = async (req, res) => {
   const id = req.params.id;
 
   try {
-    const leaveRequest = await LeaveManagementSchema.findById(id);
+    const leaveRequest = await LeaveManagementSchema.findByPk(id);
     if (!leaveRequest) {
-      return res.status(404).json({ message: "Leave request not found" }); // Return to exit the function after sending the response
+      return res.status(404).json({ message: "Leave request not found" });
     }
 
     if (leaveRequest.status === "Rejected") { 
       const leave = (parseInt(leaveRequest.balancedLeave) - parseInt(leaveRequest.noOfDays)).toString();
-      await updateBalancedLeave(leaveRequest.employeeId, leave); // Added await
+      await updateBalancedLeave(leaveRequest.employeeId, leave);
     }
-    // console.log("leaveRequest.status:", leaveRequest.status);
+
     leaveRequest.status = "Approved";
     await leaveRequest.save();
 
     return res.status(200).json({
-      message: "Leave request approved successfully", // Corrected: "approved" to "approved"
+      message: "Leave request approved successfully",
       data: leaveRequest,
     });
   } catch (error) {
-    return res.status(500).json({ message: error });
+    return res.status(500).json({ message: error.message });
   }
 };
 
@@ -90,15 +92,16 @@ export const postRejectLeave = async (req, res) => {
   const id = req.params.id;
 
   try {
-    const leaveRequest = await LeaveManagementSchema.findById(id);
+    const leaveRequest = await LeaveManagementSchema.findByPk(id);
     if (!leaveRequest) {
-      res.status(404).json({ message: "Leave request not found" });
+      return res.status(404).json({ message: "Leave request not found" });
     }
 
     if (leaveRequest.status !== "Rejected") { 
       const leave = (parseInt(leaveRequest.balancedLeave) + parseInt(leaveRequest.noOfDays)).toString();
-      await updateBalancedLeave(leaveRequest.employeeId, leave); // Added await
+      await updateBalancedLeave(leaveRequest.employeeId, leave);
     }
+
     leaveRequest.status = "Rejected";
     await leaveRequest.save();
 
@@ -107,23 +110,23 @@ export const postRejectLeave = async (req, res) => {
       data: leaveRequest,
     });
   } catch (error) {
-    return res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ message: error.message });
   }
 };
 
 export const getRequestedLeave = async (req, res) => {
   try {
-    const requestedLeave = await LeaveManagementSchema.find({})
-      .populate({
-        path: "employeeId",
+    const requestedLeave = await LeaveManagementSchema.findAll({
+      include: [{
         model: employee,
-        select: "firstName lastName",
-      })
-      .exec();
+        as: 'employee',
+        attributes: ['firstName', 'lastName'],
+      }],
+    });
 
     res.status(200).json({ data: requestedLeave });
   } catch (error) {
     console.error("Error fetching requested leave:", error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: error.message });
   }
 };

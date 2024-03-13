@@ -1,64 +1,94 @@
-import mongoose from "mongoose";
+import { DataTypes } from "sequelize";
+import sequelize from "../dataBase/sequelize.js";
 
-const DWR = new mongoose.Schema({
-    employeeId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "employee",
-        required: true,
+const DWRSchema = sequelize.define(
+  "DWR",
+  {
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        field: "id_ds",
       },
+    employeeId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      field: "employee_id_ds",
+    },
     date: {
-        type: String,
-        required: true,
+      type: DataTypes.STRING,
+      allowNull: false,
+      field: "date_ds",
     },
     fromTime: {
-        type: String,
-        required: true,
+      type: DataTypes.STRING,
+      allowNull: false,
+      field: "from_time_ds",
     },
     toTime: {
-        type: String,
-        required: true,
+      type: DataTypes.STRING,
+      allowNull: false,
+      field: "to_time_ds",
     },
     taskId: {
-        type: String,
-        required: true,
+      type: DataTypes.STRING,
+      allowNull: false,
+      field: "task_id_ds",
     },
     projectName: {
-        type: String,
-        required: true,
+      type: DataTypes.STRING,
+      allowNull: false,
+      field: "project_name_ds",
     },
     taskDescription: {
-        type: String,
-        required: true,
+      type: DataTypes.STRING,
+      allowNull: false,
+      field: "task_description_ds",
     },
     reportedBy: {
-        type: String,
-        required: true,
+      type: DataTypes.STRING,
+      allowNull: false,
+      field: "reported_by_ds",
     },
     ticketType: {
-        type: String,
-        required: true,
+      type: DataTypes.STRING,
+      allowNull: false,
+      field: "ticket_type_ds",
     },
     status: {
-        type: String,
-        required: true,
+      type: DataTypes.STRING,
+      allowNull: false,
+      field: "status_ds",
     },
     estimatedDate: {
-        type: String,
-        required: true,
+      type: DataTypes.STRING,
+      allowNull: false,
+      field: "estimated_date_ds",
     },
     solution: {
-        type: String,
-        required: true,
+      type: DataTypes.STRING,
+      allowNull: false,
+      field: "solution_ds",
     },
     deleteFlag: {
-        type: Boolean,
-        required: true,
-        default: false
-    }
-});
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+      field: "delete_flag_ds",
+    },
+  },
+  {
+    tableName: "dwr_ds",
+  }
+);
 
-const dwrSchema = mongoose.model(
-    "dwr_ds",
-    DWR
-  );
-export default dwrSchema;
+(async () => {
+  try {
+    await DWRSchema.sync();
+    console.log("DWR model synchronized successfully.");
+  } catch (error) {
+    console.error("Error synchronizing DWR model:", error);
+  }
+})();
+
+export default DWRSchema;

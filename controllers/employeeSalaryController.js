@@ -5,13 +5,16 @@ export const putEmployeeSalary = async (req, res) => {
     const employeeId = req.params.id; // Corrected the destructure
     const updateData = req.body;
 
-    const updateSalary = await salaryDetailsSchema.findOneAndUpdate(
-      { employeeId: employeeId },
-      updateData,
-      { new: true }
-    );
+    const [updatedRowsCount, [updatedSalary]] = await SalaryDetails.update(updateData, {
+      where: { employeeId: employeeId },
+      returning: true // Return the updated rows
+    });
 
-    res.status(200).json({ success: true, data: updateSalary });
+    if (updatedRowsCount === 0) {
+      return res.status(404).json({ message: "Employee salary not found" });
+    }
+
+    res.status(200).json({ success: true, data: updatedSalary });
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, error: "Server Error" });
@@ -21,14 +24,17 @@ export const putEmployeeSalary = async (req, res) => {
 export const getEmployeeSalaryByEmployeeId = async (req, res) => {
   try {
     const employeeId = req.params.id;
-    const employeeSalary = await salaryDetailsSchema.findOne({
-      employeeId,
+    const employeeSalary = await SalaryDetails.findOne({
+      where: { employeeId: employeeId }
     });
+
     if (!employeeSalary) {
-      return res.status(404).json({ messsage: "Employee Salary not found" });
+      return res.status(404).json({ message: "Employee salary not found" });
     }
+
     res.status(200).json({ data: employeeSalary });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ success: false, error: "Server Error" });
   }
 };

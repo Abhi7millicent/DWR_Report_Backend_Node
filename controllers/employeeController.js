@@ -213,20 +213,22 @@ export const getBalancedLeave = async (req, res) => {
 
 export const updateBalancedLeave = async (employeeId, leave) => {
   try {
-    await Employee.findByIdAndUpdate(
-      employeeId,
-      { balancedLeave: leave },
-      { new: true }
-    );
+    const employee = await Employee.findByPk(employeeId);
+    if (employee) {
+      await employee.update({ balancedLeave: leave });
+      console.log('Leave balance updated successfully.');
+    } else {
+      console.log('Employee not found.');
+    }
   } catch (error) {
-    throw new Error(error.message);
+    console.error('Error updating leave balance:', error);
   }
 };
 
 export const getBalancedLeaveById = async (employeeId) => {
   try {
     console.log("employeeId:", employeeId);
-    const employee = await Employee.findById(employeeId);
+    const employee = await Employee.findByPk(employeeId);
     if (!employee) {
       throw new Error("Employee not found1");
     }
@@ -240,7 +242,7 @@ export const getBalancedLeaveById = async (employeeId) => {
 export const getAttendanceIdById = async (employeeId) => {
   try {
     console.log("employeeId:", employeeId);
-    const employee = await Employee.findById(employeeId);
+    const employee = await Employee.findByPk(employeeId);
     if (!employee) {
       throw new Error("Employee not found1");
     }

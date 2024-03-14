@@ -18,7 +18,7 @@ export const postSendMail = async (req, res) => {
     });
 
     const transporterMail = await TransporterEmail.findOne();
-
+    
     if (!transporterMail) {
       return res.status(404).json({ error: "Transporter email not found" });
     }
@@ -34,7 +34,7 @@ export const postSendMail = async (req, res) => {
 
     // Send email using Nodemailer
     await transporter.sendMail({
-      from: transporterMail.authUser,
+      from: transporterMail.userId,
       to: email,
       subject: subject,
       text: body,

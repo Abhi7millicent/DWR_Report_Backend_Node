@@ -1,18 +1,39 @@
-import mongoose from "mongoose";
+import { DataTypes } from "sequelize";
+import sequelize from "../dataBase/sequelize.js";
 
-const leaveMaster = new mongoose.Schema({
+const leaveMaster = sequelize.define(
+  "LeaveMaster",
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      field: "id_ltm", // Assuming this field name is correct for your leaveMaster schema
+    },
     name: {
-        type: String,
-        required: true,
+      type: DataTypes.STRING,
+      allowNull: false,
+      field: "name_ltm", // Adjust field name according to your database schema
     },
     deleteFlag: {
-        type: Boolean,
-        require: true,
-        default: false,
-    }
-})
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+      field: "delete_flag_ltm",
+    },
+  },
+  {
+    tableName: "leave_master_rm", // Adjust table name according to your database schema
+  }
+);
 
-export const leaveMasterSchema = mongoose.model(
-    "leave_master_rm",
-    leaveMaster
-  );
+(async () => {
+  try {
+    await leaveMaster.sync();
+    console.log("LeaveMaster model synchronized successfully.");
+  } catch (error) {
+    console.error("Error synchronizing LeaveMaster model:", error);
+  }
+})();
+
+export default leaveMaster;

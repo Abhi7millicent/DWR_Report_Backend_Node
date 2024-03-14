@@ -38,6 +38,7 @@ async function replacePlaceholders(path, replacements, res) {
 export const saveLetter = async (req, res) => {
     try {
         const { letterType } = req.body;
+        // console.log("path", req.file.path);
         const path = req.file.path;
 
         const newLetter = await lettersSchema.create({
@@ -45,7 +46,7 @@ export const saveLetter = async (req, res) => {
             path,
         });
 
-        res.status(201).send("Letter uploaded successfully.:" , newLetter);
+        res.status(201).send("Letter uploaded successfully.:");
     } catch (error) {
         console.error("Error saving letter:", error);
         res.status(500).send("Server error");

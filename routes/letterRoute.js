@@ -10,12 +10,12 @@ router.post("/:type", updateLetter);
 export default router;
 
 // {
-    // "{DATE}": "2024-03-05",
-    // "{REFERENCENO}": "843788943",
-    // "{NAME}": "Abhi",
-    // "{ADDRESS1}": "test1",
-    // "{ADDRESS2}": "test2",
-    // "{POSITION}": "Software Devloper",
-    // "{ANNUALY}" : "1200000",
-    // "{MONTHLY}": "100000"
+//     "{DATE}": "2024-03-05",
+//     "{REFERENCENO}": "843788943",
+//     "{NAME}": "Abhi",
+//     "{ADDRESS1}": "test1",
+//     "{ADDRESS2}": "test2",
+//     "{POSITION}": "Software Devloper",
+//     "{ANNUALY}" : "1200000",
+//     "{MONTHLY}": "100000"
 // }

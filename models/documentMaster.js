@@ -1,18 +1,39 @@
-import mongoose from "mongoose";
+import { DataTypes } from "sequelize";
+import sequelize from "../dataBase/sequelize.js";
 
-const documentMaster = new mongoose.Schema({
+const documentMaster = sequelize.define(
+  "Document",
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      field: "id_drm",
+    },
     name: {
-        type: String,
-        required: true,
+      type: DataTypes.STRING,
+      allowNull: false,
+      field: "name_drm",
     },
     deleteFlag: {
-        type: Boolean,
-        require: true,
-        default: false,
-    }
-})
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+      field: "delete_flag_drm",
+    },
+  },
+  {
+    tableName: "document_master_rm",
+  }
+);
 
-export const documentMasterSchema = mongoose.model(
-    "document_master_rm",
-    documentMaster
-  );
+(async () => {
+  try {
+    await documentMaster.sync();
+    console.log("Document model synchronized successfully.");
+  } catch (error) {
+    console.error("Error synchronizing Document model:", error);
+  }
+})();
+
+export default documentMaster;

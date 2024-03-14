@@ -13,7 +13,6 @@ export const postLeaveManagement = async (req, res) => {
       balancedLeave,
       employeeId,
     } = req.body;
-    // const employeeId = req.params.id;
 
     const leaveManagement = new LeaveManagementSchema({
       leaveType,
@@ -25,22 +24,21 @@ export const postLeaveManagement = async (req, res) => {
       employeeId,
     });
 
-   
-    if (leaveManagement.leaveType !== "Unpaid Leave") {
-      // console.log("empid1:",leaveManagementSave.employeeId)
-      const previousBalancedLeave = await getBalancedLeaveById(leaveManagementSave.employeeId);
-      if (previousBalancedLeave >= leaveManagementSave.noOfDays) {
-          const leave = (parseInt(previousBalancedLeave) - parseInt(leaveManagementSave.noOfDays)).toString();
-          await updateBalancedLeave(leaveManagementSave.employeeId, leave);
-      } else {
-          res.status(400).json({ message: "Sorry you do not have sufficient amount of leave." });
-      }
-  };
-  
-  const leaveManagementSave = await leaveManagement.save();
-  
+    let leaveManagementSave = null; // Define before usage
 
-   
+    if (leaveManagement.leaveType !== "Unpaid Leave") {
+      const previousBalancedLeave = await getBalancedLeaveById(employeeId); // Use employeeId directly
+
+      if (previousBalancedLeave >= noOfDays) {
+        const leave = (parseInt(previousBalancedLeave) - parseInt(noOfDays)).toString();
+        await updateBalancedLeave(employeeId, leave); // Use employeeId directly
+      } else {
+        return res.status(400).json({ message: "Sorry, you do not have sufficient leave balance." }); // Return response
+      }
+    }
+
+    leaveManagementSave = await leaveManagement.save(); // Save after checking balance
+
     res.status(200).json({ data: leaveManagementSave });
   } catch (error) {
     res.status(400).json({ message: error.message });

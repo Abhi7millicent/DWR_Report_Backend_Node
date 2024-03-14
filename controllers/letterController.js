@@ -12,25 +12,40 @@ async function replacePlaceholders(path, replacements, res) {
         const zip = new PizZip(content);
         const doc = new Docxtemplater();
         doc.loadZip(zip);
-        doc.setData(replacements);
-        doc.render();
+        
+        console.log("Loaded DOCX file successfully.");
+    
+        console.log("Replacements:", replacements);
+    
+        console.log("Keys in replacements:", Object.keys(replacements));
+        // Verify placeholder usage
+        console.log("Template before rendering:", doc.getFullText());
 
+        // Ensure all keys in replacements have values
+
+    
+        
+        try {
+            doc.setData(replacements);
+            doc.render();
+            console.log("Replacements applied successfully.");
+        } catch (renderError) {
+            console.error("Error rendering document:", renderError);
+        }
+    
+        console.log("Replacements applied successfully.");
+    
+        // Verify rendered output
+        console.log("Rendered content:", doc.getFullText());
+    
         const modifiedContent = doc.getZip().generate({ type: 'nodebuffer' });
-
+    
         res.setHeader('Content-Type', 'application/docx');
         res.setHeader('Content-Disposition', 'attachment; filename="modified_letter.docx"');
         res.send(modifiedContent);
     } catch (error) {
         console.error("Error replacing placeholders:", error);
         throw error;
-    } finally {
-        // Attempt to remove temporary files/directories created by libreoffice-convert
-        try {
-            await promisify(fs.rmdir)(libreofficeConvert.getTmpDirPath(), { recursive: true });
-        } catch (cleanupError) {
-            // Ignore cleanup errors
-            console.error("Error cleaning up temporary directory:", cleanupError);
-        }
     }
 }
 

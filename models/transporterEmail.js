@@ -14,16 +14,20 @@ const TransporterEmail = sequelize.define(
       allowNull: false,
       field: "port_te",
     },
-
+    userId: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      field: "user_id_te",
+    },
     authUser: {
       type: DataTypes.STRING,
       allowNull: false,
-      field: "auth_user_te", // Assuming you want to rename the field to match the SQL convention
+      field: "auth_user_te", 
     },
     authPassword: {
       type: DataTypes.STRING,
       allowNull: false,
-      field: "auth_password_te", // Assuming you want to rename the field to match the SQL convention
+      field: "auth_password_te", 
     },
   },
   {

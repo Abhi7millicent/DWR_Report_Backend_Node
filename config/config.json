@@ -1,0 +1,24 @@
+
+{
+  "development": {
+    "username": "millicent_dwr",
+    "password": "millicent@123!",
+    "database": "millicent_dwr",
+    "host": "sg2nlmysql9plsk.secureserver.net",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "root",
+    "password": null,
+    "database": "database_test",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "root",
+    "password": null,
+    "database": "database_production",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  }
+}

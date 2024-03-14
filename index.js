@@ -14,6 +14,10 @@ import leaveManagement from "./routes/leaveManagementRoute.js";
 import dwr from "./routes/DWRRoute.js";
 import email from "./routes/emailRoute.js";
 import attendance from "./routes/attendanceRoute.js";
+import roleMaster from "./routes/roleMasterRoute.js";
+import documentMaster from "./routes/documentMasterRoute.js";
+import leaveMaster from "./routes/leaveMasterRoute.js";
+import letterMaster from "./routes/letterMasterRoute.js";
 dotenv.config();
 const PORT = process.env.PORT;
 
@@ -32,6 +36,10 @@ app.use("/api/DWR/leave-management", leaveManagement);
 app.use("/api/DWR", dwr);
 app.use("/api/DWR/email", email);
 app.use("/api/DWR/attendance", attendance);
+app.use("/api/DWR/letter-master", leaveMaster);
+app.use("/api/DWR/role-master", roleMaster);
+app.use("/api/DWR/leave-master", letterMaster);
+app.use("/api/DWR/document-master", documentMaster);
 
 sequelize
   .authenticate()

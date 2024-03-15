@@ -13,30 +13,16 @@ async function replacePlaceholders(path, replacements, res) {
         const doc = new Docxtemplater();
         doc.loadZip(zip);
         
-        console.log("Loaded DOCX file successfully.");
-    
-        console.log("Replacements:", replacements);
-    
-        console.log("Keys in replacements:", Object.keys(replacements));
-        // Verify placeholder usage
-        console.log("Template before rendering:", doc.getFullText());
-
-        // Ensure all keys in replacements have values
-
     
         
         try {
             doc.setData(replacements);
             doc.render();
-            console.log("Replacements applied successfully.");
         } catch (renderError) {
             console.error("Error rendering document:", renderError);
         }
     
-        console.log("Replacements applied successfully.");
     
-        // Verify rendered output
-        console.log("Rendered content:", doc.getFullText());
     
         const modifiedContent = doc.getZip().generate({ type: 'nodebuffer' });
     

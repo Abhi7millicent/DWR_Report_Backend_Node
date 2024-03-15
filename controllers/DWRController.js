@@ -93,7 +93,7 @@ export const getDWRBasedOnDateRange = async (req, res) => {
     const { startDate, endDate, employeeId } = req.params;
 
     const dwrList = await dwrSchema.findAll({
-      where: { employeeId, date: { [sequelize.Op.between]: [startDate, endDate] }, deleteflag: false }
+      where: { employeeId, date: { [sequelize.Op.between]: [startDate, endDate] }, deleteFlag: false }
     });
 
     res.status(200).json({ data: dwrList });
@@ -107,11 +107,11 @@ export const getDWRBasedOnDate = async (req, res) => {
   try {
     const { employeeId, date } = req.params;
 
-    const dwrList = await dwrSchema.findAll({ where: { employeeId, date, deleteflag: false } });
+    const dwrList = await dwrSchema.findAll({ where: { employeeId, date, deleteFlag: false } });
 
     res.status(200).json({ data: dwrList });
   } catch (err) {
     console.error("Error fetching DWR entries:", err);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: "Internal server error". err });
   }
 };

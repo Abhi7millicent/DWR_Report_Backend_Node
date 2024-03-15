@@ -6,7 +6,7 @@ dotenv.config();
 var storage = multer.diskStorage({
   destination: (req, file, cb) => {
     // cb(null, "D:/DWR_Report_Backend_Node/uploads/documents"); // here its will be location file will be save
-    cb(null, process.env.APP_ROUTE+"/DWR_Report_Backend_Node/uploads/documents"); // here its will be location file will be save
+    cb(null, process.env.APP_ROUTE+"/uploads/documents"); // here its will be location file will be save
   },
   filename: (req, file, cb) => {
     let ext = path.extname(file.originalname);

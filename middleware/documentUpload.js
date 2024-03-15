@@ -20,7 +20,6 @@ var uplaod = multer({
   fileFilter: (req, file, callback) => {
     if (file.mimetype == "image/png" || file.mimetype == "image/jpg") {
       console.log( process.env.APP_ROUTE,"path");
-      console.log(__filename,"filename");
       callback(null, true);
     } else {
       console.log("only jpg and png file support!");

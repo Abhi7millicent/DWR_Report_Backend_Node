@@ -1,6 +1,7 @@
 import xlsx from "xlsx";
 import dwrSchema from "../models/DWR.js";
 import moment from "moment";
+import { Op } from 'sequelize';
 
 export const uploadDWR = async (req, res) => {
   try {
@@ -93,7 +94,7 @@ export const getDWRBasedOnDateRange = async (req, res) => {
     const { startDate, endDate, employeeId } = req.params;
 
     const dwrList = await dwrSchema.findAll({
-      where: { employeeId, date: { [sequelize.Op.between]: [startDate, endDate] }, deleteFlag: false }
+      where: { employeeId, date: { [Op.between]: [startDate, endDate] }, deleteFlag: false }
     });
 
     res.status(200).json({ data: dwrList });
@@ -101,7 +102,8 @@ export const getDWRBasedOnDateRange = async (req, res) => {
     console.error("Error fetching DWR entries:", err);
     res.status(500).json({ message: "Internal server error" });
   }
-};
+}
+
 
 export const getDWRBasedOnDate = async (req, res) => {
   try {

@@ -1,6 +1,6 @@
-
 import { DataTypes } from "sequelize";
 import sequelize from "../dataBase/sequelize.js";
+import Employee from "./employee.js";
 
 const LeaveManagementSchema = sequelize.define(
   "LeaveManagement",
@@ -62,6 +62,12 @@ const LeaveManagementSchema = sequelize.define(
   }
 );
 
+// Define association between LeaveManagement and Employee
+LeaveManagementSchema.belongsTo(Employee, {
+  foreignKey: "employeeId", // Specify the foreign key used in the LeaveManagement table
+  as: "employee", // Alias for the association
+});
+
 (async () => {
   try {
     await LeaveManagementSchema.sync();
@@ -72,4 +78,3 @@ const LeaveManagementSchema = sequelize.define(
 })();
 
 export default LeaveManagementSchema;
-

@@ -24,7 +24,7 @@ const upload = multer({
   storage: storage,
   fileFilter: (req, file, callback) => {
     if (file.mimetype === "image/png" || file.mimetype === "image/jpeg") {
-      console.log("path:", destination);
+      // console.log("path:", );
       callback(null, true);
     } else {
       console.log("Only JPG and PNG files are supported!");

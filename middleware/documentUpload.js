@@ -6,7 +6,8 @@ import { mkdirSync, existsSync } from "fs";
 dotenv.config();
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const uploadDir = "./uploads/documents"; // Destination directory
+
+    const uploadDir =    path.join(process.cwd(),  "/uploads/documents"); ; // Destination directory
     // const uploadDir = "./upl/documents"; // Destination directory
     console.log("dir:", uploadDir);
     if (!existsSync(uploadDir)) {

@@ -2,6 +2,7 @@ import path from "path";
 import dotenv from "dotenv";
 import multer from "multer";
 import { mkdirSync, existsSync } from "fs";
+
 dotenv.config();
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -15,7 +16,8 @@ const storage = multer.diskStorage({
   },
 
   filename: (req, file, cb) => {
-    let ext = path.extname(file.originalname);
+    let ext = path.join(process.cwd(), '/uploads/documents');
+    // let ext = path.extname(file.originalname);
     cb(null, Date.now() + ext); // Rename the file with current time
   },
 });

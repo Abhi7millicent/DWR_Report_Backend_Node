@@ -16,7 +16,7 @@ const storage = multer.diskStorage({
   },
 
   filename: (req, file, cb) => {
-    let ext = path.join(process.cwd(), '/uploads/documents');
+    let ext = path.join(process.cwd());
     // let ext = path.extname(file.originalname);
     cb(null, Date.now() + ext); // Rename the file with current time
   },

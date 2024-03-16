@@ -1,43 +1,38 @@
 import path from "path";
 import dotenv from "dotenv";
 import multer from "multer";
-import fs from "fs"; // Import the fs module
-
+import { mkdirSync } from "fs";
+import { fileURLToPath } from "url";
 dotenv.config();
-
-let storage = multer.diskStorage({
+// Getting the directory name of the current module file
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    let destinationDir = "./upload/document";
-
-    // Check if the destination directory exists, if not, create it
-    fs.promises
-      .mkdir(destinationDir, { recursive: true })
-      .then(() => {
-        cb(null, destinationDir);
-      })
-      .catch((err) => {
-        console.error("Error creating directory:", err);
-        cb(err, null);
-      });
+    // Assuming req.body.category exists and holds the category information
+    const category = req.body.category || "default";
+    const uploadPath = path.join(__dirname, "upload", category);
+    mkdirSync(uploadPath, { recursive: true });
+    cb(null, uploadPath);
   },
-  filename: function (req, file, cb) {
-    cb(null, `${file.originalname}`);
+
+  filename: (req, file, cb) => {
+    let ext = path.extname(file.originalname);
+    cb(null, Date.now() + ext); // Rename the file with current time
   },
 });
 
 var upload = multer({
   storage: storage,
   fileFilter: (req, file, callback) => {
-    if (file.mimetype === "image/png" || file.mimetype === "image/jpeg") {
-      console.log("path:", destination);
+    if (file.mimetype == "image/png" || file.mimetype == "image/jpg") {
       callback(null, true);
     } else {
-      console.log("Only JPG and PNG files are supported!");
+      console.log("only jpg and png files are supported!");
       callback(null, false);
     }
   },
   limits: {
-    fieldSize: 1024 * 1024 * 2, // Limit file size to 2MB
+    fieldSize: 1024 * 1024 * 2,
   },
 });
 

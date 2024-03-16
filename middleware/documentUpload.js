@@ -1,34 +1,38 @@
 import path from "path";
 import dotenv from "dotenv";
 import multer from "multer";
-import { mkdirSync } from "fs";
+import { mkdirSync, existsSync } from "fs";
+
 dotenv.config();
-var storage = multer.diskStorage({
+
+const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    // cb(null, "D:/DWR_Report_Backend_Node/uploads/documents"); // here its will be location file will be save
-    cb(null, process.env.APP_ROUTE+"/uploads/documents"); // here its will be location file will be save
+    const uploadDir = process.env.APP_ROUTE+"/uploads/documents"; // Destination directory
+    if (!existsSync(uploadDir)) {
+      mkdirSync(uploadDir, { recursive: true }); // Create directory if not exists
+    }
+    cb(null, uploadDir);
   },
   filename: (req, file, cb) => {
-    let ext = path.extname(file.originalname);
-    mkdirSync(ext, { recursive: true });
-    cb(null, Date.now() + ext); // it will rename the filewith current time
+    const ext = path.extname(file.originalname);
+    cb(null, Date.now() + ext); // Rename the file with current time
   },
 });
 
-var uplaod = multer({
+const upload = multer({
   storage: storage,
   fileFilter: (req, file, callback) => {
-    if (file.mimetype == "image/png" || file.mimetype == "image/jpg") {
-      console.log( process.env.APP_ROUTE,"path");
+    if (file.mimetype === "image/png" || file.mimetype === "image/jpeg") {
+      console.log("path:", destination);
       callback(null, true);
     } else {
-      console.log("only jpg and png file support!");
+      console.log("Only JPG and PNG files are supported!");
       callback(null, false);
     }
   },
   limits: {
-    fieldSize: 1024 * 1024 * 2,
+    fieldSize: 1024 * 1024 * 2, // Limit file size to 2MB
   },
 });
 
-export default uplaod;
+export default upload;

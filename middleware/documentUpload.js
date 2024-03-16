@@ -28,15 +28,16 @@ let storage = multer.diskStorage({
 var upload = multer({
   storage: storage,
   fileFilter: (req, file, callback) => {
-    if (file.mimetype == "image/png" || file.mimetype == "image/jpg") {
+    if (file.mimetype === "image/png" || file.mimetype === "image/jpeg") {
+      console.log("path:", destination);
       callback(null, true);
     } else {
-      console.log("only jpg and png file support!");
+      console.log("Only JPG and PNG files are supported!");
       callback(null, false);
     }
   },
   limits: {
-    fieldSize: 1024 * 1024 * 2,
+    fieldSize: 1024 * 1024 * 2, // Limit file size to 2MB
   },
 });
 

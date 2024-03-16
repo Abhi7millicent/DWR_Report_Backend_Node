@@ -1,10 +1,11 @@
 import path from "path";
 import dotenv from "dotenv";
 import multer from "multer";
-import { mkdirSync, existsSync } from "fs";
-
+import { mkdirSync } from "fs";
+import { fileURLToPath } from "url";
 dotenv.config();
-
+// Getting the directory name of the current module file
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const uploadDir = "./uploads/documents"; // Destination directory
@@ -15,8 +16,9 @@ const storage = multer.diskStorage({
     }
     cb(null, uploadDir);
   },
+
   filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname);
+    let ext = path.extname(file.originalname);
     cb(null, Date.now() + ext); // Rename the file with current time
   },
 });
@@ -24,15 +26,15 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage: storage,
   fileFilter: (req, file, callback) => {
-    if (file.mimetype === "image/png" || file.mimetype === "image/jpeg") {
+    if (file.mimetype == "image/png" || file.mimetype == "image/jpg") {
       callback(null, true);
     } else {
-      console.log("Only JPG and PNG files are supported!");
+      console.log("only jpg and png files are supported!");
       callback(null, false);
     }
   },
   limits: {
-    fieldSize: 1024 * 1024 * 2, // Limit file size to 2MB
+    fieldSize: 1024 * 1024 * 2,
   },
 });
 

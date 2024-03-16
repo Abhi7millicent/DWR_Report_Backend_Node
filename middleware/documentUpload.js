@@ -7,7 +7,8 @@ dotenv.config();
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const uploadDir = process.env.APP_ROUTE+"/uploads/documents"; // Destination directory
+    // const uploadDir = process.env.APP_ROUTE+"/uploads/documents"; // Destination directory
+    const uploadDir = "./uploads/documents"; // Destination directory
     console.log("dir:", uploadDir);
     if (!existsSync(uploadDir)) {
       mkdirSync(uploadDir, { recursive: true }); // Create directory if not exists

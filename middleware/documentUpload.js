@@ -1,21 +1,31 @@
 import path from "path";
 import dotenv from "dotenv";
 import multer from "multer";
-import { mkdirSync } from "fs";
+import fs from "fs"; // Import the fs module
+
 dotenv.config();
-var storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    // cb(null, "D:/DWR_Report_Backend_Node/uploads/documents"); // here its will be location file will be save
-    cb(null, process.env.APP_ROUTE+"/uploads/documents"); // here its will be location file will be save
+
+let storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    let destinationDir = "./upload/document";
+
+    // Check if the destination directory exists, if not, create it
+    fs.promises
+      .mkdir(destinationDir, { recursive: true })
+      .then(() => {
+        cb(null, destinationDir);
+      })
+      .catch((err) => {
+        console.error("Error creating directory:", err);
+        cb(err, null);
+      });
   },
-  filename: (req, file, cb) => {
-    let ext = path.extname(file.originalname);
-    mkdirSync(ext, { recursive: true });
-    cb(null, Date.now() + ext); // it will rename the filewith current time
+  filename: function (req, file, cb) {
+    cb(null, `${file.originalname}`);
   },
 });
 
-var uplaod = multer({
+var upload = multer({
   storage: storage,
   fileFilter: (req, file, callback) => {
     if (file.mimetype == "image/png" || file.mimetype == "image/jpg") {
@@ -30,4 +40,4 @@ var uplaod = multer({
   },
 });
 
-export default uplaod;
+export default upload;

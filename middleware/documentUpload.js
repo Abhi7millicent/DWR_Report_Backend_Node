@@ -1,11 +1,8 @@
 import path from "path";
 import dotenv from "dotenv";
 import multer from "multer";
-import { mkdirSync } from "fs";
-import { fileURLToPath } from "url";
+import { mkdirSync, existsSync } from "fs";
 dotenv.config();
-// Getting the directory name of the current module file
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const uploadDir = "./uploads/documents"; // Destination directory

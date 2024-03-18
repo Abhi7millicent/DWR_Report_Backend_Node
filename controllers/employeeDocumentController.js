@@ -1,14 +1,25 @@
+import { uploadFileToBlobStorage } from "../middleware/documentUpload.js";
 import DocumentSchema from "../models/employeeDocument.js";
 
 export const postEmployeeDocument = async (req, res) => {
   try {
-    // Create a new Document instance with data from the request
+    const file = req.file;
+    const employeeId = req.body.employeeId;
+    console.log("file:", file, employeeId);
+
+    if (!file) {
+
+      return res.status(400).json({ message: "No file uploaded" });
+    }
+    const filePath = await uploadFileToBlobStorage(file);
+    console.log("filePath:",filePath);
     console.log(req.body.employeeId, "empId");
     const document = await DocumentSchema.create({
       employeeId: req.body.employeeId,
       documentType: req.body.documentType,
       description: req.body.description,
-      uploadFilePath: req.file ? req.file.path : null,
+      // uploadFilePath: req.file ? req.file.path : null,
+      uploadFilePath: filePath,
     });
 
     // Respond with success message

@@ -8,6 +8,7 @@ import upload from "../middleware/documentUpload.js";
 const router = express.Router();
 
 router.post("/add", upload.single("uploadFilePath"), postEmployeeDocument);
+// router.post("/add", postEmployeeDocument);
 router.get("/list/:id", getEmployeeDocument);
 router.put("/:id", putEmployeeDocument);
 

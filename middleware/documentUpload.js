@@ -1,24 +1,21 @@
-import path from "path";
+import axios from "axios";
 import dotenv from "dotenv";
 import multer from "multer";
 import { mkdirSync, existsSync } from "fs";
+import path from "path";
 
 dotenv.config();
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-
-    const uploadDir =    path.join(process.cwd(),  "/uploads/documents"); ; // Destination directory
-    // const uploadDir = "./upl/documents"; // Destination directory
-    console.log("dir:", uploadDir);
+    const uploadDir = "./uploads/documents"; // Destination directory
     if (!existsSync(uploadDir)) {
       mkdirSync(uploadDir, { recursive: true }); // Create directory if not exists
     }
     cb(null, uploadDir);
   },
-
   filename: (req, file, cb) => {
-    let ext = path.join(process.cwd());
-    // let ext = path.extname(file.originalname);
+    let ext = path.extname(file.originalname);
     cb(null, Date.now() + ext); // Rename the file with current time
   },
 });
@@ -26,10 +23,10 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage: storage,
   fileFilter: (req, file, callback) => {
-    if (file.mimetype == "image/png" || file.mimetype == "image/jpg") {
+    if (file.mimetype === "image/png" || file.mimetype === "image/jpg") {
       callback(null, true);
     } else {
-      console.log("only jpg and png files are supported!");
+      console.log("Only jpg and png files are supported!");
       callback(null, false);
     }
   },
@@ -39,3 +36,27 @@ const upload = multer({
 });
 
 export default upload;
+
+const authToken = process.env.BLOB_READ_WRITE_TOKEN;
+
+export const uploadFileToBlobStorage = async (file) => {
+  try {
+    const response = await axios.post(
+      'YOUR_BLOB_STORAGE_API_ENDPOINT',
+      file.buffer, // Assuming file.buffer contains the file content
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          'Content-Type': file.mimetype, // Set the appropriate content type
+        },
+      }
+    );
+    console.log("Uploaded file path:", response.data.url);
+    return response.data.url; // URL of the uploaded file
+  } catch (error) {
+    console.error('Error uploading file to Blob storage:', error.message);
+    throw error;
+  }
+};
+
+

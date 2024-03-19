@@ -29,18 +29,17 @@ export const getListOfProjects = async (req, res) => {
 
 // Get project details by ID
 export const getProjectById = async (req, res) => {
-    try {
-      const { id } = req.params;
-      const project = await projectSchema.findByPk(id);
-      if (!project) {
-        return res.status(404).json({ message: "Project not found" });
-      }
-      res.status(200).json(project);
-    } catch (error) {
-      res.status(500).json({ message: error.message });
+  try {
+    const { id } = req.params;
+    const project = await projectSchema.findByPk(id);
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" });
     }
-  };
-  
+    res.status(200).json(project);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 // Edit a project
 export const editProject = async (req, res) => {

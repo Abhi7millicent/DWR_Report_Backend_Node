@@ -1,4 +1,4 @@
-import projectSchema from "../models/projectSchema.js";
+import projectSchema from "../models/project.js";
 
 // Add a new project
 export const addProject = async (req, res) => {

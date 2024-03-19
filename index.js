@@ -18,7 +18,7 @@ import roleMaster from "./routes/roleMasterRoute.js";
 import documentMaster from "./routes/documentMasterRoute.js";
 import leaveMaster from "./routes/leaveMasterRoute.js";
 import letterMaster from "./routes/letterMasterRoute.js";
-import projectRoutes from "./routes/projectRoutes.js";
+import project from "./routes/projectRoutes.js";
 dotenv.config();
 const PORT = process.env.PORT;
 
@@ -41,7 +41,7 @@ app.use("/api/DWR/letter-master", leaveMaster);
 app.use("/api/DWR/role-master", roleMaster);
 app.use("/api/DWR/leave-master", letterMaster);
 app.use("/api/DWR/document-master", documentMaster);
-app.use("/projects", projectRoutes);
+app.use("/api/DWR/projects", project);
 
 sequelize
   .authenticate()

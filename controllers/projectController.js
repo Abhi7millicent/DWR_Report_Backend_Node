@@ -20,7 +20,9 @@ export const addProject = async (req, res) => {
 // Get a list of all projects
 export const getListOfProjects = async (req, res) => {
   try {
-    const projects = await projectSchema.findAll();
+    const projects = await projectSchema.findAll({
+      where: { deleteFlag: false },
+    });
     res.status(200).json(projects);
   } catch (error) {
     res.status(500).json({ message: error.message });

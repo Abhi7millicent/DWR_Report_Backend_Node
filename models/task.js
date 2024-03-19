@@ -1,55 +1,59 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../dataBase/sequelize.js";
 
-const projectSchema = sequelize.define(
-    "project_master_pm",
+const taskSchema = sequelize.define(
+    "task_master_tm",
     {
         id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true,
-            field: "id_pm",
+            field: "id_tm",
           },
           name: {
             type: DataTypes.STRING,
             allowNull: false,
-            field: "name_pm",
+            field: "name_tm",
           },
           description: {
             type: DataTypes.STRING,
             allowNull: false,
-            field: "description_pm",
+            field: "description_tm",
           },
           startDate: {
             type: DataTypes.STRING,
             allowNull: false,
-            field: "start_date_pm",
+            field: "start_date_tm",
           },
           endDate: {
             type: DataTypes.STRING,
             allowNull: false,
-            field: "end_date_pm",
+            field: "end_date_tm",
+          },
+          projectId: {
+            type: DataTypes.STRING,
+            field: "project_id_tm",
           },
           deleteFlag: {
             type: DataTypes.BOOLEAN,
             allowNull: false,
             defaultValue: false,
-            field: "delete_flag_pm",
+            field: "delete_flag_tm",
           },
     },
     {
-        tableName: "project_master_pm",
+        tableName: "task_master_tm",
     }
 );
 
 (async () => {
     try {
       await projectSchema.sync();
-      console.log("project model synchronized successfully.");
+      console.log("task model synchronized successfully.");
     } catch (error) {
-      console.error("Error synchronizing project model:", error);
+      console.error("Error synchronizing task model:", error);
     }
   })();
   
-  export default projectSchema;
+  export default taskSchema;
   

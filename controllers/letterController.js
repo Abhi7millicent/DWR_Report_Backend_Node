@@ -3,7 +3,7 @@ import { promisify } from "util";
 import  lettersSchema  from "../models/letter.js";
 import Docxtemplater from "docxtemplater";
 import PizZip from "pizzip";
-import libreofficeConvert from "libreoffice-convert";
+import { uploadLetterToFirebaseStorage } from "../middleware/letterUpload.js";
 
 // Function to replace placeholders in a Word document
 async function replacePlaceholders(path, replacements, res) {
@@ -13,7 +13,6 @@ async function replacePlaceholders(path, replacements, res) {
         const doc = new Docxtemplater();
         doc.loadZip(zip);
         
-    
         
         try {
             doc.setData(replacements);
@@ -40,8 +39,16 @@ export const saveLetter = async (req, res) => {
     try {
         const { letterType } = req.body;
         // console.log("path", req.file.path);
-        const path = req.file.path;
+        // const path = req.file.path;
+        const filePath = req.file;
 
+    if (!filePath) {
+      return res.status(400).json({ message: "No file uploaded" });
+    }
+
+    const path = await uploadLetterToFirebaseStorage(file);
+
+        
         const newLetter = await lettersSchema.create({
             letterType,
             path,

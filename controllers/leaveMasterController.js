@@ -14,7 +14,7 @@ export const addleaveType = async (req, res) => {
 export const getleaveType = async (req, res) => {
     try {
         const leave = await leaveMaster.findAll();
-        res.json(200).json({data: leave});
+        res.status(200).json({data: leave});
       } catch (error) {
         console.error("Error getting leave:", error);
         res.status(500).json({ error: "Error getting leave" });

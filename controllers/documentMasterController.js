@@ -14,7 +14,7 @@ export const addDocumentType = async (req, res) => {
 export const getDocumentType = async (req, res) => {
     try {
         const document = await documentMaster.findAll();
-        res.json(200).json({data: document});
+        res.status(200).json({data: document});
       } catch (error) {
         console.error("Error getting document:", error);
         res.status(500).json({ error: "Error getting document" });

@@ -12,11 +12,11 @@ export const addRole = async (req, res) => {
 };
 
 export const getRole = async (req, res) => {
-    try {
-        const roles = await roleMasterSchema.findAll();
-        res.json(200).json({data: roles});
-      } catch (error) {
-        console.error("Error getting roles:", error);
-        res.status(500).json({ error: "Error getting roles" });
-      }
+  try {
+      const roles = await roleMasterSchema.findAll();
+      res.status(200).json({ data: roles });
+  } catch (error) {
+      console.error("Error getting roles:", error);
+      res.status(500).json({ error: "Error getting roles" });
+  }
 };

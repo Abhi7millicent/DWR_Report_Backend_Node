@@ -2,11 +2,18 @@ import Email from "../models/email.js";
 
 import nodemailer from "nodemailer";
 import TransporterEmail from "../models/transporterEmail.js";
+import { uploadEmailFilesToFirebaseStorage } from "../middleware/emailUplaod.js";
 
 export const postSendMail = async (req, res) => {
   try {
     const { email, name, subject, body } = req.body;
-    const file = req.file ? req.file.path : null;
+    const file1 = req.file;
+
+    if (!file1) {
+      return res.status(400).json({ message: "No file uploaded" });
+    }
+
+    const file = await uploadEmailFilesToFirebaseStorage(file1);
 
     // Save email details to MySQL
     await Email.create({

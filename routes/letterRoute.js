@@ -1,5 +1,5 @@
 import express from "express";
-import letterUpload from '../middleware/letterUpload.js';
+import letterUpload from "../middleware/letterUpload.js"
 import { saveLetter, updateLetter } from '../controllers/letterController.js'; // Correct import statement for the saveLetter function
 
 const router = express.Router();

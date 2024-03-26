@@ -87,7 +87,13 @@ const storage = multer.memoryStorage(); // Use memory storage for multer
 const upload = multer({
   storage: storage,
   fileFilter: (req, file, callback) => {
-    if (file.mimetype === "image/png" || file.mimetype === "image/jpeg") {
+    if (
+      file.mimetype === 'image/png' ||
+      file.mimetype === 'image/jpg' ||
+      file.mimetype === 'image/jpeg' ||
+      file.mimetype === 'application/pdf' || // Add PDF mimetype
+      file.mimetype === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' // Add Excel mimetype
+    ) {
       callback(null, true);
     } else {
       console.log("Only jpg and png files are supported!");

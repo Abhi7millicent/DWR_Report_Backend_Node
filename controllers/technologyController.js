@@ -1,5 +1,5 @@
 // controllers/technologyController.js
-import Technology from '../models/technologyMasterSchema.js';
+import Technology from '../models/technologyMaster.js';
 
 // Create a new technology
 export const createTechnology = async (req, res) => {

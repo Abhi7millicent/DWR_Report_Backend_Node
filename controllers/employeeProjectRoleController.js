@@ -1,4 +1,4 @@
-import employeeProjectRoleSchema from '../models/employeeProjectRoleSchema.js';
+import employeeProjectRoleSchema from '../models/employeeProjectRole.js';
 
 // Create operation
 export const createEmployeeProjectRole = async (req, res) => {

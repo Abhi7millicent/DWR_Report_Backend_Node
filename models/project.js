@@ -25,10 +25,15 @@ const projectSchema = sequelize.define(
             allowNull: false,
             field: "client_location_pm",
           },
-          contact: {
+          contactName: {
             type: DataTypes.STRING,
             allowNull: false,
-            field: "contact_pm",
+            field: "contact_name_pm",
+          },
+          contactNo: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            field: "contact_no_pm",
           },
           emailId: {
             type: DataTypes.STRING,

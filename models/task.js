@@ -18,7 +18,7 @@ const taskSchema = sequelize.define(
           taskId: {
             type: DataTypes.STRING,
             allowNull: false,
-            field: "project_id_tm",
+            field: "task_id_tm",
           },
           name: {
             type: DataTypes.STRING,

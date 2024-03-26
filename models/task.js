@@ -10,10 +10,30 @@ const taskSchema = sequelize.define(
             autoIncrement: true,
             field: "id_tm",
           },
+          projectId: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            field: "project_id_tm",
+          },
+          taskId: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            field: "project_id_tm",
+          },
           name: {
             type: DataTypes.STRING,
             allowNull: false,
             field: "name_tm",
+          },
+          taskType: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            field: "task_type_tm",
+          },
+          assignTo: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            field: "assign_to_tm",
           },
           description: {
             type: DataTypes.STRING,
@@ -29,10 +49,6 @@ const taskSchema = sequelize.define(
             type: DataTypes.STRING,
             allowNull: false,
             field: "end_date_tm",
-          },
-          projectId: {
-            type: DataTypes.STRING,
-            field: "project_id_tm",
           },
           deleteFlag: {
             type: DataTypes.BOOLEAN,

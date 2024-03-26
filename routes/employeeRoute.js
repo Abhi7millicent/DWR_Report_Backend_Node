@@ -6,6 +6,7 @@ import {
   updateEmployee,
   postAddBalancedLeave,
   getBalancedLeave,
+  getListOfEmployeeName,
 } from "../controllers/employeeController.js";
 
 const router = express.Router();
@@ -14,11 +15,14 @@ const router = express.Router();
 router.post("/add", addEmployee);
 
 router.get("/list", getEmployeeList);
+router.get("/namelist", getListOfEmployeeName);
 
 router.get("/:id", getEmployeeById);
 
 router.put("/:id", updateEmployee);
 router.post("/addBalancedLeave", postAddBalancedLeave);
 router.get("/balanced-leave/:id", getBalancedLeave);
+
+
 
 export default router;

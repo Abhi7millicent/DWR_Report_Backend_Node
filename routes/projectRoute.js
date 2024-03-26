@@ -1,5 +1,5 @@
 import express from "express";
-import { getProjects, getProjectById, createProject, updateProject, updateDeleteFlag } from "../controllers/projectController.js";
+import { getProjects, getProjectById, createProject, updateProject, updateDeleteFlag, getListOfProjectName } from "../controllers/projectController.js";
 
 const router = express.Router();
 
@@ -11,6 +11,7 @@ router.get("/list", getProjects);
 
 // Get project details by ID
 router.get("/:id", getProjectById);
+router.get("/nameList", getListOfProjectName);
 
 // Edit a project
 router.put("/edit/:id", updateProject);

@@ -1,85 +1,75 @@
+import Task from "../models/task.js";
 
-import Task from '../models/task.js';
-
-// Controller to add a new task
-export const addTask = async (req, res) => {
-  try {
-    const task = await Task.create(req.body);
-    res.status(201).json(task);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Failed to add task' });
-  }
-};
-
-// Controller to update the delete flag of a task
-export const updateDeleteFlag = async (req, res) => {
-    try{
-    const { id } = req.params;
-    const updatedTask = await Task.update(
-      { deleteFlag: true },
-      { where: { id } }
-    );
-    res.status(200).json({ updatedTask, message: 'Task delete flag updated successfully' });
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
-
-// Controller to get a task by ID
-export const getTaskById = async (req, res) => {
-  const { id } = req.params;
-  try {
-    const task = await Task.findByPk(id);
-    if (!task) {
-      return res.status(404).json({ message: 'Task not found' });
+// Controller for creating a new task
+export const createTask = async (req, res) => {
+    try {
+        const task = await Task.create(req.body);
+        res.status(201).json(task);
+    } catch (error) {
+        console.error("Error creating task:", error);
+        res.status(500).json({ error: "Could not create task" });
     }
-    res.status(200).json(task);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Failed to fetch task' });
-  }
 };
 
-// Controller to get a list of all tasks
+// Controller for getting all tasks
 export const getAllTasks = async (req, res) => {
     try {
-      const tasks = await Task.findAll({ where: { deleteFlag: false } });
-      res.status(200).json(tasks);
+        const tasks = await Task.findAll();
+        res.json(tasks);
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Failed to fetch tasks' });
+        console.error("Error fetching tasks:", error);
+        res.status(500).json({ error: "Could not fetch tasks" });
     }
-  };
-
-// Controller to update project ID of a task by ID
-export const updateProjectId = async (req, res) => {
-  const { id } = req.params;
-  const { projectId } = req.body;
-  try {
-    const task = await Task.findByPk(id);
-    if (!task) {
-      return res.status(404).json({ message: 'Task not found' });
-    }
-    await task.update({ projectId });
-    res.status(200).json({ message: 'Project ID updated successfully' });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Failed to update project ID' });
-  }
 };
 
+// Controller for getting a single task by ID
+export const getTaskById = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const task = await Task.findByPk(id);
+        if (!task) {
+            return res.status(404).json({ error: "Task not found" });
+        }
+        res.json(task);
+    } catch (error) {
+        console.error("Error fetching task:", error);
+        res.status(500).json({ error: "Could not fetch task" });
+    }
+};
+
+// Controller for updating a task by ID
 export const updateTask = async (req, res) => {
     const { id } = req.params;
     try {
+        const [updated] = await Task.update(req.body, {
+            where: { id: id }
+        });
+        if (updated) {
+            const updatedTask = await Task.findByPk(id);
+            res.json(updatedTask);
+        } else {
+            res.status(404).json({ error: "Task not found" });
+        }
+    } catch (error) {
+        console.error("Error updating task:", error);
+        res.status(500).json({ error: "Could not update task" });
+    }
+};
+
+// Controller for deleting a task by ID
+export const updateDeleteFlag = async (req, res) => {
+  const { id } = req.params;
+  const { deleteFlag } = true;
+  try {
       const task = await Task.findByPk(id);
       if (!task) {
-        return res.status(404).json({ message: 'Task not found' });
+          return res.status(404).json({ error: "Task not found" });
       }
-      await task.update(req.body);
-      res.status(200).json({ message: 'Task updated successfully' });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Failed to update task' });
-    }
-  };
+      task.deleteFlag = deleteFlag;
+      await task.save();
+      res.json(task);
+  } catch (error) {
+      console.error("Error updating delete flag:", error);
+      res.status(500).json({ error: "Could not update delete flag" });
+  }
+};

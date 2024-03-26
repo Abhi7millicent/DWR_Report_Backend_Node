@@ -20,6 +20,7 @@ import leaveMaster from "./routes/leaveMasterRoute.js";
 import letterMaster from "./routes/letterMasterRoute.js";
 import project from "./routes/projectRoute.js";
 import task from './routes/taskRoute.js';
+import technology from './routes/technologyRoute.js';
 
 dotenv.config();
 const PORT = process.env.PORT;
@@ -45,6 +46,7 @@ app.use("/api/DWR/leave-master", letterMaster);
 app.use("/api/DWR/document-master", documentMaster);
 app.use("/api/DWR/projects", project);
 app.use("/api/DWR/task", task);
+app.use("/api/DWR/technologies", technology);
 
 sequelize
   .authenticate()

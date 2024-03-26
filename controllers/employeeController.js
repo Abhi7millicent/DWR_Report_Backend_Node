@@ -255,3 +255,28 @@ export const getAttendanceIdById = async (employeeId) => {
     throw new Error(error.message);
   }
 };
+
+export const getListOfEmployeeName = async (req, res) =>  {
+  try {
+    // Fetch all employees from the database
+    const employees = await Employee.findAll({
+      where: {
+        deleteFlag: false,
+        role: { [Sequelize.Op.not]: "admin" }, // Using Sequelize operators
+      },
+    });
+
+    // Extracting firstName, lastName, and id
+    const employeeDetails = employees.map(employee => {
+      return {
+        id: employee.id,
+        name: `${employee.firstName} ${employee.lastName}`
+      };
+    });
+
+    res.json(employeeDetails);
+  } catch (error) {
+    console.error("Error fetching employee details:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};

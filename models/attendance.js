@@ -4,10 +4,16 @@ import sequelize from "../dataBase/sequelize.js";
 const AttendanceSchema = sequelize.define(
   "attendance",
   {
+    id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      primaryKey: true,
+      autoIncrement: true,
+      field: "id_am",
+    },
     attendanceId: {
       type: DataTypes.STRING,
       allowNull: false,
-      primaryKey: true,
       field: "attendance_id",
     },
     date: {
@@ -41,7 +47,7 @@ const AttendanceSchema = sequelize.define(
     },
   },
   {
-    tableName: "attendance_a",
+    tableName: "attendance_master_am",
   }
 );
 

@@ -2,14 +2,20 @@ import XLSX from 'xlsx';
 import AttendanceSchema from '../models/attendance.js';
 import moment from "moment-timezone";
 import { getAttendanceIdById } from './employeeController.js';
+import { readFirebaseFile, uploadAttendanceToFirebaseStorage } from '../middleware/attendanceUpload.js';
 export const uploadAttendance = async (req, res) => {
     try {
-        if (!req.file) {
-            return res.status(400).json({ message: 'No file uploaded' });
-        }
+        const file = req.file;
 
-        // Load the uploaded Excel file
-        const workbook = XLSX.readFile(req.file.path);
+    if (!file) {
+      return res.status(400).json({ message: "No file uploaded" });
+    }
+
+    const filePath = await uploadAttendanceToFirebaseStorage(file);
+    const fileContent = await readFirebaseFile(filePath);
+
+    // Load the uploaded Excel file
+    const workbook = XLSX.read(fileContent, { type: 'buffer' });
         const sheetName = workbook.SheetNames[0];
         const sheet = workbook.Sheets[sheetName];
         const jsonData = XLSX.utils.sheet_to_json(sheet, { raw: true });
@@ -33,6 +39,8 @@ jsonData.forEach(row => {
         attendanceRecords[id][date].endTime = dateTimeString; // Store as string
     }
 });
+
+// console.log("attendanceRecords:", attendanceRecords);
 
 // Save attendance records to the database
 const savePromises = Object.values(attendanceRecords).map(async record => {
@@ -102,7 +110,7 @@ export const getAttendanceOfMonth = async (req, res) => {
         const startDate = new Date(year, month - 1, 1).toISOString().split('T')[0];
         const endDate = new Date(year, month, 0, 23, 59, 59).toISOString().split('T')[0];
 
-        const attendanceList = await AttendanceSchema.find({
+        const attendanceList = await AttendanceSchema.findAll({
             attendanceId: attendanceId,
             date: {
                 $gte: startDate,
@@ -121,3 +129,5 @@ export const getAttendanceOfMonth = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 };
+
+ 

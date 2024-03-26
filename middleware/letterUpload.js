@@ -2,19 +2,20 @@ import multer from "multer";
 
 const storage = multer.memoryStorage(); // Use memory storage for multer
 
- const letterUpload = multer({
+const letterUpload = multer({
   storage: storage,
   fileFilter: (req, file, callback) => {
     if (
-      file.mimetype === 'image/png' ||
-      file.mimetype === 'image/jpg' ||
-      file.mimetype === 'image/jpeg' ||
-      file.mimetype === 'application/pdf' || // Add PDF mimetype
-      file.mimetype === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' // Add Excel mimetype
+      // file.mimetype === 'image/png' ||
+      // file.mimetype === 'image/jpg' ||
+      // file.mimetype === 'image/jpeg' ||
+      // file.mimetype === 'application/pdf' ||
+      // file.mimetype === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+      file.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' // Add DOCX mimetype
     ) {
       callback(null, true);
     } else {
-      console.log('Only JPG, PNG, PDF, and Excel files are supported!');
+      console.log('Only DOCX files are supported!');
       callback(null, false);
     }
   },
@@ -22,6 +23,7 @@ const storage = multer.memoryStorage(); // Use memory storage for multer
     fileSize: 1024 * 1024 * 2, // 2MB file size limit
   },
 });
+
 
 export default letterUpload;
 

@@ -16,7 +16,7 @@ const taskSchema = sequelize.define(
             field: "project_id_tm",
           },
           taskId: {
-            type: DataTypes.JSON,
+            type: DataTypes.STRING,
             allowNull: false,
             field: "task_id_tm",
           },
@@ -26,12 +26,12 @@ const taskSchema = sequelize.define(
             field: "name_tm",
           },
           taskType: {
-            type: DataTypes.STRING,
+            type: DataTypes.JSON,
             allowNull: false,
             field: "task_type_tm",
           },
           assignTo: {
-            type: DataTypes.STRING,
+            type: DataTypes.JSON,
             allowNull: false,
             field: "assign_to_tm",
           },

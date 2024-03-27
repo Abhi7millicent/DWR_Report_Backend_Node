@@ -12,7 +12,7 @@ export const createDropDown = async (req, res) => {
 
 // Get all drop-down items
 export const getAllDropDowns = async (req, res) => {
-    const { type } = req.params.type; // Extract the "type" parameter from the query string
+    // const { type } = req.params.type; // Extract the "type" parameter from the query string
     try {
       
       const dropDownItems = await dropDownMasterSchema.findAll({ where: {type: req.params.type, deleteFlag: false } });

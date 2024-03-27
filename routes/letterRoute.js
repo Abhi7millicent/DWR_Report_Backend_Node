@@ -4,7 +4,7 @@ import { saveLetter, updateLetter } from '../controllers/letterController.js'; /
 
 const router = express.Router();
 
-router.post("/upload", letterUpload.single('file'), saveLetter); // Using the letterUpload middleware for handling file uploads
+router.post("/upload", letterUpload.single('path'), saveLetter); // Using the letterUpload middleware for handling file uploads
 router.post("/:type", updateLetter);
 
 export default router;

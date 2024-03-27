@@ -40,13 +40,13 @@ const projectSchema = sequelize.define(
             allowNull: false,
             field: "email_pm",
           },
-          tecnology: {
-            type: DataTypes.STRING,
+          technology: {
+            type: DataTypes.JSON,
             allowNull: false,
             field: "tecnology_pm",
           },
           employeeProjectId: {
-            type: DataTypes.STRING,
+            type: DataTypes.JSON,
             allowNull: false,
             field: "employee_project_id_pm",
           },

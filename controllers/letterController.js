@@ -46,7 +46,7 @@ export const saveLetter = async (req, res) => {
       return res.status(400).json({ message: "No file uploaded" });
     }
 
-    const path = await uploadLetterToFirebaseStorage(file);
+    const path = await uploadLetterToFirebaseStorage(filePath);
 
         
         const newLetter = await lettersSchema.create({

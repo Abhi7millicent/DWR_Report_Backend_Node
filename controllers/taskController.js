@@ -22,6 +22,18 @@ export const getAllTasks = async (req, res) => {
     }
 };
 
+
+export const getAllTasksByTaskId = async (req, res) => {
+    const id = req.params.id;
+    try {
+        const tasks = await Task.findAll({where: {taskId: id,deleteFlag: false}});
+        res.json(tasks);
+    } catch (error) {
+        console.error("Error fetching tasks:", error);
+        res.status(500).json({ error: "Could not fetch tasks" });
+    }
+};
+
 // Controller for getting a single task by ID
 export const getTaskById = async (req, res) => {
     const { id } = req.params;

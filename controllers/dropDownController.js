@@ -1,9 +1,9 @@
 import dropDownMasterSchema from "../models/dropDown.js";
 
 export const createDropDown = async (req, res) => {
-    const { type } = req.params; // Extract the "type" parameter from the URL path
+    // const { type } = req.params.type; // Extract the "type" parameter from the URL path
     try {
-      const dropDownItem = await dropDownMasterSchema.create({ ...req.body, type }); // Include the "type" in the creation data
+      const dropDownItem = await dropDownMasterSchema.create({ ...req.body, type: req.params.type }); // Include the "type" in the creation data
       res.status(201).json(dropDownItem);
     } catch (error) {
       res.status(400).json({ message: error.message });
@@ -12,13 +12,10 @@ export const createDropDown = async (req, res) => {
 
 // Get all drop-down items
 export const getAllDropDowns = async (req, res) => {
-    const { type } = req.query; // Extract the "type" parameter from the query string
+    const { type } = req.params.type; // Extract the "type" parameter from the query string
     try {
-      let whereClause = { deleteFlag: false }; // Initial where clause with deleteFlag condition
-      if (type) {
-        whereClause.type = type; // Add type condition if provided
-      }
-      const dropDownItems = await dropDownMasterSchema.findAll({ where: whereClause });
+      
+      const dropDownItems = await dropDownMasterSchema.findAll({ where: {type: req.params.type, deleteFlag: false } });
       res.json(dropDownItems);
     } catch (error) {
       res.status(500).json({ message: error.message });

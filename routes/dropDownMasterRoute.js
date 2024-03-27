@@ -9,8 +9,8 @@ import {
 
 const router = express.Router();
 
-router.post("/{type}", createDropDown);
-router.get("/{type}", getAllDropDowns);
+router.post("/:type", createDropDown);
+router.get("/:type", getAllDropDowns);
 router.get("/:id", getDropDownById);
 router.put("/:id", updateDropDown);
 router.patch("/:id", deleteDropDown);

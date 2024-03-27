@@ -1,5 +1,5 @@
 import Task from "../models/task.js";
-
+import { Op } from "sequelize";
 // Controller for creating a new task
 export const createTask = async (req, res) => {
     try {
@@ -22,11 +22,29 @@ export const getAllTasks = async (req, res) => {
     }
 };
 
+export const getAllTasksByProjectId = async (req, res) => {
+    try {
+        const tasks = await taskSchema.findAll({ 
+            where: { 
+                projectId: {
+                    [Op.and]: [
+                        { value: req.params.id }      // Filter by value
+                    ]
+                },
+                taskId: "", // Filter tasks where taskId is null
+                deleteFlag: false 
+            } 
+        });
+        res.json(tasks);
+    } catch (error) {
+        console.error("Error fetching tasks:", error);
+        res.status(500).json({ error: "Could not fetch tasks" });
+    }
+};
 
 export const getAllTasksByTaskId = async (req, res) => {
-    const id = req.params.id;
     try {
-        const tasks = await Task.findAll({where: {taskId: id,deleteFlag: false}});
+        const tasks = await Task.findAll({where: {taskId: req.params.id,deleteFlag: false}});
         res.json(tasks);
     } catch (error) {
         console.error("Error fetching tasks:", error);
@@ -74,13 +92,11 @@ export const updateDeleteFlag = async (req, res) => {
   try {
       const task = await Task.findByPk(id);
       if (!task) {
-          return res.status(404).json({ error: "Task not found" });
+          return res.status(404).json({ message: "task not found" });
       }
-      task.deleteFlag = {deleteFlag: true};
-      await task.save();
-      res.json(task);
+      await task.update({ deleteFlag: true });
+      res.status(200).json(task);
   } catch (error) {
-      console.error("Error updating delete flag:", error);
-      res.status(500).json({ error: "Could not update delete flag" });
+      res.status(400).json({ message: error.message });
   }
 };

@@ -4,12 +4,14 @@ import  lettersSchema  from "../models/letter.js";
 import Docxtemplater from "docxtemplater";
 import PizZip from "pizzip";
 import { uploadLetterToFirebaseStorage } from "../middleware/letterUpload.js";
+import { readFirebaseFile } from "../middleware/attendanceUpload.js";
 
 // Function to replace placeholders in a Word document
 async function replacePlaceholders(path, replacements, res) {
     try {
-        const content = await promisify(fs.readFile)(path);
-        const zip = new PizZip(content);
+        const fileContent = await readFirebaseFile(path);
+        // const content = await promisify(fs.readFile)(fileContent);
+        const zip = new PizZip(fileContent);
         const doc = new Docxtemplater();
         doc.loadZip(zip);
         

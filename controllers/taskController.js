@@ -14,7 +14,7 @@ export const createTask = async (req, res) => {
 // Controller for getting all tasks
 export const getAllTasks = async (req, res) => {
     try {
-        const tasks = await Task.findAll();
+        const tasks = await Task.findAll({where: {deleteFlag: false}});
         res.json(tasks);
     } catch (error) {
         console.error("Error fetching tasks:", error);
@@ -59,13 +59,12 @@ export const updateTask = async (req, res) => {
 // Controller for deleting a task by ID
 export const updateDeleteFlag = async (req, res) => {
   const { id } = req.params;
-  const { deleteFlag } = true;
   try {
       const task = await Task.findByPk(id);
       if (!task) {
           return res.status(404).json({ error: "Task not found" });
       }
-      task.deleteFlag = deleteFlag;
+      task.deleteFlag = {deleteFlag: true};
       await task.save();
       res.json(task);
   } catch (error) {

@@ -1,5 +1,12 @@
 import express from "express";
-import { getProjects, getProjectById, createProject, updateProject, updateDeleteFlag, getListOfProjectName } from "../controllers/projectController.js";
+import {
+  getProjects,
+  getProjectById,
+  createProject,
+  updateProject,
+  updateDeleteFlag,
+  getListOfProjectName,
+} from "../controllers/projectController.js";
 
 const router = express.Router();
 
@@ -9,9 +16,10 @@ router.post("/add", createProject);
 // Get a list of all projects
 router.get("/list", getProjects);
 
+router.get("/name", getListOfProjectName);
+
 // Get project details by ID
 router.get("/:id", getProjectById);
-router.get("/nameList", getListOfProjectName);
 
 // Edit a project
 router.put("/edit/:id", updateProject);

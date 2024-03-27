@@ -3,7 +3,7 @@ import projectSchema from "../models/project.js";
 // Get all projects
 export const getProjects = async (req, res) => {
     try {
-        const projects = await projectSchema.findAll();
+        const projects = await projectSchema.findAll({where: {deleteFlag: false}});
         res.status(200).json(projects);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -54,13 +54,12 @@ export const updateProject = async (req, res) => {
 // Delete a project by ID
 export const updateDeleteFlag = async (req, res) => {
   const { id } = req.params;
-  const { deleteFlag } = true;
   try {
       const project = await projectSchema.findByPk(id);
       if (!project) {
           return res.status(404).json({ message: "Project not found" });
       }
-      await project.update({ deleteFlag });
+      await project.update({ deleteFlag: true });
       res.status(200).json(project);
   } catch (error) {
       res.status(400).json({ message: error.message });

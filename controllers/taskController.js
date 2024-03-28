@@ -24,7 +24,7 @@ export const getAllTasks = async (req, res) => {
 
 export const getAllTasksByProjectId = async (req, res) => {
     try {
-        const tasks = await taskSchema.findAll({ 
+        const tasks = await Task.findAll({ 
             where: { 
                 projectId: {
                     [Op.and]: [

@@ -46,7 +46,7 @@ export const uploadAttendanceToFirebaseStorage = async (file) => {
     try {
         const storageRef = firebase.storage().ref();
         const fileExtension = path.extname(file.originalname);
-        const uploadTask = storageRef.child(`attendance/${fileExtension}`).put(file.buffer, { contentType: file.mimetype });
+        const uploadTask = storageRef.child(`attendance/${Date.now()}${fileExtension}`).put(file.buffer, { contentType: file.mimetype });
         await uploadTask;
         console.log("Uploaded file path:", uploadTask.snapshot.ref.getDownloadURL());
         return uploadTask.snapshot.ref.getDownloadURL();

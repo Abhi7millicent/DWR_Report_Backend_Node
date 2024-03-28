@@ -21,7 +21,8 @@ import letterMaster from "./routes/letterMasterRoute.js";
 import project from "./routes/projectRoute.js";
 import task from './routes/taskRoute.js';
 import technology from './routes/technologyRoute.js';
-import dropDown from './routes/dropDownMasterRoute.js'
+import dropDown from './routes/dropDownMasterRoute.js';
+import offerLetterTemplate from './routes/offerLetterTemplateRoute.js'
 
 dotenv.config();
 const PORT = process.env.PORT;
@@ -49,6 +50,7 @@ app.use("/api/DWR/projects", project);
 app.use("/api/DWR/task", task);
 app.use("/api/DWR/technologies", technology);
 app.use("/api/DWR/drop-down", dropDown);
+app.use("/api/DWR/offer-letter-template", offerLetterTemplate);
 
 sequelize
   .authenticate()

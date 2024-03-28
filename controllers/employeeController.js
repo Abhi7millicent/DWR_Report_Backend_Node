@@ -59,7 +59,7 @@ export const addEmployee = async (req, res) => {
     try {
       await addresSchema.create({
         employeeId: employee.id,
-        addressType: "Permanent",
+        addressType: "Current",
       });
     } catch (error) {
       // Handle the error here
@@ -68,7 +68,7 @@ export const addEmployee = async (req, res) => {
 
     await addresSchema.create({
       employeeId: employee.id,
-      addressType: "Temporary",
+      addressType: "Permanent",
     });
 
     // Create personal details entry for the new employee

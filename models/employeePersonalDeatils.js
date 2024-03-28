@@ -19,6 +19,14 @@ const personalDeatilsSchema = sequelize.define(
       type: DataTypes.STRING,
       field: "blood_group_epd",
     },
+    panNo: {
+      type: DataTypes.STRING,
+      field: "pan_no_epd",
+    },
+    addharNo: {
+      type: DataTypes.STRING,
+      field: "addhar_no_epd",
+    },
     emergencyContact1: {
       type: DataTypes.STRING,
       field: "emergency_contact1_epd",

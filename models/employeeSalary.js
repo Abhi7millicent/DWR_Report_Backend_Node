@@ -35,10 +35,6 @@ const salaryDetailsSchema = sequelize.define(
       type: DataTypes.STRING,
       field: "epfo_no_esd",
     },
-    panNo: {
-      type: DataTypes.STRING,
-      field: "pan_no_esd",
-    },
     annualSalary: {
       type: DataTypes.STRING,
       field: "annual_salary_esd",

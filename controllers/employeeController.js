@@ -261,8 +261,8 @@ export const getListOfEmployeeName = async (req, res) =>  {
     // Fetch all employees from the database
     const employees = await Employee.findAll({
       where: {
-        deleteFlag: false,
-        role: { [Sequelize.Op.not]: "admin" }, // Using Sequelize operators
+        deleteFlag: false
+        // role: { [Sequelize.Op.not]: "admin" }, // Using Sequelize operators
       },
     });
 

@@ -32,7 +32,6 @@ const Employee = sequelize.define(
     },
     date: {
       type: DataTypes.STRING, // Assuming it's a date field
-      allowNull: false,
       field: "date_em",
     },
     balancedLeave: {
@@ -44,7 +43,7 @@ const Employee = sequelize.define(
       field: "lastupdatedmonthyear_em",
     },
     reporting: {
-      type: DataTypes.STRING,
+      type: DataTypes.JSON,
       field: "reporting_em",
     },
     role: {

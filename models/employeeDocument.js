@@ -15,7 +15,7 @@ const DocumentSchema = sequelize.define(
       field: "employee_id_ed",
     },
     documentType: {
-      type: DataTypes.STRING,
+      type: DataTypes.JSON,
       field: "document_type_ed",
     },
     uploadFilePath: {

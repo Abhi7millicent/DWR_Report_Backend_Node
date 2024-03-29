@@ -16,12 +16,12 @@ const EmployeeEducationDetails = sequelize.define(
       field: "employee_id_eed",
     },
     degree: {
-      type: DataTypes.STRING,
+      type: DataTypes.JSON,
       allowNull: false,
       field: "degree_eed",
     },
     institute: {
-      type: DataTypes.STRING,
+      type: DataTypes.JSON,
       allowNull: false,
       field: "institute_eed",
     },

@@ -32,7 +32,7 @@ export const generateSalarySlip = async (req, res) => {
 
     const leave = absentCount + (halfDayCount/2);
 
-    const leaveAmount = (wagesOfDay * absentCount) + ((wagesOfDay * halfDayCount) / 2);
+    const leaveAmount = wagesOfDay * leave;
 
     //pending values
     const hra =0;
@@ -58,7 +58,7 @@ export const generateSalarySlip = async (req, res) => {
     });
 
     await salarySlip.save();
-    res.status(201).json({ message: "Employee added successfully" });
+    res.status(201).json({ message: "Salary slip genrated successfully" });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }

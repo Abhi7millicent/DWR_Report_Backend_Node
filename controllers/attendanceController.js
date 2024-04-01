@@ -1,6 +1,7 @@
 import XLSX from 'xlsx';
 import AttendanceSchema from '../models/attendance.js';
 import moment from "moment-timezone";
+import { Op } from "sequelize";
 import { getAttendanceIdById } from './employeeController.js';
 import { readFirebaseFile, uploadAttendanceToFirebaseStorage } from '../middleware/attendanceUpload.js';
 export const uploadAttendance = async (req, res) => {
@@ -129,5 +130,46 @@ export const getAttendanceOfMonth = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 };
+
+export const getNoOfAbsentBetweenDateRange = async (startDate, endDate, employeeId) => {
+    try{
+        const startDateString = startDate.toISOString().split('T')[0];
+        const endDateString = endDate.toISOString().split('T')[0];
+        
+        const absentCount = await AttendanceSchema.count({
+            where: {
+                attendanceId: employeeId,
+                date: {
+                    [Op.between]: [startDateString, endDateString]
+                },
+                statusflag: "Absent"
+            }
+        });
+
+        return absentCount;
+    } catch (error) {
+      throw new Error("Error finding start date: " + error.message);
+    }
+  };
+export const getNoOfHalfdayBetweenDateRange = async (startDate, endDate, employeeId) => {
+    try{
+        const startDateString = startDate.toISOString().split('T')[0];
+        const endDateString = endDate.toISOString().split('T')[0];
+        
+        const absentCount = await AttendanceSchema.count({
+            where: {
+                attendanceId: employeeId,
+                date: {
+                    [Op.between]: [startDateString, endDateString]
+                },
+                statusflag: "HalfDay"
+            }
+        });
+
+        return absentCount;
+    } catch (error) {
+      throw new Error("Error finding start date: " + error.message);
+    }
+  };
 
  

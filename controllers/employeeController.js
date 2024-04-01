@@ -5,8 +5,10 @@ import personalDeatilsSchema from "../models/employeePersonalDeatils.js";
 import salaryDetailsSchema from "../models/employeeSalary.js";
 import { DateTime } from "luxon";
 import { Sequelize } from "sequelize";
+import { postSendWellcomeMail } from "./sendMailControll.js";
 export const addEmployee = async (req, res) => {
   try {
+    const { emails } = req.body;
     const {
       firstName,
       middleName,
@@ -81,6 +83,8 @@ export const addEmployee = async (req, res) => {
       employeeId: employee.id,
     });
 
+    // await postSendWellcomeMail(emails,firstName,email,password);
+
     res.status(201).json({ message: "Employee added successfully" });
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -93,8 +97,9 @@ export const getEmployeeList = async (req, res) => {
     const employeeList = await Employee.findAll({
       where: {
         deleteFlag: false,
-        role: { [Sequelize.Op.not]: "admin" }, // Using Sequelize operators
+        role: { [Sequelize.Op.not]: "admin" },// Using Sequelize operators
       },
+      order: [['id', 'DESC']], // Replace 'columnName' with the column you want to order by
     });
 
     res.status(200).json({ employees: employeeList });
@@ -251,6 +256,20 @@ export const getAttendanceIdById = async (employeeId) => {
     }
     console.log("attendanceId:", employee.attendanceId);
     return employee.attendanceId;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+export const getStartDateByEmployeeMaster = async (employeeId) => {
+  try {
+    console.log("employeeId:", employeeId);
+    const employee = await Employee.findByPk(employeeId);
+    if (!employee) {
+      throw new Error("Employee not found");
+    }
+    console.log("attendanceId:", employee.attendanceId);
+    return employee.date;
   } catch (error) {
     throw new Error(error.message);
   }

@@ -46,6 +46,10 @@ const Email = sequelize.define(
       type: DataTypes.STRING,
       field: "file_el",
     },
+    pdf:{
+      type: DataTypes.BLOB,
+      field: "file_el",
+    }
   },
   {
     tableName: "email_log_el",

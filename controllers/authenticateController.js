@@ -30,6 +30,7 @@ export const authenticate = async (req, res) => {
             id: employee.id,
             name: `${employee.firstName} ${employee.lastName}`,
             role: employee.role,
+            email: employee.email,
             message: 'Authentication successful',
             status: true, 
             token

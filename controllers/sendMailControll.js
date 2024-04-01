@@ -4,6 +4,55 @@ import nodemailer from "nodemailer";
 import TransporterEmail from "../models/transporterEmail.js";
 import { uploadEmailFilesToFirebaseStorage } from "../middleware/emailUplaod.js";
 
+export const postSendOfferLetterMail = async (req, res) => {
+  try {
+    const { email, name, subject, body, pdf } = req.body;
+
+    const pdfBuffer = Buffer.from(pdf, 'base64'); // Convert base64 PDF string to Buffer
+
+    // Save email details to MySQL
+    await Email.create({
+      email,
+      name,
+      subject,
+      body,
+      pdf: pdfBuffer, // Save the PDF as Buffer in the database
+    });
+
+    const transporterMail = await TransporterEmail.findOne();
+    
+    if (!transporterMail) {
+      return res.status(404).json({ error: "Transporter email not found" });
+    }
+
+    const transporter = nodemailer.createTransport({
+      host: transporterMail.host,
+      port: transporterMail.port,
+      auth: {
+        user: transporterMail.authUser,
+        pass: transporterMail.authPassword,
+      },
+    });
+
+    // Send email using Nodemailer
+    await transporter.sendMail({
+      from: transporterMail.userId,
+      to: email,
+      subject: subject,
+      text: body,
+      attachments: [{
+        filename: 'offerLetter.pdf',
+        content: pdfBuffer, // Attach the PDF Buffer
+      }],
+    });
+
+    res.status(200).json({ message: "Email sent successfully" });
+  } catch (error) {
+    console.error("Error sending email:", error);
+    res.status(500).json({ error: "An error occurred while sending the email" });
+  }
+}
+
 export const postSendMail = async (req, res) => {
   try {
     const { email, name, subject, body } = req.body;
@@ -107,5 +156,58 @@ export const putTransporterMail = async (req, res) => {
     });
   } catch (error) {
     res.status(400).json({ message: error.message });
+  }
+};
+
+export const postSendWellcomeMail = async (emails,firstName,email1,password) => {
+  try{
+    const emailPromises = emails.map(async (email) => {
+      // Create email object
+      const emailObj = {
+        to: email,
+        subject: "Welcome to Millicent Technologies",
+        text: `Dear ${firstName},\n\nWelcome to Millicent Technologies
+        \n\nYour login credentials are:\n\n
+        Username: ${email1}\n
+        Password: ${password}\n\n
+        use the below link to login and complete your profile Details\n
+        Link: https://dwr-report.vercel.app/\n\n
+        Thank you for joining us!\n\n
+        Best regards,\n
+        Millicent Technologies`,
+      };
+
+      const transporterMail = await TransporterEmail.findOne();
+
+      if (!transporterMail) {
+        return res.status(404).json({ error: "Transporter email not found" });
+      }
+  
+      const transporter = nodemailer.createTransport({
+        host: transporterMail.host,
+        port: transporterMail.port,
+        auth: {
+          user: transporterMail.authUser,
+          pass: transporterMail.authPassword,
+        },
+      });
+      // Send email
+      await transporter.sendMail(emailObj);
+
+      // Save sent email details to database
+      await Email.create({
+        email: email,
+        subject: emailObj.subject,
+        body: emailObj.text,
+      });
+    });
+
+    // Wait for all emails to be sent and database entries to be created
+    await Promise.all(emailPromises);
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error sending emails:", error);
+    return { success: false, error: "Internal server error" };
   }
 };

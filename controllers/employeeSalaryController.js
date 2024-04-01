@@ -41,3 +41,14 @@ export const getEmployeeSalaryByEmployeeId = async (req, res) => {
     res.status(500).json({ success: false, error: "Server Error" });
   }
 };
+
+export const getSalaryByEmployee = async (employeeId) => {
+    try{
+      const employeeSalary = await salaryDetailsSchema.findOne({
+        where: { employeeId: employeeId }
+      });
+      return employeeSalary.monthlySalary;
+    } catch (error) {
+    throw new Error("Error to calculate noOfDays: " + error.message);
+  }
+};

@@ -57,6 +57,26 @@ const salarySlipSchema = sequelize.define(
       defaultValue: 0,
       field: "tds_it_ssm",
     },
+    dailyWages: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+      field: "daily_wages_ssm",
+    },
+    totalAddition: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+      field: "total_addition_ssm",
+    },
+    totalDeduction: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+      field: "total_deduction_ssm",
+    },
+    netSalary: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+      field: "net_salary_ssm",
+    },
     deleteFlag: {
       type: DataTypes.BOOLEAN,
       allowNull: false,

@@ -1,6 +1,6 @@
 import express from "express";
 import multer from "multer";
-import { uploadDWR, getDWR, getDWRBasedOnDate, getDWRBasedOnDateRange } from "../controllers/DWRController.js";
+import { uploadDWR, getDWR, getDWRBasedOnDate, getDWRBasedOnDateRange } from "../controllers/dailyWorkReportController.js";
 
 const router = express.Router();
 

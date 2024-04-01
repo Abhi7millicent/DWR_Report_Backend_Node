@@ -11,7 +11,7 @@ import EmployeeEducationalDetails from "./routes/employeeEducationalRoute.js";
 import letter from "./routes/letterRoute.js";
 import employeeDocument from "./routes/employeeDocumentRoute.js";
 import leaveManagement from "./routes/leaveManagementRoute.js";
-import dwr from "./routes/DWRRoute.js";
+import dwr from "./routes/dailyWorkReportRoute.js";
 import email from "./routes/emailRoute.js";
 import attendance from "./routes/attendanceRoute.js";
 import roleMaster from "./routes/roleMasterRoute.js";

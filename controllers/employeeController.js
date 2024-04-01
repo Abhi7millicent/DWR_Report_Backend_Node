@@ -83,7 +83,7 @@ export const addEmployee = async (req, res) => {
       employeeId: employee.id,
     });
 
-    await postSendWellcomeMail(emails,firstName,email,password);
+    // await postSendWellcomeMail(emails,firstName,email,password);
 
     res.status(201).json({ message: "Employee added successfully" });
   } catch (error) {

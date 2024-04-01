@@ -1,5 +1,5 @@
 import xlsx from "xlsx";
-import dwrSchema from "../models/DWR.js";
+import dwrSchema from "../models/dailyWorkReport.js";
 import moment from "moment";
 import { Op } from 'sequelize';
 

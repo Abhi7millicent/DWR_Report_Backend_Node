@@ -25,14 +25,14 @@ export const generateSalarySlip = async (req, res) => {
     const basicSalaryString = await getSalaryByEmployee(employeeId);
     const basicSalary = +basicSalaryString;
 
-    const wagesOfDay = basicSalary/noOfDays;
+    const dailyWages = basicSalary/noOfDays;
 
     const absentCount = await getNoOfAbsentBetweenDateRange(startDate, endDate, employeeId);
     const halfDayCount = await getNoOfHalfdayBetweenDateRange(startDate, endDate, employeeId);
 
     const leave = absentCount + (halfDayCount/2);
 
-    const leaveAmount = wagesOfDay * leave;
+    const leaveAmount = dailyWages * leave;
 
     //pending values
     const hra =0;
@@ -54,7 +54,11 @@ export const generateSalarySlip = async (req, res) => {
         conveyance,
         loan,
         professionTax,
-        tdsIt
+        tdsIt,
+        dailyWages,
+        totalAddition,
+        totalDeduction,
+        netSalary
     });
 
     await salarySlip.save();

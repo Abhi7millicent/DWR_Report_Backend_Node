@@ -45,7 +45,7 @@ export const getEmployeeSalaryByEmployeeId = async (req, res) => {
 export const getSalaryByEmployee = async (employeeId) => {
     try{
       const employeeSalary = await salaryDetailsSchema.findOne({
-        where: { employeeId: employeeId }
+        where: { employeeId: employeeId.employeeId }
       });
       return employeeSalary.monthlySalary;
     } catch (error) {

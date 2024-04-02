@@ -77,6 +77,15 @@ const salarySlipSchema = sequelize.define(
       defaultValue: 0,
       field: "net_salary_ssm",
     },
+    status: {
+      type: DataTypes.STRING,
+      defaultValue: "Pending",
+      field: "status_ssm",
+    },
+    path: {
+      type: DataTypes.STRING,
+      field: "path_ssm",
+    },
     deleteFlag: {
       type: DataTypes.BOOLEAN,
       allowNull: false,

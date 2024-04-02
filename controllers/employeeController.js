@@ -264,7 +264,8 @@ export const getAttendanceIdById = async (employeeId) => {
 export const getStartDateByEmployeeMaster = async (employeeId) => {
   try {
     console.log("employeeId:", employeeId);
-    const employee = await Employee.findByPk(employeeId);
+    const id = parseInt(employeeId.employeeId);
+    const employee = await Employee.findByPk(id);
     if (!employee) {
       throw new Error("Employee not found");
     }
@@ -275,6 +276,20 @@ export const getStartDateByEmployeeMaster = async (employeeId) => {
   }
 };
 
+export const getAttendanceIdByEmployeeMaster = async (employeeId) => {
+  try {
+    console.log("employeeId:", employeeId);
+    const id = parseInt(employeeId.employeeId);
+    const employee = await Employee.findByPk(id);
+    if (!employee) {
+      throw new Error("Employee not found");
+    }
+    console.log("attendanceId:", employee.attendanceId);
+    return employee.attendanceId;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
 export const getListOfEmployeeName = async (req, res) =>  {
   try {
     // Fetch all employees from the database

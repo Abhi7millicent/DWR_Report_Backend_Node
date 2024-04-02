@@ -1,6 +1,8 @@
+import { uploadSalarySlipFileToFirebaseStorage } from "../middleware/salarySlipUpload.js";
 import salarySlipSchema from "../models/salarySlip.js";
 import { getNoOfAbsentBetweenDateRange, getNoOfHalfdayBetweenDateRange } from "./attendanceController.js";
-import { getStartDateByEmployeeMaster } from "./employeeController.js";
+import { getAttendanceIdByEmployeeMaster, getStartDateByEmployeeMaster } from "./employeeController.js";
+import { getSalaryByEmployee } from "./employeeSalaryController.js";
 
 export const generateSalarySlip = async (req, res) => {
   try {
@@ -11,26 +13,39 @@ export const generateSalarySlip = async (req, res) => {
         dateValue = await getStartDateByEmployeeMaster(employeeId);
     }
     
-    const existingSalarySlip = await salarySlipSchema.findOne({
-      where: {
-        date: dateValue,
-        employeeId: employeeId
-      }
-    });
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Adding 1 because month index starts from 0
+    const day = String(currentDate.getDate()).padStart(2, '0');
 
-    if (existingSalarySlip) {
-      // If salary slip already exists, send a response indicating it's already present
-      return res.status(200).json({ message: 'Salary slip already exists for this date and employee ID.' });
-    }
+    const currentDateFormatted = `${year}-${month}-${day}`;
+
+    const parseDate = (dateString) => {
+    const [year, month, day] = dateString.split('-').map(Number);
+    return { year, month, day };
+    };
+
+// Parse dateValue and currentDateFormatted
+const dateValueParsed = parseDate(dateValue);
+const currentDateParsed = parseDate(currentDateFormatted);
+
+// Check if year and month are the same
+const isSameMonthAndYear = dateValueParsed.year === currentDateParsed.year && dateValueParsed.month === currentDateParsed.month;
+
+if (isSameMonthAndYear) {
+  // If salary slip already exists, send a response indicating it's already present
+  return res.status(200).json({ message: 'Salary slip already exists for the privious month date and employee ID.' });
+}
 
     const startDate = new Date(dateValue);
 
     // Calculate end date as one month ahead of the start date
     const endDate = new Date(startDate);
     endDate.setMonth(endDate.getMonth() + 1);
-    endDate.setDate(endDate.getDate() - 1)
+    endDate.setDate(endDate.getDate() - 1);
 
     const dateFormate = new Date(endDate);
+    dateFormate.setDate(endDate.getDate() + 1);
     const date = dateFormate.toISOString().split('T')[0];
 
     const noOfDays = await calculateNoOfDays(startDate, endDate);
@@ -40,8 +55,9 @@ export const generateSalarySlip = async (req, res) => {
 
     const dailyWages = basicSalary/noOfDays;
 
-    const absentCount = await getNoOfAbsentBetweenDateRange(startDate, endDate, employeeId);
-    const halfDayCount = await getNoOfHalfdayBetweenDateRange(startDate, endDate, employeeId);
+    const attendanceId = await getAttendanceIdByEmployeeMaster(employeeId);
+    const absentCount = await getNoOfAbsentBetweenDateRange(startDate, endDate, attendanceId);
+    const halfDayCount = await getNoOfHalfdayBetweenDateRange(startDate, endDate, attendanceId);
 
     const leave = absentCount + (halfDayCount/2);
 
@@ -57,9 +73,10 @@ export const generateSalarySlip = async (req, res) => {
     const totalAddition = basicSalary + hra + conveyance;
     const totalDeduction = leaveAmount + loan + professionTax + tdsIt;
     const netSalary = totalAddition - totalDeduction;
+    const empId = employeeId.employeeId;
 
     const salarySlip = new salarySlipSchema({
-        employeeId,
+        employeeId:empId,
         date,
         basicSalary,
         leave,
@@ -86,7 +103,7 @@ const findStartDate = async (employeeId) => {
     // Find the most recent salary slip for the employee
     const salarySlip = await salarySlipSchema.findOne({
       where: {
-        employeeId: employeeId
+        employeeId: employeeId.employeeId
       },
       order: [['id', 'DESC']]
     });
@@ -127,3 +144,30 @@ export const getSalarySlipByEmployeeId = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+export const updateSalarySlipById = async (req, res) => {
+  const { id } = req.params;
+  const file = req.file;
+  if (!file) {
+    return res.status(400).json({ message: "No file uploaded" });
+  }
+
+  const path = await uploadSalarySlipFileToFirebaseStorage(file);
+  try {
+    const [updated] = await salarySlipSchema.update(
+      req.body,
+      {
+        where: { id: id }
+      }
+    );
+
+    if (updated) {
+      res.status(200).send(`Salary slip with ID ${id} has been updated successfully.`);
+    } else {
+      res.status(404).send(`Salary slip with ID ${id} not found.`);
+    }
+  } catch (error) {
+    res.status(500).send('Error updating salary slip details: ' + error.message);
+  }
+};
+

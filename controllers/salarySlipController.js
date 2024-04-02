@@ -10,6 +10,19 @@ export const generateSalarySlip = async (req, res) => {
     if (!dateValue) {
         dateValue = await getStartDateByEmployeeMaster(employeeId);
     }
+    
+    const existingSalarySlip = await salarySlipSchema.findOne({
+      where: {
+        date: dateValue,
+        employeeId: employeeId
+      }
+    });
+
+    if (existingSalarySlip) {
+      // If salary slip already exists, send a response indicating it's already present
+      return res.status(200).json({ message: 'Salary slip already exists for this date and employee ID.' });
+    }
+
     const startDate = new Date(dateValue);
 
     // Calculate end date as one month ahead of the start date
@@ -101,3 +114,16 @@ const calculateNoOfDays = async (startDate, endDate) => {
   }
 };
 
+export const getSalarySlipByEmployeeId = async (req, res) => {
+  const { employeeId } = req.params;
+
+  try {
+    const salarySlips = await salarySlipSchema.findAll({
+      where: { employeeId: employeeId },
+    });
+    res.status(200).json({data: salarySlips});
+  } catch (error) {
+    console.error("Error fetching salary slip by employeeId:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};

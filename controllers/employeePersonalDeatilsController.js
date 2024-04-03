@@ -47,8 +47,16 @@ export const getEmployeePersonalDataByEmployeeId = async (req, res) => {
 
 export const getListOfDateOfBirth = async (startDate, endDate) => {
     try {
-      const personalData = await personalDetailsSchema.findAll({ where: {dateOfBirth: { [Op.between]: [startDate, endDate] }, deleteFlag: false} });
-      
+      const personalData = await personalDetailsSchema.findAll({ 
+        where: {
+            [Op.and]: [
+                sequelize.where(sequelize.fn('DATE_FORMAT', sequelize.col('dateOfBirth'), '%m-%d'), {
+                    [Op.between]: [startDate.substring(5), endDate.substring(5)] // Extract MM-DD from startDate and endDate
+                }),
+                { deleteFlag: false }
+            ]
+        }
+    });
       const namesWithBirthdate = [];
         
         for (const data of personalData) {

@@ -5,6 +5,7 @@ import personalDeatilsSchema from "../models/employeePersonalDeatils.js";
 import salaryDetailsSchema from "../models/employeeSalary.js";
 import { DateTime } from "luxon";
 import { Sequelize } from "sequelize";
+import { Op } from 'sequelize';
 import { postSendWellcomeMail } from "./sendMailControll.js";
 export const addEmployee = async (req, res) => {
   try {
@@ -308,11 +309,11 @@ export const getNameById = async (empId) => {
     throw new Error(error.message);
   }
 };
-export const getListOfAnniversary = async (empId) => {
+export const getListOfAnniversary = async (startDate, endDate) => {
   try {
-    const employee = await Employee.findAll({ where: {dateOfBirth: { [Op.between]: [startDate, endDate] }, deleteFlag: false} });
+    const employee = await Employee.findAll({ where: {date: { [Op.between]: [startDate, endDate] }, deleteFlag: false} });
     const namesWithAnniversaryDate = [];
-        
+    for (const data of employee) {
     const anniversaryDate = new Date(data.date);
         
     // Increase the year by one
@@ -327,6 +328,7 @@ export const getListOfAnniversary = async (empId) => {
         date: formattedAnniversaryDate,
         type: "Anniversary"
     });
+  }
         return namesWithAnniversaryDate;
   } catch (error) {
     throw new Error(error.message);

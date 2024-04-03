@@ -308,6 +308,30 @@ export const getNameById = async (empId) => {
     throw new Error(error.message);
   }
 };
+export const getListOfAnniversary = async (empId) => {
+  try {
+    const employee = await Employee.findAll({ where: {dateOfBirth: { [Op.between]: [startDate, endDate] }, deleteFlag: false} });
+    const namesWithAnniversaryDate = [];
+        
+    const anniversaryDate = new Date(data.date);
+        
+    // Increase the year by one
+    anniversaryDate.setFullYear(anniversaryDate.getFullYear() + 1);
+    
+    // Format the anniversary date as "YYYY-MM-DD"
+    const formattedAnniversaryDate = anniversaryDate.toISOString().split('T')[0];
+    
+    // Push the name with the adjusted anniversary date to the array
+    namesWithAnniversaryDate.push({ 
+        name: data.firstName + data.middleName + data.lastName, 
+        date: formattedAnniversaryDate,
+        type: "Anniversary"
+    });
+        return namesWithAnniversaryDate;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
 
 export const getListOfEmployeeName = async (req, res) =>  {
   try {

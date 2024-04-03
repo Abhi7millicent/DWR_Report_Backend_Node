@@ -47,7 +47,7 @@ export const getEmployeePersonalDataByEmployeeId = async (req, res) => {
 
 export const getListOfDateOfBirth = async (startDate, endDate) => {
     try {
-      const personalData = await personalDetailsSchema.findOne({ where: {dateOfBirth: { [Op.between]: [startDate, endDate] }, deleteFlag: false} });
+      const personalData = await personalDetailsSchema.findAll({ where: {dateOfBirth: { [Op.between]: [startDate, endDate] }, deleteFlag: false} });
       
       const namesWithBirthdate = [];
         

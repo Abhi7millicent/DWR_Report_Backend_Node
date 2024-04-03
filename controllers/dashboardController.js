@@ -1,4 +1,5 @@
 import { getEmployeeTotalCount } from "./employeeController";
+import { getListOfDateOfBirth } from "./employeePersonalDeatilsController";
 import { getProjectTotalCount } from "./projectController";
 import { getCompletedTaskTotalCount, getCompletedTaskTotalCountById, getPendingTaskTotalCount, getPendingTaskTotalCountById, getTaskTotalCount, getTaskTotalCountById } from "./taskController";
 

@@ -290,6 +290,25 @@ export const getAttendanceIdByEmployeeMaster = async (employeeId) => {
     throw new Error(error.message);
   }
 };
+
+export const getEmployeeTotalCount = async () => {
+  try {
+    const count = await Employee.count({ where: { deleteFlag: false } });
+    return count;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+export const getNameById = async (empId) => {
+  const id = parseInt(empId);
+  try {
+    const name = await Employee.findByPk(id);
+    return name.firstName + name.middleName +name.lastName;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
 export const getListOfEmployeeName = async (req, res) =>  {
   try {
     // Fetch all employees from the database

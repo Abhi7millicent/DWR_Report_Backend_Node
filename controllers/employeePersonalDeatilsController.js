@@ -1,4 +1,6 @@
 import personalDetailsSchema from "../models/employeePersonalDeatils.js";
+import { Op } from 'sequelize';
+import { getNameById } from "./employeeController.js";
 
 export const updateEmployeePersonalDetails = async (req, res) => {
   const employeeId = req.params.employeeId;
@@ -38,6 +40,25 @@ export const getEmployeePersonalDataByEmployeeId = async (req, res) => {
       
       return res.status(200).json({ data: personalData });
   } catch (error) {
+      console.error("Error retrieving personal data:", error);
+      return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const getListOfDateOfBirth = async (startDate, endDate) => {
+    try {
+      const personalData = await personalDetailsSchema.findOne({ where: {dateOfBirth: { [Op.between]: [startDate, endDate] }, deleteFlag: false} });
+      
+      const namesWithBirthdate = [];
+        
+        for (const data of personalData) {
+            // Get the name associated with the personalData ID
+            const name = await getNameById(data.employeeId);
+            // Push name with birthdate to the array
+            namesWithBirthdate.push({ name: name, date: data.dateOfBirth , type: "birthDay"});
+        }
+        return namesWithBirthdate;
+    } catch (error) {
       console.error("Error retrieving personal data:", error);
       return res.status(500).json({ message: "Internal server error" });
   }

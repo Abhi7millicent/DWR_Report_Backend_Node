@@ -65,6 +65,12 @@ const projectSchema = sequelize.define(
             allowNull: false,
             field: "end_date_pm",
           },
+          status: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            defaultValue: "Pending",
+            field: "status_pm",
+          },
           deleteFlag: {
             type: DataTypes.BOOLEAN,
             allowNull: false,

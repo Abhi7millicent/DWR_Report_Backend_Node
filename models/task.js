@@ -45,6 +45,12 @@ const taskSchema = sequelize.define(
             allowNull: false,
             field: "start_date_tm",
           },
+          status: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            defaultValue: "Pending",
+            field: "status_tm",
+          },
           endDate: {
             type: DataTypes.STRING,
             allowNull: false,

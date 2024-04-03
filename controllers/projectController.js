@@ -87,3 +87,12 @@ export const getListOfProjectName = async (req, res) =>  {
       res.status(500).json({ error: "Internal Server Error" });
     }
   };
+
+  export const getProjectTotalCount = async () => {
+    try {
+      const count = await projectSchema.count({ where: { deleteFlag: false } });
+      return count;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  };

@@ -100,3 +100,65 @@ export const updateDeleteFlag = async (req, res) => {
       res.status(400).json({ message: error.message });
   }
 };
+
+export const getTaskTotalCount = async () => {
+    try {
+      const count = await Task.count({ where: { deleteFlag: false } });
+      return count;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  };
+export const getPendingTaskTotalCount = async () => {
+    try {
+      const count = await Task.count({ where: { deleteFlag: false, status: "Pending" } });
+      return count;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  };
+export const getCompletedTaskTotalCount = async () => {
+    try {
+      const count = await Task.count({ where: { deleteFlag: false, status: "Completed" } });
+      return count;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  };
+
+  export const getTaskTotalCountById = async (employeeId) => {
+    try {
+      const count = await Task.count({ where: { deleteFlag: false, assignTo: {
+        [Op.and]: [
+            { value: employeeId }      // Filter by value
+        ]
+    }, } });
+      return count;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  };
+export const getPendingTaskTotalCountById = async () => {
+    try {
+      const count = await Task.count({ where: { assignTo: {
+        [Op.and]: [
+            { value: employeeId }      // Filter by value
+        ]
+    }, deleteFlag: false, status: "Pending" } });
+      return count;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  };
+export const getCompletedTaskTotalCountById = async () => {
+    try {
+      const count = await Task.count({ where: { assignTo: {
+        [Op.and]: [
+            { value: employeeId }      // Filter by value
+        ]
+    }, deleteFlag: false, status: "Completed" } });
+      return count;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  };

@@ -309,6 +309,15 @@ export const getNameById = async (empId) => {
     throw new Error(error.message);
   }
 };
+export const getBalanceleaveCountById = async (employeeId) => {
+  const id = employeeId;
+  try {
+    const name = await Employee.findByPk(id);
+    return name.balancedLeave;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
 export const getListOfAnniversary = async (startDate, endDate) => {
   try {
     const employee = await Employee.findAll({ where: {date: { [Op.between]: [startDate, endDate] }, deleteFlag: false} });

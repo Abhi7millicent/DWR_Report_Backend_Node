@@ -1,4 +1,4 @@
-import { getEmployeeTotalCount, getListOfAnniversary } from "./employeeController.js";
+import { getBalanceleaveCountById, getEmployeeTotalCount, getListOfAnniversary } from "./employeeController.js";
 import { getListOfDateOfBirth } from "./employeePersonalDeatilsController.js";
 import { getProjectTotalCount } from "./projectController.js";
 import {
@@ -71,9 +71,21 @@ export const getTaskCountById = async (req, res) => {
   }
 };
 
+export const getBalanceleavesCountById = async (req, res) => {
+    try {
+      const employeeId = req.param.employeeId;
+      const count = await getBalanceleaveCountById(employeeId);
+      res.status(200).send({ data: count });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Internal Server Error");
+    }
+  };
+
 export const getPendingTaskCountById = async (req, res) => {
   try {
-    const count = await getPendingTaskTotalCountById();
+    const employeeId = req.param.employeeId;
+    const count = await getPendingTaskTotalCountById(employeeId);
     res.status(200).send({ data: count });
   } catch (error) {
     console.error(error);
@@ -83,7 +95,8 @@ export const getPendingTaskCountById = async (req, res) => {
 
 export const getCompletedTaskCountById = async (req, res) => {
   try {
-    const count = await getCompletedTaskTotalCountById();
+    const employeeId = req.param.employeeId;
+    const count = await getCompletedTaskTotalCountById(employeeId);
     res.status(200).send({ data: count });
   } catch (error) {
     console.error(error);
@@ -105,7 +118,9 @@ export const getListOfEvents = async (req, res) => {
 
     const dateOfBirth = await getListOfDateOfBirth(startDate, endDate);
     const anniversary = await getListOfAnniversary(startDate, endDate);
-    res.status(200).send({ dateOfBirth, anniversary });
+    const events = [...dateOfBirth, ...anniversary];
+
+    res.status(200).send(events);
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error");

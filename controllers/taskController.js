@@ -138,7 +138,7 @@ export const getCompletedTaskTotalCount = async () => {
       throw new Error(error.message);
     }
   };
-export const getPendingTaskTotalCountById = async () => {
+export const getPendingTaskTotalCountById = async (employeeId) => {
     try {
       const count = await Task.count({ where: { assignTo: {
         [Op.and]: [
@@ -150,7 +150,7 @@ export const getPendingTaskTotalCountById = async () => {
       throw new Error(error.message);
     }
   };
-export const getCompletedTaskTotalCountById = async () => {
+export const getCompletedTaskTotalCountById = async (employeeId) => {
     try {
       const count = await Task.count({ where: { assignTo: {
         [Op.and]: [

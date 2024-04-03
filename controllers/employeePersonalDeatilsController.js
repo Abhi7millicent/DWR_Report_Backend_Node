@@ -1,5 +1,5 @@
 import personalDetailsSchema from "../models/employeePersonalDeatils.js";
-import { Op } from 'sequelize';
+import { Op, Sequelize } from 'sequelize';
 import { getNameById } from "./employeeController.js";
 
 export const updateEmployeePersonalDetails = async (req, res) => {
@@ -50,7 +50,7 @@ export const getListOfDateOfBirth = async (startDate, endDate) => {
       const personalData = await personalDetailsSchema.findAll({ 
         where: {
             [Op.and]: [
-                sequelize.where(sequelize.fn('DATE_FORMAT', sequelize.col('dateOfBirth'), '%m-%d'), {
+              Sequelize.where(Sequelize.fn('DATE_FORMAT', Sequelize.col('date_of_birth_epd'), '%m-%d'), {
                     [Op.between]: [startDate.substring(5), endDate.substring(5)] // Extract MM-DD from startDate and endDate
                 }),
                 { deleteFlag: false }

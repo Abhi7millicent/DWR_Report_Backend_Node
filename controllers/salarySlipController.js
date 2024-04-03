@@ -154,7 +154,7 @@ export const updateSalarySlipById = async (req, res) => {
 
   const path = await uploadSalarySlipFileToFirebaseStorage(file);
   try {
-    const [updated] = await salarySlipSchema.update(
+    const updated = await salarySlipSchema.update(
       req.body,
       {
         where: { id: id }
@@ -162,12 +162,25 @@ export const updateSalarySlipById = async (req, res) => {
     );
 
     if (updated) {
-      res.status(200).send(`Salary slip with ID ${id} has been updated successfully.`);
+      res.status(200).json(`Salary slip with ID ${id} has been updated successfully.`);
     } else {
-      res.status(404).send(`Salary slip with ID ${id} not found.`);
+      res.status(404).json(`Salary slip with ID ${id} not found.`);
     }
   } catch (error) {
-    res.status(500).send('Error updating salary slip details: ' + error.message);
+    res.status(500).json('Error updating salary slip details: ' + error.message);
   }
 };
 
+export const getSalarySlipById = async (req, res) => {
+  const  id  = req.params.id;
+  try{
+    const salarySlip = await salarySlipSchema.findByPk(id);
+    if (!salarySlip) {
+      throw new Error("salarySlip not found");
+    }
+    res.status(200).json({data: salarySlip});
+  } catch (error) {
+    res.status(500).json('Error to get salary slip details: ' + error.message);
+  }
+
+};

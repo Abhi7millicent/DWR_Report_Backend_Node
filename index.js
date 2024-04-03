@@ -19,11 +19,12 @@ import documentMaster from "./routes/documentMasterRoute.js";
 import leaveMaster from "./routes/leaveMasterRoute.js";
 import letterMaster from "./routes/letterMasterRoute.js";
 import project from "./routes/projectRoute.js";
-import task from './routes/taskRoute.js';
-import technology from './routes/technologyRoute.js';
-import dropDown from './routes/dropDownMasterRoute.js';
-import offerLetterTemplate from './routes/offerLetterTemplateRoute.js'
-import salarySlip from './routes/salarySlipRoute.js'
+import task from "./routes/taskRoute.js";
+import technology from "./routes/technologyRoute.js";
+import dropDown from "./routes/dropDownMasterRoute.js";
+import offerLetterTemplate from "./routes/offerLetterTemplateRoute.js";
+import salarySlip from "./routes/salarySlipRoute.js";
+import dashboard from "./routes/dashboardRoute.js";
 
 dotenv.config();
 const PORT = process.env.PORT;
@@ -53,13 +54,14 @@ app.use("/api/DWR/technologies", technology);
 app.use("/api/DWR/drop-down", dropDown);
 app.use("/api/DWR/offer-letter-template", offerLetterTemplate);
 app.use("/api/DWR/salary-slip", salarySlip);
+app.use("/api/DWR/dashboard", dashboard);
 
 sequelize
   .authenticate()
   .then(() => {
-    console.log('Database connected successfully');
+    console.log("Database connected successfully");
     app.listen(PORT, () => console.log(`Server is running on : ${PORT}`));
   })
-  .catch(err => {
-    console.error('Unable to connect to the database:', err);
+  .catch((err) => {
+    console.error("Unable to connect to the database:", err);
   });

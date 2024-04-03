@@ -309,8 +309,8 @@ export const getNameById = async (empId) => {
     throw new Error(error.message);
   }
 };
-export const getBalanceleaveCountById = async (employeeId) => {
-  const id = employeeId;
+export const getBalanceleaveCountById = async (empId) => {
+  const id = empId;
   try {
     const name = await Employee.findByPk(id);
     return name.balancedLeave;

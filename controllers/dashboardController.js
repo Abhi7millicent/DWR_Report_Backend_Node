@@ -62,7 +62,7 @@ export const getCompletedTaskCount = async (req, res) => {
 
 export const getTaskCountById = async (req, res) => {
   try {
-    const employeeId = req.param.employeeId;
+    const employeeId = req.params.employeeId;
     const count = await getTaskTotalCountById(employeeId);
     res.status(200).send({ data: count });
   } catch (error) {
@@ -73,8 +73,8 @@ export const getTaskCountById = async (req, res) => {
 
 export const getBalanceleavesCountById = async (req, res) => {
     try {
-      const employeeId = req.param.employeeId;
-      const count = await getBalanceleaveCountById(employeeId);
+      const empId = req.params.employeeId;
+      const count = await getBalanceleaveCountById(empId);
       res.status(200).send({ data: count });
     } catch (error) {
       console.error(error);
@@ -84,7 +84,7 @@ export const getBalanceleavesCountById = async (req, res) => {
 
 export const getPendingTaskCountById = async (req, res) => {
   try {
-    const employeeId = req.param.employeeId;
+    const employeeId = req.params.employeeId;
     const count = await getPendingTaskTotalCountById(employeeId);
     res.status(200).send({ data: count });
   } catch (error) {
@@ -95,7 +95,7 @@ export const getPendingTaskCountById = async (req, res) => {
 
 export const getCompletedTaskCountById = async (req, res) => {
   try {
-    const employeeId = req.param.employeeId;
+    const employeeId = req.params.employeeId;
     const count = await getCompletedTaskTotalCountById(employeeId);
     res.status(200).send({ data: count });
   } catch (error) {

@@ -1,6 +1,6 @@
 import express from "express";
 import {
-    getBalanceleavesCountById,
+  getBalanceleavesCountById,
   getCompletedTaskCount,
   getCompletedTaskCountById,
   getEmployeeCount,
@@ -19,10 +19,10 @@ router.get("/project-count", getProjectCount);
 router.get("/task-count", getTaskCount);
 router.get("/pending-task-count", getPendingTaskCount);
 router.get("/completed-task-count", getCompletedTaskCount);
-router.get("/task-count/:id", getTaskCountById);
-router.get("/pending-task-count/:id", getPendingTaskCountById);
-router.get("/completed-task-count/:id", getCompletedTaskCountById);
-router.get("/balance-leaves-count/:id", getBalanceleavesCountById);
+router.get("/task-count/:employeeId", getTaskCountById);
+router.get("/pending-task-count/:employeeId", getPendingTaskCountById);
+router.get("/completed-task-count/:employeeId", getCompletedTaskCountById);
+router.get("/balance-leaves-count/:employeeId", getBalanceleavesCountById);
 router.get("/events-list", getListOfEvents);
 
 export default router;

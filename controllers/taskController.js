@@ -22,6 +22,21 @@ export const getAllTasks = async (req, res) => {
     }
 };
 
+export const getAllTasksById = async (req, res) => {
+  const employeeId = req.params.employeeId;
+  try {
+      const tasks = await Task.findAll({where: {deleteFlag: false, assignTo: {
+        [Op.and]: [
+            { value: employeeId }      // Filter by value
+        ]
+    }}});
+      res.json({data: tasks});
+  } catch (error) {
+      console.error("Error fetching tasks:", error);
+      res.status(500).json({ error: "Could not fetch tasks" });
+  }
+};
+
 export const getAllTasksByProjectId = async (req, res) => {
     try {
         const tasks = await Task.findAll({ 

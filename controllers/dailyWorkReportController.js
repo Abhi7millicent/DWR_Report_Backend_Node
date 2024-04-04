@@ -1,7 +1,8 @@
 import xlsx from "xlsx";
-import dwrSchema from "../models/dailyWorkReport.js";
+import dailyWorkReportSchema from "../models/dailyWorkReport.js";
 import moment from "moment";
 import { Op } from 'sequelize';
+import { readDWRFromFirebaseFile, uploadDWRToFirebaseStorage } from "../middleware/dailyWorkReportUpload.js";
 
 export const uploadDWR = async (req, res) => {
   try {
@@ -9,8 +10,11 @@ export const uploadDWR = async (req, res) => {
       return res.status(400).send("No file uploaded");
     }
 
+    const filePath = await uploadDWRToFirebaseStorage(req.file);
+    const fileContent = await readDWRFromFirebaseFile(filePath);
     // Parse uploaded Excel file
-    const workbook = xlsx.readFile(req.file.path);
+    const workbook = xlsx.read(fileContent, { type: 'buffer' });
+    // const workbook = xlsx.readFile(fileContent);
     const sheetName = workbook.SheetNames[0];
     const sheet = workbook.Sheets[sheetName];
     const data = xlsx.utils.sheet_to_json(sheet);
@@ -68,7 +72,7 @@ export const uploadDWR = async (req, res) => {
     }
 
     // Save transformed data to MySQL
-    await dwrSchema.bulkCreate(transformedData);
+    await dailyWorkReportSchema.bulkCreate(transformedData);
 
 
     res.status(200).send("Data uploaded successfully");
@@ -81,7 +85,7 @@ export const uploadDWR = async (req, res) => {
 export const getDWR = async (req, res) => {
   try {
     const employeeId = req.params.employeeId;
-    const dwrList = await dwrSchema.findAll({ where: { employeeId, deleteFlag: false } });
+    const dwrList = await dailyWorkReportSchema.findAll({ where: { employeeId, deleteFlag: false } });
     res.status(200).json({ data: dwrList });
   } catch (err) {
     console.error("Error fetching DWR entries:", err);
@@ -93,7 +97,7 @@ export const getDWRBasedOnDateRange = async (req, res) => {
   try {
     const { startDate, endDate, employeeId } = req.params;
 
-    const dwrList = await dwrSchema.findAll({
+    const dwrList = await dailyWorkReportSchema.findAll({
       where: { employeeId, date: { [Op.between]: [startDate, endDate] }, deleteFlag: false }
     });
 
@@ -109,7 +113,7 @@ export const getDWRBasedOnDate = async (req, res) => {
   try {
     const { employeeId, date } = req.params;
 
-    const dwrList = await dwrSchema.findAll({ where: { employeeId, date, deleteFlag: false } });
+    const dwrList = await dailyWorkReportSchema.findAll({ where: { employeeId, date, deleteFlag: false } });
 
     res.status(200).json({ data: dwrList });
   } catch (err) {

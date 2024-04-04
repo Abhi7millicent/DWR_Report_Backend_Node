@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../dataBase/sequelize.js";
 
-const DWRSchema = sequelize.define(
+const dailyWorkReportSchema = sequelize.define(
   "DWR",
   {
     id: {
@@ -84,11 +84,11 @@ const DWRSchema = sequelize.define(
 
 (async () => {
   try {
-    await DWRSchema.sync();
+    await dailyWorkReportSchema.sync();
     console.log("DWR model synchronized successfully.");
   } catch (error) {
     console.error("Error synchronizing DWR model:", error);
   }
 })();
 
-export default DWRSchema;
+export default dailyWorkReportSchema;

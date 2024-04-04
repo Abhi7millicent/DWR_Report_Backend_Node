@@ -1,23 +1,12 @@
 import express from "express";
 import multer from "multer";
 import { uploadDWR, getDWR, getDWRBasedOnDate, getDWRBasedOnDateRange } from "../controllers/dailyWorkReportController.js";
+import uploadDWRPath from "../middleware/dailyWorkReportUpload.js";
 
 const router = express.Router();
 
-// Multer configuration
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'D:\\DWR_report_backend\\uploads\\DWR');
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname); // Keep the original filename
-  }
-});
-
-const upload = multer({ storage: storage });
-
 // Define route for uploading DWR data
-router.post("/upload", upload.single('file'), uploadDWR);
+router.post("/upload", uploadDWRPath.single('file'), uploadDWR);
 router.get("/list/:employeeId", getDWR);
 router.get("/list/:employeeId/:date", getDWRBasedOnDate);
 router.get("/list/:employeeId/:startDate/:endDate", getDWRBasedOnDateRange);

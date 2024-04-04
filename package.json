@@ -42,10 +42,12 @@
     "office-converter": "^1.0.2",
     "officegen": "^0.6.5",
     "pdf-lib": "^1.17.1",
+    "pdfkit": "^0.15.0",
     "pizzip": "^3.1.6",
     "puppeteer": "^22.4.0",
     "sequelize": "^6.37.1",
     "tmp": "^0.2.3",
-    "xlsx": "^0.18.5"
+    "xlsx": "^0.18.5",
+    "xml2js": "^0.6.2"
   }
 }

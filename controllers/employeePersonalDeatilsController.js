@@ -59,12 +59,15 @@ export const getListOfDateOfBirth = async (startDate, endDate) => {
     });
       const namesWithBirthdate = [];
         
-        for (const data of personalData) {
-            // Get the name associated with the personalData ID
-            const name = await getNameById(data.employeeId);
-            // Push name with birthdate to the array
-            namesWithBirthdate.push({ name: name, date: data.dateOfBirth , type: "birthDay"});
-        }
+      for (const data of personalData) {
+        // Get the name associated with the personalData ID
+        const name = await getNameById(data.employeeId);
+        // Replace year in dateOfBirth with current year
+        const currentYear = new Date().getFullYear();
+        const dateOfBirthWithCurrentYear = `${currentYear}-${data.dateOfBirth.substring(5)}`;
+        // Push name with birthdate to the array
+        namesWithBirthdate.push({ name: name, date: dateOfBirthWithCurrentYear , type: "birthDay"});
+    }
         return namesWithBirthdate;
     } catch (error) {
       console.error("Error retrieving personal data:", error);

@@ -294,7 +294,7 @@ export const getAttendanceIdByEmployeeMaster = async (employeeId) => {
 
 export const getEmployeeTotalCount = async () => {
   try {
-    const count = await Employee.count({ where: { deleteFlag: false } });
+    const count = await Employee.count({ where: { deleteFlag: false, role: { [Sequelize.Op.not]: "admin" } } });
     return count;
   } catch (error) {
     throw new Error(error.message);
@@ -320,29 +320,36 @@ export const getBalanceleaveCountById = async (empId) => {
 };
 export const getListOfAnniversary = async (startDate, endDate) => {
   try {
-    const employee = await Employee.findAll({ where: {date: { [Op.between]: [startDate, endDate] }, deleteFlag: false} });
+    const employee = await Employee.findAll({ 
+      where: { date: { [Op.between]: [startDate, endDate] }, deleteFlag: false } 
+    });
     const namesWithAnniversaryDate = [];
+    
     for (const data of employee) {
-    const anniversaryDate = new Date(data.date);
-        
-    // Increase the year by one
-    anniversaryDate.setFullYear(anniversaryDate.getFullYear() + 1);
-    
-    // Format the anniversary date as "YYYY-MM-DD"
-    const formattedAnniversaryDate = anniversaryDate.toISOString().split('T')[0];
-    
-    // Push the name with the adjusted anniversary date to the array
-    namesWithAnniversaryDate.push({ 
+      // Get the current year
+      const currentYear = new Date().getFullYear();
+
+      // Get the anniversary date and set the year to the current year
+      const anniversaryDate = new Date(data.date);
+      anniversaryDate.setFullYear(currentYear);
+
+      // Format the anniversary date as "YYYY-MM-DD"
+      const formattedAnniversaryDate = anniversaryDate.toISOString().split('T')[0];
+
+      // Push the name with the adjusted anniversary date to the array
+      namesWithAnniversaryDate.push({ 
         name: data.firstName + data.middleName + data.lastName, 
         date: formattedAnniversaryDate,
         type: "Anniversary"
-    });
-  }
-        return namesWithAnniversaryDate;
+      });
+    }
+    
+    return namesWithAnniversaryDate;
   } catch (error) {
     throw new Error(error.message);
   }
 };
+
 
 export const getListOfEmployeeName = async (req, res) =>  {
   try {

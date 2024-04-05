@@ -5,7 +5,7 @@ import personalDeatilsSchema from "../models/employeePersonalDeatils.js";
 import salaryDetailsSchema from "../models/employeeSalary.js";
 import { DateTime } from "luxon";
 import { Sequelize } from "sequelize";
-import { Op } from 'sequelize';
+import { Op } from "sequelize";
 import { postSendWellcomeMail } from "./sendMailControll.js";
 export const addEmployee = async (req, res) => {
   try {
@@ -98,9 +98,9 @@ export const getEmployeeList = async (req, res) => {
     const employeeList = await Employee.findAll({
       where: {
         deleteFlag: false,
-        role: { [Sequelize.Op.not]: "admin" },// Using Sequelize operators
+        role: { [Sequelize.Op.not]: "admin" }, // Using Sequelize operators
       },
-      order: [['id', 'DESC']], // Replace 'columnName' with the column you want to order by
+      order: [["id", "DESC"]], // Replace 'columnName' with the column you want to order by
     });
 
     res.status(200).json({ employees: employeeList });
@@ -225,12 +225,12 @@ export const updateBalancedLeave = async (employeeId, leave) => {
     const employee = await Employee.findByPk(employeeId);
     if (employee) {
       await employee.update({ balancedLeave: leave });
-      console.log('Leave balance updated successfully.');
+      console.log("Leave balance updated successfully.");
     } else {
-      console.log('Employee not found.');
+      console.log("Employee not found.");
     }
   } catch (error) {
-    console.error('Error updating leave balance:', error);
+    console.error("Error updating leave balance:", error);
   }
 };
 
@@ -294,7 +294,9 @@ export const getAttendanceIdByEmployeeMaster = async (employeeId) => {
 
 export const getEmployeeTotalCount = async () => {
   try {
-    const count = await Employee.count({ where: { deleteFlag: false, role: { [Sequelize.Op.not]: "admin" } } });
+    const count = await Employee.count({
+      where: { deleteFlag: false, role: { [Sequelize.Op.not]: "admin" } },
+    });
     return count;
   } catch (error) {
     throw new Error(error.message);
@@ -304,7 +306,7 @@ export const getNameById = async (empId) => {
   const id = parseInt(empId);
   try {
     const name = await Employee.findByPk(id);
-    return name.firstName + name.middleName +name.lastName;
+    return name.firstName + " " + name.middleName + " " + name.lastName;
   } catch (error) {
     throw new Error(error.message);
   }
@@ -320,11 +322,14 @@ export const getBalanceleaveCountById = async (empId) => {
 };
 export const getListOfAnniversary = async (startDate, endDate) => {
   try {
-    const employee = await Employee.findAll({ 
-      where: { date: { [Op.between]: [startDate, endDate] }, deleteFlag: false } 
+    const employee = await Employee.findAll({
+      where: {
+        date: { [Op.between]: [startDate, endDate] },
+        deleteFlag: false,
+      },
     });
     const namesWithAnniversaryDate = [];
-    
+
     for (const data of employee) {
       // Get the current year
       const currentYear = new Date().getFullYear();
@@ -334,38 +339,39 @@ export const getListOfAnniversary = async (startDate, endDate) => {
       anniversaryDate.setFullYear(currentYear);
 
       // Format the anniversary date as "YYYY-MM-DD"
-      const formattedAnniversaryDate = anniversaryDate.toISOString().split('T')[0];
+      const formattedAnniversaryDate = anniversaryDate
+        .toISOString()
+        .split("T")[0];
 
       // Push the name with the adjusted anniversary date to the array
-      namesWithAnniversaryDate.push({ 
-        name: data.firstName + data.middleName + data.lastName, 
+      namesWithAnniversaryDate.push({
+        name: data.firstName + " " + data.middleName + " " + data.lastName,
         date: formattedAnniversaryDate,
-        type: "Anniversary"
+        type: "Anniversary",
       });
     }
-    
+
     return namesWithAnniversaryDate;
   } catch (error) {
     throw new Error(error.message);
   }
 };
 
-
-export const getListOfEmployeeName = async (req, res) =>  {
+export const getListOfEmployeeName = async (req, res) => {
   try {
     // Fetch all employees from the database
     const employees = await Employee.findAll({
       where: {
-        deleteFlag: false
+        deleteFlag: false,
         // role: { [Sequelize.Op.not]: "admin" }, // Using Sequelize operators
       },
     });
 
     // Extracting firstName, lastName, and id
-    const employeeDetails = employees.map(employee => {
+    const employeeDetails = employees.map((employee) => {
       return {
         id: employee.id,
-        name: `${employee.firstName} ${employee.lastName}`
+        name: `${employee.firstName} ${employee.lastName}`,
       };
     });
 

@@ -23,7 +23,7 @@ const personalDeatilsSchema = sequelize.define(
       type: DataTypes.STRING,
       field: "pan_no_epd",
     },
-    addharNo: {
+    aadhaarNo: {
       type: DataTypes.STRING,
       field: "addhar_no_epd",
     },

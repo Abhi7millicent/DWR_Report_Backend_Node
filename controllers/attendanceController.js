@@ -66,7 +66,6 @@ await Promise.all(savePromises);
 const employeeAttendanceId = await getAttendanceIdWithStartDate();
 
 console.log("employeeAttendanceId:", employeeAttendanceId);
-
         return res.status(200).json({ message: 'Attendance records uploaded successfully' });
     } catch (error) {
         console.error('Error:', error);

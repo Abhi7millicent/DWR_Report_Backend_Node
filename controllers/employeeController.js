@@ -375,3 +375,21 @@ export const getListOfEmployeeName = async (req, res) =>  {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+export const getAttendanceIdWithStartDate = async () => {
+    try{
+      const employeelist = await Employee.findAll({ where: {
+        deleteFlag: false
+      }});
+      const result = {};
+      employeelist.forEach(employee => {
+            if(employee.attendanceId){
+            result[employee.attendanceId] = employee.date;
+            }
+        });
+        return result;
+    } catch (error) {
+      console.error("Error fetching employee details:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+};

@@ -4,6 +4,7 @@ import moment from "moment-timezone";
 import { Op } from "sequelize";
 import { getAttendanceIdById } from './employeeController.js';
 import { readFirebaseFile, uploadAttendanceToFirebaseStorage } from '../middleware/attendanceUpload.js';
+import { getLeaveListById } from './leaveManagementController.js';
 export const uploadAttendance = async (req, res) => {
     try {
         const file = req.file;
@@ -61,6 +62,10 @@ const savePromises = Object.values(attendanceRecords).map(async record => {
     }
 });
 await Promise.all(savePromises);
+
+const employeeAttendanceId = await getAttendanceIdWithStartDate();
+
+console.log("employeeAttendanceId:", employeeAttendanceId);
 
         return res.status(200).json({ message: 'Attendance records uploaded successfully' });
     } catch (error) {
@@ -123,13 +128,29 @@ export const getAttendanceOfMonth = async (req, res) => {
         attendanceList.forEach(attendance => {
             result[attendance.date] = attendance.statusflag;
         });
+        
+        const leaveResult = {};
+        const leaveList = await getLeaveListById(startDate, endDate, employeeId);
+        leaveList.forEach(leave => {
+            const leaveStartDate = new Date(leave.startDate);
+            const leaveEndDate = new Date(leave.endDate);
+            for (let date = leaveStartDate; date <= leaveEndDate; date.setDate(date.getDate() + 1)) {
+                leaveResult[date.toISOString().split('T')[0]] = leave.leaveType; // Assuming leave.leaveType holds the type of leave
+            }
+        });
 
-        res.status(200).json(result);
+        const listOfAttendance = {
+            ...result,
+            ...leaveResult
+        };
+
+        res.status(200).json( listOfAttendance );
     } catch (error) {
         console.error('Error:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
 };
+
 
 export const getNoOfAbsentBetweenDateRange = async (startDate, endDate, employeeId) => {
     try{

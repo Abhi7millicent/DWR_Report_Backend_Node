@@ -1,6 +1,7 @@
 import employee from "../models/employee.js";
 import  LeaveManagementSchema  from "../models/leaveManagement.js";
 import { updateBalancedLeave, getBalancedLeaveById } from "./employeeController.js";
+import { Op } from 'sequelize';
 
 export const postLeaveManagement = async (req, res) => {
   try {
@@ -126,5 +127,24 @@ export const getRequestedLeave = async (req, res) => {
   } catch (error) {
     console.error("Error fetching requested leave:", error);
     res.status(500).json({ message: error.message });
+  }
+};
+
+export const getLeaveListById = async (startDate, endDate, employeeId) =>{
+  try {
+    const leaveList = await LeaveManagementSchema.findAll({
+      where: {
+        employeeId: employeeId,
+        startDate: {
+          [Op.between]: [startDate, endDate]
+        },
+        endDate: {
+          [Op.between]: [startDate, endDate]
+        }
+      }
+    });
+    return leaveList;
+  } catch (error) {
+    console.error("Error fetching requested leave:", error);
   }
 };

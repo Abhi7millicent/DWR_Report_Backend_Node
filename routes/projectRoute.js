@@ -6,6 +6,7 @@ import {
   updateProject,
   updateDeleteFlag,
   getListOfProjectName,
+  getListOfProjectNameByEmployeeId,
 } from "../controllers/projectController.js";
 
 const router = express.Router();
@@ -17,6 +18,8 @@ router.post("/add", createProject);
 router.get("/list", getProjects);
 
 router.get("/name", getListOfProjectName);
+
+router.get("/getNameByEmployeeId", getListOfProjectNameByEmployeeId);
 
 // Get project details by ID
 router.get("/:id", getProjectById);

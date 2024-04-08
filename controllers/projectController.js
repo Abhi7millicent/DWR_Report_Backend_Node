@@ -66,6 +66,33 @@ export const updateDeleteFlag = async (req, res) => {
   }
 };
 
+export const getListOfProjectNameByEmployeeId = async (req, res) =>  {
+  try {
+    const employeeId = req.params.employeeId;
+    const projects = await projectSchema.findAll({
+      where: {
+        employeeProjectId:{
+          [Op.and]: [
+            { value: employeeId }      // Filter by value
+        ]
+        },
+        deleteFlag: false, // Using Sequelize operators
+      },
+    });
+    const projectDetails = projects.map(project => {
+      return {
+        id: project.id,
+        name: project.name
+      };
+    });
+
+    res.status(200).json(projectDetails);
+  } catch (error) {
+    console.error("Error fetching project details:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 export const getListOfProjectName = async (req, res) =>  {
     try {
      

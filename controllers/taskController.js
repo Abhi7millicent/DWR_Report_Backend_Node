@@ -67,6 +67,40 @@ export const getAllTasksByTaskId = async (req, res) => {
     }
 };
 
+export const assignedTask = async (req, res) => {
+  const { assignTo, status } = req.body;
+  const id  = req.params.id;
+  try {
+    // Find the task by taskId
+    const task = await Task.findByPk(id);
+
+    if (!task) {
+      return res.status(404).json({ error: "Task not found" });
+    }
+
+    // Update assignTo if provided
+    if (assignTo) {
+      // Assuming assignTo is an array of employee IDs, you can add a new employee
+      const value = task.assignTo + assignTo;
+      task.assignTo = value;
+    }
+
+    // Update status if provided
+    if (status) {
+      task.status = status;
+    }
+
+    // Save the updated task
+    await task.save();
+
+    return res.json({ message: "Task updated successfully", task });
+  } catch (error) {
+    console.error("Error updating task:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+}
+
+
 // Controller for getting a single task by ID
 export const getTaskById = async (req, res) => {
     const { id } = req.params;

@@ -18,7 +18,8 @@ const router = express.Router();
 
   
 
-  router.post("/upload", upload.single('file'), uploadAttendance);
+  // router.post("/upload/:startDate/:endDate", upload.single('file'), uploadAttendance);
+  router.post("/upload/", upload.single('file'), uploadAttendance);
   router.get("/:employeeId/:date", getAttendanceOfMonth);
 
   export default router;

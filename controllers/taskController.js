@@ -69,7 +69,8 @@ export const getAllTasksByTaskId = async (req, res) => {
 
 export const assignedTask = async (req, res) => {
   const { assignTo, status } = req.body;
-  const id  = req.params.id;
+  const id = req.params.id;
+
   try {
     // Find the task by taskId
     const task = await Task.findByPk(id);
@@ -78,12 +79,16 @@ export const assignedTask = async (req, res) => {
       return res.status(404).json({ error: "Task not found" });
     }
 
-    // Update assignTo if provided
-    if (assignTo) {
-      // Assuming assignTo is an array of employee IDs, you can add a new employee
-      const value = task.assignTo + assignTo;
-      task.assignTo = value;
+    
+     const value = req.body.assignTo;
+     if (!Array.isArray(task.assignTo)) {
+      task.assignTo = [];
     }
+
+    // Add the new employee ID to the assignTo array
+    task.assignTo.push(value);
+  
+
 
     // Update status if provided
     if (status) {

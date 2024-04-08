@@ -15,6 +15,7 @@ export const addEmployee = async (req, res) => {
       middleName,
       lastName,
       email,
+      date,
       balancedLeave,
       lastUpdatedMonthYear,
       reporting,
@@ -45,7 +46,7 @@ export const addEmployee = async (req, res) => {
       middleName,
       lastName,
       email,
-      date: currentDate, // Assign current date to dateOfBirth
+      date, // Assign current date to dateOfBirth
       balancedLeave,
       lastUpdatedMonthYear,
       reporting,

@@ -1,8 +1,12 @@
 import dropDownMasterSchema from "../models/dropDown.js";
 
 export const createDropDown = async (req, res) => {
-    // const { type } = req.params.type; // Extract the "type" parameter from the URL path
     try {
+      const existing = await dropDownMasterSchema.findOne({where:{ name: req.body.name, type: req.params.type, deleteFlag: false }});
+      if (existing) {
+        // If role with the same name already exists and deleteFlag is false, return a message
+        return res.status(400).json({ error: "already exists" });
+    }
       const dropDownItem = await dropDownMasterSchema.create({ ...req.body, type: req.params.type }); // Include the "type" in the creation data
       res.status(201).json(dropDownItem);
     } catch (error) {

@@ -8,8 +8,8 @@ import { getLeaveListById } from './leaveManagementController.js';
 export const uploadAttendance = async (req, res) => {
     try {
         const file = req.file;
-        // const startDate = req.params.startDate;
-        // const endDate = req.params.endDate;
+        const startDate = req.body.startDate;
+        const endDate = req.body.endDate;
     if (!file) {
       return res.status(400).json({ message: "No file uploaded" });
     }
@@ -63,54 +63,54 @@ const savePromises = Object.values(attendanceRecords).map(async record => {
 await Promise.all(savePromises);
 
 const employeeAttendanceId = await getAttendanceIdWithStartDate();
-// const startDateFormat = new Date(startDate);
-// const endDateFormat = new Date(endDate);
-// const listOfDates = [];
-// let saturdayCount = 0;
+const startDateFormat = new Date(startDate);
+const endDateFormat = new Date(endDate);
+const listOfDates = [];
+let saturdayCount = 0;
 
-// for (let date = startDateFormat; date <= endDateFormat; date.setDate(date.getDate() + 1)) {
-//     if (date.getDay() === 6) { // Saturday (0 is Sunday, 6 is Saturday)
-//         saturdayCount++;
-//         if (saturdayCount % 2 === 0) { // include 2nd and 4th Saturdays
-//             continue;
-//         } else {
-//             listOfDates.push(date.toISOString().split('T')[0]);
-//             continue;
-//         }
-//     }
-//     if (date.getDay() !== 0) { // Exclude Sundays
-//         listOfDates.push(date.toISOString().split('T')[0]);
-//     }
-// }
-// const promises = employeeAttendanceId.map(async (employee) => {
-//     await Promise.all(listOfDates.map(async (date) => {
-//         try {
-//             const attendance = await AttendanceSchema.findAll({
-//                 where: {
-//                     attendanceId: employee.attendanceId,
-//                     date: date
-//                 }
-//             });
-//             console.log("attendance:", attendance);
-//             if (!attendance || attendance.length === 0) {
-//                 const newAttendance = new AttendanceSchema({
-//                     attendanceId: employee.attendanceId,
-//                     date: date,
-//                     statusflag: "Absent"
-//                 });
-//                 await newAttendance.save();
-//                 console.log(`Attendance added for ${employee.attendanceId} on ${date}`);
-//             } else {
-//                 console.log(`Attendance already exists for ${employee.attendanceId} on ${date}`);
-//             }
-//         } catch (error) {
-//             console.error(`Error occurred while processing attendance for ${employee.attendanceId} on ${date}:`, error);
-//         }
-//     }));
-// });
+for (let date = startDateFormat; date <= endDateFormat; date.setDate(date.getDate() + 1)) {
+    if (date.getDay() === 6) { // Saturday (0 is Sunday, 6 is Saturday)
+        saturdayCount++;
+        if (saturdayCount % 2 === 0) { // include 2nd and 4th Saturdays
+            continue;
+        } else {
+            listOfDates.push(date.toISOString().split('T')[0]);
+            continue;
+        }
+    }
+    if (date.getDay() !== 0) { // Exclude Sundays
+        listOfDates.push(date.toISOString().split('T')[0]);
+    }
+}
+const promises = employeeAttendanceId.map(async (employee) => {
+    await Promise.all(listOfDates.map(async (date) => {
+        try {
+            const attendance = await AttendanceSchema.findAll({
+                where: {
+                    attendanceId: employee.attendanceId,
+                    date: date
+                }
+            });
+            console.log("attendance:", attendance);
+            if (!attendance || attendance.length === 0) {
+                const newAttendance = new AttendanceSchema({
+                    attendanceId: employee.attendanceId,
+                    date: date,
+                    statusflag: "Absent"
+                });
+                await newAttendance.save();
+                console.log(`Attendance added for ${employee.attendanceId} on ${date}`);
+            } else {
+                console.log(`Attendance already exists for ${employee.attendanceId} on ${date}`);
+            }
+        } catch (error) {
+            console.error(`Error occurred while processing attendance for ${employee.attendanceId} on ${date}:`, error);
+        }
+    }));
+});
 
 
-// await Promise.all(promises);
+await Promise.all(promises);
 
 // console.log("employeeAttendanceId:", employeeAttendanceId);
         return res.status(200).json({ message: 'Attendance records uploaded successfully' });

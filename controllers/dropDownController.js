@@ -5,7 +5,7 @@ export const createDropDown = async (req, res) => {
       const existing = await dropDownMasterSchema.findOne({where:{ name: req.body.name, type: req.params.type, deleteFlag: false }});
       if (existing) {
         // If role with the same name already exists and deleteFlag is false, return a message
-        return res.status(400).json({ error: "already exists" });
+        return res.status(400).json({ error: "Already exists" });
     }
       const dropDownItem = await dropDownMasterSchema.create({ ...req.body, type: req.params.type }); // Include the "type" in the creation data
       res.status(201).json(dropDownItem);

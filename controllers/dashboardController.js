@@ -120,9 +120,13 @@ export const getListOfEvents = async (req, res) => {
     const anniversary = await getListOfAnniversary(startDate, endDate);
     const events = [...dateOfBirth, ...anniversary];
 
-    res.status(200).send({data: events});
+    // Sort events array based on date in descending order
+    events.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+    res.status(200).send({ data: events });
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error");
   }
 };
+

@@ -3,13 +3,18 @@ import dailyWorkReportSchema from "../models/dailyWorkReport.js";
 import moment from "moment";
 import { Op } from 'sequelize';
 import { readDWRFromFirebaseFile, uploadDWRToFirebaseStorage } from "../middleware/dailyWorkReportUpload.js";
+import { getByEmployeeId } from "./dailyWorkReportDateAdjustController.js";
 
 export const uploadDWR = async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).send("No file uploaded");
     }
-
+    const employeeId = req.body.employeeId;
+    let date = await getByEmployeeId(employeeId);
+if (!date) {
+  date = req.body.currentDate;
+}
     const filePath = await uploadDWRToFirebaseStorage(req.file);
     const fileContent = await readDWRFromFirebaseFile(filePath);
     // Parse uploaded Excel file
@@ -22,8 +27,8 @@ export const uploadDWR = async (req, res) => {
 
     // Transform Excel data to match the schema
     const transformedData = data.map((row) => ({
-      employeeId: row.employeeId,
-      date: formatDate(row.date),
+      employeeId: employeeId,
+      date: currentDate,
       fromTime: formatTime(row.fromTime),
       toTime: formatTime(row.toTime),
       taskId: row.taskId,

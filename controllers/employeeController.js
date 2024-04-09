@@ -305,7 +305,7 @@ export const getNameById = async (empId) => {
   const id = parseInt(empId);
   try {
     const name = await Employee.findByPk(id);
-    return name.firstName + name.middleName +name.lastName;
+    return name.firstName + " " + name.middleName + " " + name.lastName;
   } catch (error) {
     throw new Error(error.message);
   }
@@ -339,7 +339,7 @@ export const getListOfAnniversary = async (startDate, endDate) => {
 
       // Push the name with the adjusted anniversary date to the array
       namesWithAnniversaryDate.push({ 
-        name: data.firstName + data.middleName + data.lastName, 
+        name: data.firstName + " " + data.middleName + " " + data.lastName, 
         date: formattedAnniversaryDate,
         type: "Anniversary"
       });

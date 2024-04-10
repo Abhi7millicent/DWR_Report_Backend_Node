@@ -17,7 +17,7 @@ const LeaveManagementSchema = sequelize.define(
       field: "employee_id_lm",
     },
     leaveType: {
-      type: DataTypes.STRING,
+      type: DataTypes.JSON,
       allowNull: false,
       field: "leave_type_lm",
     },

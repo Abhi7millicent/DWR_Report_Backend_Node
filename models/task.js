@@ -15,10 +15,10 @@ const taskSchema = sequelize.define(
             allowNull: false,
             field: "project_id_tm",
           },
-          taskId: {
+          assignById: {
             type: DataTypes.STRING,
             allowNull: false,
-            field: "task_id_tm",
+            field: "assign_by_id_tm",
           },
           name: {
             type: DataTypes.STRING,
@@ -34,6 +34,10 @@ const taskSchema = sequelize.define(
             type: DataTypes.JSON,
             allowNull: false,
             field: "assign_to_tm",
+          },
+          comment: {
+            type: DataTypes.STRING,
+            field: "comment_tm",
           },
           description: {
             type: DataTypes.STRING,

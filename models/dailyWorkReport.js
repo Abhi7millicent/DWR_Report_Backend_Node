@@ -32,7 +32,6 @@ const dailyWorkReportSchema = sequelize.define(
     },
     taskId: {
       type: DataTypes.STRING,
-      allowNull: false,
       field: "task_id_ds",
     },
     projectName: {
@@ -52,7 +51,6 @@ const dailyWorkReportSchema = sequelize.define(
     },
     ticketType: {
       type: DataTypes.STRING,
-      allowNull: false,
       field: "ticket_type_ds",
     },
     status: {
@@ -62,12 +60,10 @@ const dailyWorkReportSchema = sequelize.define(
     },
     estimatedDate: {
       type: DataTypes.STRING,
-      allowNull: false,
       field: "estimated_date_ds",
     },
     solution: {
       type: DataTypes.STRING,
-      allowNull: false,
       field: "solution_ds",
     },
     deleteFlag: {

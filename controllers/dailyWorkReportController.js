@@ -28,7 +28,7 @@ if (!date) {
     // Transform Excel data to match the schema
     const transformedData = data.map((row) => ({
       employeeId: employeeId,
-      date: currentDate,
+      date: date,
       fromTime: formatTime(row.fromTime),
       toTime: formatTime(row.toTime),
       taskId: row.taskId,

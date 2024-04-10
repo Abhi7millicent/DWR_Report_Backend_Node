@@ -27,12 +27,12 @@ export const postLeaveManagement = async (req, res) => {
 
     let leaveManagementSave = null; // Define before usage
 
-    if (leaveManagement.leaveType !== "Unpaid Leave") {
-      const previousBalancedLeave = await getBalancedLeaveById(employeeId); // Use employeeId directly
+    if (leaveManagement.leaveType.label !== "loss of pay") {
+      const previousBalancedLeave = await getBalancedLeaveById(employeeId); 
 
       if (previousBalancedLeave >= noOfDays) {
         const leave = (parseInt(previousBalancedLeave) - parseInt(noOfDays)).toString();
-        await updateBalancedLeave(employeeId, leave); // Use employeeId directly
+        await updateBalancedLeave(employeeId, leave); 
       } else {
         return res.status(400).json({ message: "Sorry, you do not have sufficient leave balance." }); // Return response
       }

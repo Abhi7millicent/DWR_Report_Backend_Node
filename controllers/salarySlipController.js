@@ -19,12 +19,20 @@ export const generateSalarySlip = async (req, res) => {
   try {
     const employeeId = req.params;
     let dateValue = await findStartDate(employeeId);
-
+    const currentDate = new Date();
+   
     if (!dateValue) {
       dateValue = await getStartDateByEmployeeMaster(employeeId);
+      const startDate = new Date(dateValue);
+      const differenceInMilliseconds = currentDate - startDate;
+      const differenceInDays = differenceInMilliseconds / (1000 * 3600 * 24);
+  
+      if(differenceInDays < 35) {
+        return res.status(200).json({ message: "35 days is not completed to generate salary slip" });
+    }
     }
 
-    const currentDate = new Date();
+    
     const year = currentDate.getFullYear();
     const month = String(currentDate.getMonth() + 1).padStart(2, "0"); // Adding 1 because month index starts from 0
     const day = String(currentDate.getDate()).padStart(2, "0");
@@ -45,12 +53,12 @@ export const generateSalarySlip = async (req, res) => {
       dateValueParsed.year === currentDateParsed.year &&
       dateValueParsed.month === currentDateParsed.month;
 
-    if (isSameMonthAndYear) {
-      // If salary slip already exists, send a response indicating it's already present
-      return res.status(200).json({
-        message: "Salary slip already exists for the previous month.",
-      });
-    }
+      if (isSameMonthAndYear) {
+        // If salary slip already exists, send a response indicating it's already present
+        return res.status(200).json({
+          message: "Salary slip already exists for the previous month.",
+        });
+      }
 
     const startDate = new Date(dateValue);
 

@@ -3,7 +3,7 @@ import dailyWorkReportSchema from "../models/dailyWorkReport.js";
 import moment from "moment";
 import { Op } from 'sequelize';
 import { readDWRFromFirebaseFile, uploadDWRToFirebaseStorage } from "../middleware/dailyWorkReportUpload.js";
-import { getByEmployeeId } from "./dailyWorkReportDateAdjustController.js";
+import { updateStatusByEmployeeIdAndDate } from "./dailyWorkReportDateAdjustController.js";
 
 export const uploadDWR = async (req, res) => {
   try {
@@ -11,10 +11,10 @@ export const uploadDWR = async (req, res) => {
       return res.status(400).send("No file uploaded");
     }
     const employeeId = req.body.employeeId;
-    let date = await getByEmployeeId(employeeId);
-if (!date) {
-  date = req.body.currentDate;
-}
+    // let date = await getByEmployeeId(employeeId);
+    // if (!date) {
+    const date = req.body.selectedDate;
+    // }
     const filePath = await uploadDWRToFirebaseStorage(req.file);
     const fileContent = await readDWRFromFirebaseFile(filePath);
     // Parse uploaded Excel file
@@ -78,6 +78,8 @@ if (!date) {
 
     // Save transformed data to MySQL
     await dailyWorkReportSchema.bulkCreate(transformedData);
+
+    await updateStatusByEmployeeIdAndDate(employeeId, date);
 
 
     res.status(200).send("Data uploaded successfully");

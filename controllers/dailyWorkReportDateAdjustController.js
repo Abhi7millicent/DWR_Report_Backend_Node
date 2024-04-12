@@ -33,6 +33,7 @@ import dailyWorkReportDateAdjustSchema from "../models/dailyWorkReportDateAdjust
             where: {
                 employeeId: employeeId,
                 deleteFlag: false,
+                status: "Pending"
             }
         });
         if (adjustment.length > 0) { // Check if adjustment exists
@@ -48,23 +49,30 @@ import dailyWorkReportDateAdjustSchema from "../models/dailyWorkReportDateAdjust
 }
 
 
-  export const getByEmployeeId = async (employeeId) => {
-    try {
-      const adjustment = await dailyWorkReportDateAdjustSchema.findAll({
-        where: {
-            employeeId: employeeId,
-            deleteFlag: false,
-        }
+export const updateStatusByEmployeeIdAndDate = async (employeeId, date) => {
+  try {
+      const adjustment = await dailyWorkReportDateAdjustSchema.findOne({
+          where: {
+              employeeId: employeeId,
+              date: date,
+              deleteFlag: false,
+          }
       });
+
       if (adjustment) {
-        return adjustment.date;
+          await adjustment.update({ status: 'Completed' });
       } else {
-        return null;
+          // If the record doesn't exist, you may choose to create it or just return a message.
+          // Here, we'll just log a message.
+          console.log("Record not found for the given employeeId and date.");
       }
-    } catch (error) {
-      return  error.message;
-    }
+  } catch (error) {
+      // Catch any errors that occur during the process
+      console.error(error.message);
   }
+}
+
+
 
   // Create a new daily work report date adjustment
   export const create = async (req, res) => {

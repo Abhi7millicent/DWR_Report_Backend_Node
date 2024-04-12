@@ -90,9 +90,7 @@ const upload = multer({
       file.mimetype === "image/png" ||
       file.mimetype === "image/jpg" ||
       file.mimetype === "image/jpeg" ||
-      file.mimetype === "application/pdf" || // Add PDF mimetype
-      file.mimetype ===
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document" // Add Excel mimetype
+      file.mimetype === "application/pdf"
     ) {
       callback(null, true);
     } else {

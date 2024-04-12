@@ -19,46 +19,89 @@ import dailyWorkReportDateAdjustSchema from "../models/dailyWorkReportDateAdjust
       if (adjustment) {
         res.status(200).json({data: adjustment});
       } else {
-        res.status(404).json({ message: 'Adjustment not found' });
+        res.status(404).json({ message: 'Adjustment not found1' });
       }
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
   }
 
-  export const getByEmployeeId = async (employeeId) => {
+  export const getDateByEmployeeId = async (req, res) => {
     try {
-      const adjustment = await dailyWorkReportDateAdjustSchema.findAll({
-        where: {
-            employeeId: employeeId,
-            deleteFlag: false,
+        const employeeId = parseInt(req.params.employeeId); // Convert to integer
+        const adjustment = await dailyWorkReportDateAdjustSchema.findAll({
+            where: {
+                employeeId: employeeId,
+                deleteFlag: false,
+                status: "Pending"
+            }
+        });
+        if (adjustment.length > 0) { // Check if adjustment exists
+            // Assuming adjustment is an array of objects, you might need to loop through each object to get dates
+            const dates = adjustment.map(entry => entry.date);
+            res.status(200).json({ data: dates });
+        } else {
+            res.status(404).json({ message: "No adjustments found for the employee" });
         }
-      });
-      if (adjustment) {
-        return adjustment.date;
-      } else {
-        return null;
-      }
     } catch (error) {
-      res.status(500).json({ error: error.message });
+        res.status(500).json({ error: error.message });
     }
+}
+
+
+export const updateStatusByEmployeeIdAndDate = async (employeeId, date) => {
+  try {
+      const adjustment = await dailyWorkReportDateAdjustSchema.findOne({
+          where: {
+              employeeId: employeeId,
+              date: date,
+              deleteFlag: false,
+          }
+      });
+
+      if (adjustment) {
+          await adjustment.update({ status: 'Completed' });
+      } else {
+          // If the record doesn't exist, you may choose to create it or just return a message.
+          // Here, we'll just log a message.
+          console.log("Record not found for the given employeeId and date.");
+      }
+  } catch (error) {
+      // Catch any errors that occur during the process
+      console.error(error.message);
   }
+}
+
+
 
   // Create a new daily work report date adjustment
   export const create = async (req, res) => {
-    const { employeeId, date, status, deleteFlag } = req.body;
+    const { employeeId, date } = req.body;
     try {
-      const newAdjustment = await dailyWorkReportDateAdjustSchema.create({
-        employeeId,
-        date,
-        status,
-        deleteFlag,
-      });
-      res.status(200).json({data: newAdjustment});
+        // Check if the date already exists for the given employeeId
+        const existingAdjustment = await dailyWorkReportDateAdjustSchema.findOne({ where: {
+            employeeId : employeeId,
+            date: date,
+            status: "Pending",
+        }
+        });
+
+        if (existingAdjustment) {
+            // If the date already exists, return an error response
+            return res.status(400).json({ error: "Upload Date already exists for this employee." });
+        }
+
+        // If the date does not exist, create a new adjustment
+        const newAdjustment = await dailyWorkReportDateAdjustSchema.create({
+            employeeId,
+            date,
+        });
+        res.status(200).json({ data: newAdjustment });
     } catch (error) {
-      res.status(400).json({ error: error.message });
+        res.status(400).json({ error: error.message });
     }
-  }
+}
+
 
   // Update an existing daily work report date adjustment
   export const update = async (req, res) => {

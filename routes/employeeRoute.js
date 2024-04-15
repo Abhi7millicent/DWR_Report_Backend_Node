@@ -9,6 +9,7 @@ import {
   getListOfEmployeeName,
   uploadProfilePic,
   viewProfilePic,
+  updateEmployeeStatus,
 } from "../controllers/employeeController.js";
 import uploadProfile from "../middleware/profileUpload.js";
 
@@ -22,6 +23,8 @@ router.get("/:id", getEmployeeById);
 router.put("/:id", updateEmployee);
 router.post("/addBalancedLeave", postAddBalancedLeave);
 router.get("/balanced-leave/:id", getBalancedLeave);
+router.put('/employees/update-status/:id', updateEmployeeStatus);
+
 // Route for uploading profile picture
 router.post('/upload/:id',uploadProfile.single("profile"), uploadProfilePic);
 

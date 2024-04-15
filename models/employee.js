@@ -78,6 +78,7 @@ const Employee = sequelize.define(
     },
     status: {
       type: DataTypes.STRING,
+      defaultValue: "Active",
       field: "status_em"
     },
     deleteFlag: {

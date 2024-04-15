@@ -458,3 +458,22 @@ export const viewProfilePic = async (req, res) => {
     return res.status(500).json({ error: 'Internal server error' });
   }
 };
+
+export const updateEmployeeStatus = async (req, res) => {
+  const  id  = req.params.id;
+  
+  try {
+    const employee = await Employee.findByPk(id);
+    
+    if (!employee) {
+      return res.status(404).json({ error: 'Employee not found' });
+    }
+
+    await employee.update({ status: 'Inactive' });
+
+    return res.json({ message: 'Employee status updated successfully' });
+  } catch (error) {
+    console.error('Error updating employee status:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};

@@ -59,13 +59,12 @@
 //   }
 // };
 
-
 import multer from "multer";
 import path from "path";
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth';
-import 'firebase/compat/firestore';
-import 'firebase/compat/storage';
+import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
+import "firebase/compat/firestore";
+import "firebase/compat/storage";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -77,7 +76,7 @@ const firebaseConfig = {
   projectId: process.env.FIREBASE_PROJECT_ID,
   storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
   messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.FIREBASE_APP_ID
+  appId: process.env.FIREBASE_APP_ID,
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -88,10 +87,10 @@ const upload = multer({
   storage: storage,
   fileFilter: (req, file, callback) => {
     if (
-      file.mimetype === 'image/png' ||
-      file.mimetype === 'image/jpg' ||
-      file.mimetype === 'image/jpeg' ||
-      file.mimetype === 'application/pdf' 
+      file.mimetype === "image/png" ||
+      file.mimetype === "image/jpg" ||
+      file.mimetype === "image/jpeg" ||
+      file.mimetype === "application/pdf"
     ) {
       callback(null, true);
     } else {
@@ -110,12 +109,17 @@ export const uploadFileToFirebaseStorage = async (file) => {
   try {
     const storageRef = firebase.storage().ref();
     const fileExtension = path.extname(file.originalname);
-    const uploadTask = storageRef.child(`uploads/${Date.now()}${fileExtension}`).put(file.buffer, { contentType: file.mimetype });
+    const uploadTask = storageRef
+      .child(`uploads/${Date.now()}${fileExtension}`)
+      .put(file.buffer, { contentType: file.mimetype });
     await uploadTask;
-    console.log("Uploaded file path:", uploadTask.snapshot.ref.getDownloadURL());
+    console.log(
+      "Uploaded file path:",
+      uploadTask.snapshot.ref.getDownloadURL()
+    );
     return uploadTask.snapshot.ref.getDownloadURL();
   } catch (error) {
-    console.error('Error uploading file to Firebase Storage:', error.message);
+    console.error("Error uploading file to Firebase Storage:", error.message);
     throw error;
   }
 };

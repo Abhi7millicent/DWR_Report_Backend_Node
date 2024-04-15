@@ -63,6 +63,23 @@ const Employee = sequelize.define(
       type: DataTypes.STRING,
       field: "attendanceid_em",
     },
+    phoneNumber: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      field: "phone_number_em",
+    },
+    profile: {
+      type: DataTypes.STRING,
+      field: "profile_em",
+    },
+    employmentType: {
+      type: DataTypes.STRING,
+      field: "employment_type_em"
+    },
+    status: {
+      type: DataTypes.STRING,
+      field: "status_em"
+    },
     deleteFlag: {
       type: DataTypes.BOOLEAN,
       allowNull: false,

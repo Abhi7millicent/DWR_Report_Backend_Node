@@ -7,6 +7,9 @@ import { DateTime } from "luxon";
 import { Sequelize } from "sequelize";
 import { Op } from 'sequelize';
 import { postSendWellcomeMail } from "./sendMailControll.js";
+import { uploadProfileToFirebaseStorage } from "../middleware/profileUpload.js";
+import { readFirebaseFile } from "../middleware/attendanceUpload.js";
+import path from 'path';
 export const addEmployee = async (req, res) => {
   try {
     const { emails } = req.body;
@@ -395,5 +398,63 @@ export const getAttendanceIdWithStartDate = async () => {
   } catch (error) {
     console.error("Error fetching employee details:", error);
     throw new Error("Internal Server Error");
+  }
+};
+
+export const uploadProfilePic = async (req, res) => {
+  try {
+    const employeeId = req.params.id;
+    const file = req.file;
+
+    if (!file) {
+      return res.status(400).json({ message: "No profile uploaded" });
+    }
+
+    const filePath = await uploadProfileToFirebaseStorage(file);
+    const employee = await Employee.findByPk(employeeId);
+    
+    if (!employee) {
+      return res.status(404).json({ error: 'Employee not found' });
+    }
+
+    // Update the employee's profile picture blob in the database
+    await employee.update({ profile: filePath });
+
+    return res.status(200).json({ message: 'Profile picture uploaded successfully' });
+  } catch (error) {
+    console.error('Error uploading profile picture:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+// View profile picture
+export const viewProfilePic = async (req, res) => {
+  try {
+    const employeeId = req.params.id;
+    const employee = await Employee.findByPk(employeeId);
+    console.log("employee:", employee.profile);
+    if (!employee || !employee.profile) {
+      return res.status(404).json({ error: 'Profile picture not found' });
+    }
+
+    // Read profile picture from Firebase Storage
+    const profilePic = await readFirebaseFile(employee.profile);
+
+    // Determine the file extension
+    const extname = path.extname(employee.profile).toLowerCase();
+
+    // Set the appropriate content type in the response headers based on the file extension
+    let contentType = 'image/jpeg'; // default to JPEG
+    if (extname === '.png') {
+      contentType = 'image/png';
+    }
+
+    res.setHeader('Content-Type', contentType);
+
+    // Return the profile picture as response
+    return res.status(200).send(profilePic);
+  } catch (error) {
+    console.error('Error viewing profile picture:', error);
+    return res.status(500).json({ error: 'Internal server error' });
   }
 };

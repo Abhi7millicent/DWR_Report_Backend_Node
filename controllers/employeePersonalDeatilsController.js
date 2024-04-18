@@ -54,6 +54,30 @@ export const getEmployeePersonalDataByEmployeeId = async (req, res) => {
   }
 };
 
+export const updatePersonalDetails = async (data, employeeId) => {
+  try {
+    await personalDetailsSchema.update(data, {
+      where: {
+        employeeId: employeeId,
+      },
+    });
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+export const getPersonalDetails = async (employeeId) => {
+  try {
+    const personalDetails = await personalDetailsSchema.findOne({
+      where: {
+        employeeId: employeeId,
+      },
+    });
+    return personalDetails;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
 export const getListOfDateOfBirth = async (startDate, endDate) => {
   try {
     const personalData = await personalDetailsSchema.findAll({

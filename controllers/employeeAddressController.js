@@ -45,3 +45,29 @@ export const putEmployeeAdressById = async (req, res) => {
     res.status(500).json({ success: false, error: "Server Error" });
   }
 };
+
+export const updateAddress = async (data, employeeId) => {
+  try {
+    await addresSchema.update(data, {
+      where: {
+        employeeId: employeeId,
+        addressType: "Current",
+      },
+    });
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+export const getAddress = async (employeeId) => {
+  try {
+    const address = await addresSchema.findOne({
+      where: {
+        employeeId: employeeId,
+        addressType: "Current",
+      },
+    });
+    return address;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};

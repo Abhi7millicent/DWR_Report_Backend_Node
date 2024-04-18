@@ -240,6 +240,28 @@ export const updateBalancedLeave = async (employeeId, leave) => {
   }
 };
 
+export const updateName = async (data, employeeId) => {
+  try {
+    console.log("employeeId:", employeeId);
+    const employee = await Employee.findByPk(employeeId);
+    if (employee) {
+      await employee.update({ firstName: data.firstName, lastName: data.lastName });
+    } else {
+      console.log('Employee not found.');
+    }
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+export const getNameData = async (employeeId) => {
+  try {
+    const employee = await Employee.findByPk(employeeId);
+    return employee;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
 export const getBalancedLeaveById = async (employeeId) => {
   try {
     console.log("employeeId:", employeeId);

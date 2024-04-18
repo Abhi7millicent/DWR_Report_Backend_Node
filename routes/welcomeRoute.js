@@ -1,9 +1,9 @@
 import express from 'express';
-import { updateWelcomeDetailsByEmployeeId } from '../controllers/welcomeContoller.js';
+import { getEmployeeDetails, updateEmployeeDetails } from '../controllers/welcomeContoller.js';
 
 const router = express.Router();
 
-// Route to update welcome details by employee ID
-router.put('/update/:employeeId', updateWelcomeDetailsByEmployeeId);
+router.put('/personal-details/:employeeId', updateEmployeeDetails);
+router.get('/personal-details/:employeeId', getEmployeeDetails);
 
 export default router;

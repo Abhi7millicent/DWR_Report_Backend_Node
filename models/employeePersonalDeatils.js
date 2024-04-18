@@ -47,6 +47,22 @@ const personalDeatilsSchema = sequelize.define(
       type: DataTypes.STRING,
       field: "date_of_birth_epd",
     },
+    personalEmail: {
+      type: DataTypes.STRING,
+      field: "personal_email_epd",
+    },
+    gender: {
+      type: DataTypes.STRING,
+      field: "gender_epd",
+    },
+    maritalStatus: {
+      type: DataTypes.STRING,
+      field: "marital_status_epd",
+    },
+    phoneNumber: {
+      type: DataTypes.STRING,
+      field: "phone_number_epd",
+    },
     deleteFlag: {
       type: DataTypes.BOOLEAN,
       allowNull: false,

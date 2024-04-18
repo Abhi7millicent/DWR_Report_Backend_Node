@@ -10,9 +10,9 @@ export const addNew = async (employeeId) => {
         await welcome.create({
             employeeId: id,
           });
-    } catch (error) {
+  } catch (error) {
         throw new Error(error.message);
-      }
+  }
 }
 export const updateEmployeeDetails = async (req, res) => {
   const employeeId = req.params.employeeId;

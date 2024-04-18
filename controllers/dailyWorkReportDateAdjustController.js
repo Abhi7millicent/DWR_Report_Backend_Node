@@ -48,6 +48,26 @@ import dailyWorkReportDateAdjustSchema from "../models/dailyWorkReportDateAdjust
     }
 }
 
+export const checkDate = async (date, employeeId) => {
+  try {
+    const value = await dailyWorkReportDateAdjustSchema.findOne({
+      where: {
+        employeeId: employeeId,
+        date: date,
+        status: "Pending",
+        deleteFlag: false,
+      }
+    });
+    // If a value is found, return true; otherwise, return false
+    return !!value;
+  } catch (error) {
+    // Catch any errors that occur during the process
+    console.error(error.message);
+    // Return false in case of error
+    return false;
+  }
+};
+
 
 export const updateStatusByEmployeeIdAndDate = async (employeeId, date) => {
   try {

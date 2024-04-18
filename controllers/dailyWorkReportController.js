@@ -3,18 +3,22 @@ import dailyWorkReportSchema from "../models/dailyWorkReport.js";
 import moment from "moment";
 import { Op } from 'sequelize';
 import { readDWRFromFirebaseFile, uploadDWRToFirebaseStorage } from "../middleware/dailyWorkReportUpload.js";
-import { updateStatusByEmployeeIdAndDate } from "./dailyWorkReportDateAdjustController.js";
+import { checkDate, updateStatusByEmployeeIdAndDate } from "./dailyWorkReportDateAdjustController.js";
 
 export const uploadDWR = async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).send("No file uploaded");
-    }
+    } 
     const employeeId = req.body.employeeId;
     // let date = await getByEmployeeId(employeeId);
     // if (!date) {
     const date = req.body.selectedDate;
     // }
+    const accessDate = await checkDate(date, employeeId); 
+    if(!accessDate) {
+      return res.status(400).send(`You do not have access to upload DWR at this date ${date}`);
+    }
     const filePath = await uploadDWRToFirebaseStorage(req.file);
     const fileContent = await readDWRFromFirebaseFile(filePath);
     // Parse uploaded Excel file

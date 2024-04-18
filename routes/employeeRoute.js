@@ -23,7 +23,7 @@ router.get("/:id", getEmployeeById);
 router.put("/:id", updateEmployee);
 router.post("/addBalancedLeave", postAddBalancedLeave);
 router.get("/balanced-leave/:id", getBalancedLeave);
-router.put('/employees/update-status/:id', updateEmployeeStatus);
+router.put('/update-status/:id', updateEmployeeStatus);
 
 // Route for uploading profile picture
 router.post('/upload/:id',uploadProfile.single("profile"), uploadProfilePic);

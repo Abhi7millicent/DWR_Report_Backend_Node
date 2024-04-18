@@ -10,6 +10,7 @@ import { postSendWellcomeMail } from "./sendMailControll.js";
 import { uploadProfileToFirebaseStorage } from "../middleware/profileUpload.js";
 import { readFirebaseFile } from "../middleware/attendanceUpload.js";
 import path from 'path';
+import { addNew } from "./welcomeContoller.js";
 export const addEmployee = async (req, res) => {
   try {
     const { emails } = req.body;
@@ -88,6 +89,7 @@ export const addEmployee = async (req, res) => {
       employeeId: employee.id,
     });
 
+    await addNew(employee.id);
     // await postSendWellcomeMail(emails,firstName,email,password);
 
     res.status(201).json({ message: "Employee added successfully" });
@@ -468,8 +470,7 @@ export const updateEmployeeStatus = async (req, res) => {
     if (!employee) {
       return res.status(404).json({ error: 'Employee not found' });
     }
-
-    await employee.update({ status: 'Inactive' });
+    await employee.update({ status: employee.status === "Active" ? 'InActive' : 'Active' });
 
     return res.json({ message: 'Employee status updated successfully' });
   } catch (error) {

@@ -52,7 +52,7 @@ const personalDeatilsSchema = sequelize.define(
       field: "personal_email_epd",
     },
     gender: {
-      type: DataTypes.STRING,
+      type: DataTypes.JSON,
       field: "gender_epd",
     },
     maritalStatus: {

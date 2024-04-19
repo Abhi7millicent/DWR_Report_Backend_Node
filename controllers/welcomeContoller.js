@@ -27,7 +27,9 @@ export const updateEmployeeDetails = async (req, res) => {
     state,
     bloodGroup,
     panNo,
+    panNoName,
     aadhaarNo,
+    aadhaarNoName,
     phoneNumber,
     emergencyContact1,
     relation1,
@@ -56,8 +58,10 @@ export const updateEmployeeDetails = async (req, res) => {
     gender,
     bloodGroup,
     panNo,
+    panNoName,
     phoneNumber,
     aadhaarNo,
+    aadhaarNoName,
     maritalStatus,
   };
 
@@ -113,8 +117,10 @@ export async function getEmployeeDetails(req, res) {
       bloodGroup: personalDetails.bloodGroup,
       panNo: personalDetails.panNo,
       panNoPath: personalDetails.panNoPath,
+      panNoName: personalDetails.panNoName,
       aadhaarNo: personalDetails.aadhaarNo,
       aadhaarNoPath: personalDetails.aadhaarNoPath,
+      aadhaarNoName: personalDetails.aadhaarNoName,
       emergencyContact1: personalDetails.emergencyContact1,
       relation1: personalDetails.relation1,
       phoneNumber: personalDetails.phoneNumber,
@@ -133,7 +139,7 @@ export async function getEmployeeDetails(req, res) {
 
 export const updatePanCard = async (req, res) => {
   try{
-    const employeeId = rep.params.employeeId;
+    const employeeId = req.params.employeeId;
     const file = req.file;
 
     if (!file) {
@@ -152,7 +158,7 @@ export const updatePanCard = async (req, res) => {
 
 export const updateAadhaarCard = async (req, res) => {
   try{
-    const employeeId = rep.params.employeeId;
+    const employeeId = req.params.employeeId;
     const file = req.file;
 
     if (!file) {
@@ -172,7 +178,7 @@ export const updateAadhaarCard = async (req, res) => {
 export const getPersonalDetailsValue = async (req, res) => {
   try {
     const employeeId = req.params.employeeId;
-    const welcomeData = await welcomeSchema.findOne({ where: { employeeId: employeeId } });
+    const welcomeData = await welcome.findOne({ where: { employeeId: employeeId } });
     if (!welcomeData) {
       return res.status(404).json({ message: 'Welcome data not found' });
     }

@@ -43,6 +43,10 @@ const salaryDetailsSchema = sequelize.define(
       type: DataTypes.STRING,
       field: "monthly_salary_esd",
     },
+    document: {
+      type: DataTypes.STRING,
+      field: "document_esd",
+    },
     deleteFlag: {
       type: DataTypes.BOOLEAN,
       allowNull: false,

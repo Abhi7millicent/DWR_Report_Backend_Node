@@ -27,6 +27,14 @@ const personalDeatilsSchema = sequelize.define(
       type: DataTypes.STRING,
       field: "addhar_no_epd",
     },
+    panNoPath: {
+      type: DataTypes.STRING,
+      field: "pan_no_path_epd",
+    },
+    aadhaarNoPath: {
+      type: DataTypes.STRING,
+      field: "addhar_no_path_epd",
+    },
     emergencyContact1: {
       type: DataTypes.STRING,
       field: "emergency_contact1_epd",
@@ -52,7 +60,7 @@ const personalDeatilsSchema = sequelize.define(
       field: "personal_email_epd",
     },
     gender: {
-      type: DataTypes.STRING,
+      type: DataTypes.JSON,
       field: "gender_epd",
     },
     maritalStatus: {

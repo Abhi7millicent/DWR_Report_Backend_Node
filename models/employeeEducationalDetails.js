@@ -40,6 +40,10 @@ const EmployeeEducationDetails = sequelize.define(
       allowNull: false,
       field: "percentage_eed",
     },
+    document: {
+      type: DataTypes.STRING,
+      field: "document_eed",
+    },
     deleteFlag: {
       type: DataTypes.BOOLEAN,
       allowNull: false,

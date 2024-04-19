@@ -78,6 +78,39 @@ export const getPersonalDetails = async (employeeId) => {
   }
 };
 
+export const uploadPanCard = async (employeeId, filePath) => {
+  try {
+    await personalDetailsSchema.update(
+      {
+        panNoPath: filePath,
+      },
+      {
+          where: {
+              employeeId: employeeId,
+          },
+      }
+  );
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+export const uploadAadhaarCard = async (employeeId, filePath) => {
+  try {
+    await personalDetailsSchema.update(
+      {
+        aadhaarNoPath: filePath,
+      },
+      {
+          where: {
+              employeeId: employeeId,
+          },
+      }
+  );
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
 export const getListOfDateOfBirth = async (startDate, endDate) => {
   try {
     const personalData = await personalDetailsSchema.findAll({

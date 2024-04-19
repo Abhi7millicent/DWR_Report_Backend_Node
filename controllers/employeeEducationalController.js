@@ -1,27 +1,26 @@
+import { uploadEducationDocumentToFirebaseStorage } from "../middleware/educationDocumentUpload.js";
 import EmployeeEducationDetails from "../models/employeeEducationalDetails.js";
 
 export const addEmployeeEducationalDetail = async (req, res) => {
   try {
-    const {
-      id,
-      degree,
-      institute,
-      startDate,
-      endDate,
-      percentage,
-      employeeId,
-    } = req.body;
-    const educationalDetails = new EmployeeEducationDetails({
-      id,
-      degree,
-      institute,
-      startDate,
-      endDate,
-      percentage,
-      employeeId,
+    const file = req.file;
+
+    if (!file) {
+      return res.status(400).json({ message: "No file uploaded" });
+    }
+
+    const filePath = await uploadEducationDocumentToFirebaseStorage(file);
+    const education = await EmployeeEducationDetails.create({
+      degree: req.body.degree,
+      institute: req.body.institute,
+      startDate: req.body.startDate,
+      endDate: req.body.endDate,
+      percentage: req.body.percentage,
+      employeeId:  req.body.employeeId,
+      document: filePath,
     });
-    const savedEducationalDetails = await educationalDetails.save();
-    res.status(201).json({ data: savedEducationalDetails });
+
+    res.status(200).json({ message: "Uploaded successfully", education });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }

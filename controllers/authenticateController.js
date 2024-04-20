@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import Employee from "../models/employee.js";
+import { pageValue } from './welcomeContoller.js';
 
 export const authenticate = async (req, res) => {
     try {
@@ -25,6 +26,7 @@ export const authenticate = async (req, res) => {
             { expiresIn: '1h' } // Token expiration time
         );
 
+        const page = await pageValue(employee.id);
         // Response data
         const responseData = {
             id: employee.id,
@@ -33,6 +35,7 @@ export const authenticate = async (req, res) => {
             email: employee.email,
             message: 'Authentication successful',
             status: true, 
+            firstTime: page,
             token
         };
 

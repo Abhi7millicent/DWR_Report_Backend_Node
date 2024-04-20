@@ -198,3 +198,18 @@ export const getPersonalDetailsValue = async (req, res) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 };
+
+export const pageValue = async (employeeId) => {
+  try {
+    const welcomeData = await welcome.findOne({
+      where: { employeeId: employeeId },
+    });
+    if (!welcomeData) {
+      return res.status(404).json({ message: "Welcome data not found" });
+    }
+     return welcomeData.personalDetails;
+
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};

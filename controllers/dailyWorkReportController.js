@@ -11,14 +11,18 @@ export const uploadDWR = async (req, res) => {
       return res.status(400).send("No file uploaded");
     } 
     const employeeId = req.body.employeeId;
+    const currentDate = new Date(); // Get current date
+    const formattedCurrentDate = currentDate.toISOString().slice(0, 10);
     // let date = await getByEmployeeId(employeeId);
     // if (!date) {
     const date = req.body.selectedDate;
     // }
+    if (date !== formattedCurrentDate) {
     const accessDate = await checkDate(date, employeeId); 
     if(!accessDate) {
       return res.status(400).send(`You do not have access to upload DWR at this date ${date}`);
     }
+  }
     const filePath = await uploadDWRToFirebaseStorage(req.file);
     const fileContent = await readDWRFromFirebaseFile(filePath);
     // Parse uploaded Excel file

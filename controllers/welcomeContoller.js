@@ -1,20 +1,24 @@
-
 import { uploadFileToFirebaseStorage } from "../middleware/documentUpload.js";
 import welcome from "../models/welcome.js";
 import { getAddress, updateAddress } from "./employeeAddressController.js";
 import { getNameData, updateName } from "./employeeController.js";
-import { getPersonalDetails, updatePersonalDetails, uploadAadhaarCard, uploadPanCard } from "./employeePersonalDeatilsController.js";
+import {
+  getPersonalDetails,
+  updatePersonalDetails,
+  uploadAadhaarCard,
+  uploadPanCard,
+} from "./employeePersonalDeatilsController.js";
 
 export const addNew = async (employeeId) => {
-    const id = parseInt(employeeId);
-    try {
-        await welcome.create({
-            employeeId: id,
-          });
+  const id = parseInt(employeeId);
+  try {
+    await welcome.create({
+      employeeId: id,
+    });
   } catch (error) {
-        throw new Error(error.message);
+    throw new Error(error.message);
   }
-}
+};
 export const updateEmployeeDetails = async (req, res) => {
   const employeeId = req.params.employeeId;
   const {
@@ -75,18 +79,21 @@ export const updateEmployeeDetails = async (req, res) => {
     // Update contact details
     await updatePersonalDetails(personalDetails, employeeId);
 
-    await welcome.update({ personalDetails: true }, {
-      where: {
-        employeeId: employeeId
+    await welcome.update(
+      { personalDetails: true },
+      {
+        where: {
+          employeeId: employeeId,
+        },
       }
-    });
+    );
 
-    res.status(200).send('Employee details updated successfully');
+    res.status(200).send("Employee details updated successfully");
   } catch (error) {
-    console.error('Error updating employee details:', error);
-    res.status(500).send('Internal server error');
+    console.error("Error updating employee details:", error);
+    res.status(500).send("Internal server error");
   }
-}
+};
 
 export async function getEmployeeDetails(req, res) {
   const employeeId = req.params.employeeId;
@@ -96,15 +103,15 @@ export async function getEmployeeDetails(req, res) {
     const employee = await getNameData(employeeId);
 
     if (!employee) {
-      return res.status(404).send('Employee not found');
+      return res.status(404).send("Employee not found");
     }
 
     // Find the address of the employee
     const address = await getAddress(employeeId);
-    
+
     // Find the personal details of the employee
     const personalDetails = await getPersonalDetails(employeeId);
-    
+
     // Construct response object
     const responseData = {
       firstName: employee.firstName,
@@ -132,13 +139,13 @@ export async function getEmployeeDetails(req, res) {
 
     res.status(200).json({ data: responseData });
   } catch (error) {
-    console.error('Error retrieving employee details:', error);
-    res.status(500).send('Internal server error');
+    console.error("Error retrieving employee details:", error);
+    res.status(500).send("Internal server error");
   }
 }
 
 export const updatePanCard = async (req, res) => {
-  try{
+  try {
     const employeeId = req.params.employeeId;
     const file = req.file;
 
@@ -157,7 +164,7 @@ export const updatePanCard = async (req, res) => {
 };
 
 export const updateAadhaarCard = async (req, res) => {
-  try{
+  try {
     const employeeId = req.params.employeeId;
     const file = req.file;
 
@@ -178,15 +185,16 @@ export const updateAadhaarCard = async (req, res) => {
 export const getPersonalDetailsValue = async (req, res) => {
   try {
     const employeeId = req.params.employeeId;
-    const welcomeData = await welcome.findOne({ where: { employeeId: employeeId } });
+    const welcomeData = await welcome.findOne({
+      where: { employeeId: employeeId },
+    });
     if (!welcomeData) {
-      return res.status(404).json({ message: 'Welcome data not found' });
+      return res.status(404).json({ message: "Welcome data not found" });
     }
     const personalDetails = welcomeData.personalDetails;
-    return res.status(200).json({data: personalDetails });
+    return res.status(200).json({ data: personalDetails });
   } catch (error) {
-    console.error('Error fetching personalDetails:', error);
-    return res.status(500).json({ message: 'Internal server error' });
+    console.error("Error fetching personalDetails:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
-

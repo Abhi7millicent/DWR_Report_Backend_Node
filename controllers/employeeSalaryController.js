@@ -1,3 +1,4 @@
+import { uploadBankDocumentToFirebaseStorage } from "../middleware/bankDocumentUpload.js";
 import  salaryDetailsSchema  from "../models/employeeSalary.js";
 
 export const putEmployeeBankAccount = async (req, res) => {
@@ -14,12 +15,12 @@ export const putEmployeeBankAccount = async (req, res) => {
     // Upload the bank document to Firebase Storage
     const bankDoument = await uploadBankDocumentToFirebaseStorage(file);
 
-    const bankDetails = await EmployeeSalaryDetails.update(
+    const bankDetails = await salaryDetailsSchema.update(
       { 
         bankAccountName, 
         ifscCode, 
         accountNo, 
-        document: bankDoument 
+        document: bankDoument, 
       },
       { 
         where: { employeeId: employeeId } 
@@ -46,7 +47,7 @@ export const putEmployeeSalary = async (req, res) => {
     // Upload the bank document to Firebase Storage
     const bankDoument = await uploadBankDocumentToFirebaseStorage(file);
 
-    const bankDetails = await EmployeeSalaryDetails.update(
+    const bankDetails = await salaryDetailsSchema.update(
       { 
         bankAccountName, 
         ifscCode, 

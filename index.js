@@ -27,6 +27,7 @@ import salarySlip from "./routes/salarySlipRoute.js";
 import dashboard from "./routes/dashboardRoute.js";
 import dwrAdjust from "./routes/dailyWorkReportDateAdjustRoute.js";
 import welcome from "./routes/welcomeRoute.js";
+import holiday from "./routes/holidayRoute.js";
 
 dotenv.config();
 const PORT = process.env.PORT;
@@ -59,6 +60,7 @@ app.use("/api/DWR/salary-slip", salarySlip);
 app.use("/api/DWR/dashboard", dashboard);
 app.use("/api/DWR/dwr-adjust", dwrAdjust);
 app.use("/api/DWR/welcome", welcome);
+app.use("/api/DWR/holiday", holiday)
 
 sequelize
   .authenticate()

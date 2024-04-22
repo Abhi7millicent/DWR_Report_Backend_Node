@@ -74,7 +74,7 @@ const taskSchema = sequelize.define(
 
 (async () => {
     try {
-      await projectSchema.sync();
+      await taskSchema.sync();
       console.log("task model synchronized successfully.");
     } catch (error) {
       console.error("Error synchronizing task model:", error);

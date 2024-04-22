@@ -36,11 +36,11 @@ const personalDeatilsSchema = sequelize.define(
       field: "addhar_no_path_epd",
     },
     panNoName: {
-      type: DataTypes.STRING,
+      type: DataTypes.JSON,
       field: "pan_no_name_epd",
     },
     aadhaarNoName: {
-      type: DataTypes.STRING,
+      type: DataTypes.JSON,
       field: "addhar_no_name_epd",
     },
     emergencyContact1: {

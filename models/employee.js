@@ -95,7 +95,7 @@ const Employee = sequelize.define(
 
 (async () => {
   try {
-    await sequelize.sync(); // Synchronize the model with the database
+    await Employee.sync(); // Synchronize the model with the database
     console.log("Employee model synchronized successfully.");
   } catch (error) {
     console.error("Error synchronizing Employee model:", error);

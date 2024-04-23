@@ -22,6 +22,7 @@ export const addEmployee = async (req, res) => {
       date,
       balancedLeave,
       lastUpdatedMonthYear,
+      phoneNumber,
       reporting,
       role,
       password,
@@ -53,6 +54,7 @@ export const addEmployee = async (req, res) => {
       date, // Assign current date to dateOfBirth
       balancedLeave,
       lastUpdatedMonthYear,
+      phoneNumber,
       reporting,
       role,
       password: hashedPassword, // Save the hashed password
